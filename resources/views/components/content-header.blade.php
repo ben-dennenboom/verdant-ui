@@ -13,7 +13,7 @@
             </div>
             @if(isset($actions) && $actions)
                 <div class="v-w-full lg:v-w-auto v-overflow-x-auto">
-                    <div class="v-inline-flex v-min-w-full lg:v-min-w-0">
+                    <div class="v-inline-flex v-min-w-full lg:v-min-w-0 v-gap-1">
                         {{ $actions }}
                     </div>
                 </div>

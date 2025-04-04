@@ -1,0 +1,22 @@
+{
+    "name": "verdant-ui",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "node build.js",
+        "build": "node build.js"
+    },
+    "devDependencies": {
+        "@tailwindcss/forms": "^0.5.9",
+        "autoprefixer": "^10.4.21",
+        "laravel-vite-plugin": "^1.0.0",
+        "postcss": "^8.4.31",
+        "postcss-cli": "^11.0.1",
+        "tailwindcss": "^3.4.17",
+        "vite": "^5.0.0"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.4.2",
+        "alpinejs": "^3.13.0"
+    }
+}

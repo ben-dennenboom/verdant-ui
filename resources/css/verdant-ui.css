@@ -1,0 +1,45 @@
+@import '@fortawesome/fontawesome-free/css/all.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.richtext-editor ul,
+.richtext-content ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin-left: 0.5rem !important;
+}
+
+.richtext-editor ol,
+.richtext-content ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+  margin-left: 0.5rem !important;
+}
+
+.richtext-editor ul ul,
+.richtext-content ul ul {
+  list-style-type: circle !important;
+}
+
+.richtext-editor ul ul ul,
+.richtext-content ul ul ul {
+  list-style-type: square !important;
+}
+
+.richtext-editor ol ol,
+.richtext-content ol ol {
+  list-style-type: lower-alpha !important;
+}
+
+.richtext-editor ol ol ol,
+.richtext-content ol ol ol {
+  list-style-type: lower-roman !important;
+}
+
+.richtext-editor li,
+.richtext-content li {
+  display: list-item !important;
+  list-style: inherit !important;
+}

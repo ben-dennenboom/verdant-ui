@@ -1,0 +1,44 @@
+{
+    "name": "dennenboom/verdant-ui",
+    "description": "A beautiful, self-contained UI component library for Laravel",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dennenboom",
+            "email": "info@dennenboom.be"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dennenboom\\VerdantUI\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Dennenboom\\VerdantUI\\VerdantUIServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "npm install",
+            "npm run build"
+        ],
+        "post-update-cmd": [
+            "npm install",
+            "npm run build"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan vendor:publish --tag=verdant-assets --force"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

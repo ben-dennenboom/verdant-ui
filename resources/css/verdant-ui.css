@@ -4,6 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/** Richtext Editor */
 .richtext-editor ul,
 .richtext-content ul {
   list-style-type: disc !important;
@@ -42,4 +43,93 @@
 .richtext-content li {
   display: list-item !important;
   list-style: inherit !important;
+}
+
+/** Calendar */
+.v-calendar .calendar-day {
+  min-height: 100px;
+}
+
+.v-calendar .v-event-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.v-calendar .today {
+  background-color: rgba(79, 70, 229, 0.1);
+}
+
+.v-calendar .v-event {
+  padding: 2px 4px;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.v-calendar .v-event:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.v-calendar .v-month-nav-btn:hover {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.v-calendar .v-mobile-events-list {
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.v-calendar .v-mobile-event-item {
+  transition: background-color 0.2s ease;
+}
+
+.v-calendar .v-mobile-event-item:hover {
+  background-color: #f9fafb;
+}
+
+.v-calendar .v-mobile-events-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.v-calendar .v-mobile-events-list::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+.v-calendar .v-mobile-events-list::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 6px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.v-calendar .v-event-appear {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.v-calendar .v-day:hover:not(.v-day-disabled) {
+  background-color: #f9fafb;
+}
+
+@media (max-width: 640px) {
+  .v-calendar .v-event {
+    font-size: 0.7rem;
+  }
 }

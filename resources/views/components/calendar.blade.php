@@ -1,11 +1,11 @@
 @props([
     'selectedDate' => null,
-    'events' => [],
+    'events',
 ])
 
 @php
   $selectedDate = $selectedDate ? Carbon\Carbon::parse($selectedDate) : now();
-  
+
   $startOfMonth = $selectedDate->copy()->startOfMonth();
 
   $startOfCalendar = $startOfMonth->copy()->startOfWeek(Carbon\Carbon::MONDAY);
@@ -64,34 +64,28 @@
       </h1>
       <div class="v-flex v-items-center">
         <div class="v-relative v-flex v-items-center v-rounded-md v-bg-white v-shadow-xs v-md:items-stretch">
-          <a href="{{ route(Route::currentRouteName(), array_merge(request()->query(), ['date' => $prevMonth])) }}"
-             class="v-flex v-h-9 v-w-12 v-items-center v-justify-center v-rounded-l-md v-border-y v-border-l v-border-gray-300 v-pr-1 v-text-gray-400 hover:v-text-gray-500 focus:v-relative v-md:w-9 v-md:pr-0 v-md:hover:v-bg-gray-50">
+          <button type="button"
+                  @click="$dispatch('calendar-previous-month')"
+                  class="v-flex v-h-9 v-w-12 v-items-center v-justify-center v-rounded-l-md v-border-y v-border-l v-border-gray-300 v-pr-1 v-text-gray-400 hover:v-text-gray-500 focus:v-relative v-md:w-9 v-md:pr-0 v-md:hover:v-bg-gray-50">
             <span class="v-sr-only">Previous month</span>
-            <svg class="v-size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+            <svg class="v-size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
             </svg>
-          </a>
-          <a href="{{ route(Route::currentRouteName(), array_merge(request()->query(), ['date' => $today])) }}"
-             class="v-hidden v-border-y v-border-gray-300 v-px-3.5 v-text-sm v-font-semibold v-text-gray-900 hover:v-bg-gray-50 focus:v-relative v-md:block">
+          </button>
+          <button type="button"
+                  @click="$dispatch('calendar-today')"
+                  class="v-hidden v-border-y v-border-gray-300 v-px-3.5 v-text-sm v-font-semibold v-text-gray-900 hover:v-bg-gray-50 focus:v-relative v-md:block">
             Today
-          </a>
+          </button>
           <span class="v-relative -v-mx-px v-h-5 v-w-px v-bg-gray-300 v-md:hidden"></span>
-          <a href="{{ route(Route::currentRouteName(), array_merge(request()->query(), ['date' => $nextMonth])) }}"
-             class="v-flex v-h-9 v-w-12 v-items-center v-justify-center v-rounded-r-md v-border-y v-border-r v-border-gray-300 v-pl-1 v-text-gray-400 hover:v-text-gray-500 focus:v-relative v-md:w-9 v-md:pl-0 v-md:hover:v-bg-gray-50">
+          <button type="button"
+                  @click="$dispatch('calendar-next-month')"
+                  class="v-flex v-h-9 v-w-12 v-items-center v-justify-center v-rounded-r-md v-border-y v-border-r v-border-gray-300 v-pl-1 v-text-gray-400 hover:v-text-gray-500 focus:v-relative v-md:w-9 v-md:pl-0 v-md:hover:v-bg-gray-50">
             <span class="v-sr-only">Next month</span>
-            <svg class="v-size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+            <svg class="v-size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
             </svg>
-          </a>
-        </div>
-
-        <div class="v-ml-4 v-hidden v-md:flex v-md:items-center">
-          <x-v-button.primary
-                  href="{{ route('events.create', ['date' => $selectedDate->format('Y-m-d')]) }}"
-                  outline="false"
-                  icon="plus">
-            Add event
-          </x-v-button.primary>
+          </button>
         </div>
       </div>
     </header>
@@ -152,19 +146,34 @@
                 <ol class="v-mt-2">
                   @foreach($dayEvents as $event)
                     <li>
-                      <a href="{{ $event['link'] ?? '#' }}"
-                         class="v-group v-flex v-whitespace-normal">
-                        <p class="v-flex-auto v-truncate v-font-medium v-text-gray-900 group-hover:v-text-primary-600"
-                           style="{{ isset($event['color']) ? 'color:' . $event['color'] : '' }}">
-                          {{ $event['title'] }}
-                        </p>
-                        @if(isset($event['time']))
-                          <time datetime="{{ $dayDate }}T{{ $event['time'] }}"
-                                class="v-ml-3 v-hidden v-flex-none v-text-gray-500 group-hover:v-text-primary-600 xl:v-block">
-                            {{ $event['time'] }}
-                          </time>
-                        @endif
-                      </a>
+                      @if(isset($event['link']) && !empty($event['link']))
+                        <a href="{{ $event['link'] }}"
+                           class="v-group v-flex v-whitespace-normal">
+                          <p class="v-flex-auto v-truncate v-font-medium v-text-gray-900 group-hover:v-text-primary-600"
+                             style="{{ isset($event['color']) ? 'color:' . $event['color'] : '' }}">
+                            {{ $event['title'] }}
+                          </p>
+                          @if(isset($event['time']) && !empty($event['time']))
+                            <time datetime="{{ $dayDate }}T{{ $event['time'] }}"
+                                  class="v-ml-3 v-hidden v-flex-none v-text-gray-500 group-hover:v-text-primary-600 xl:v-block">
+                              {{ $event['time'] }}
+                            </time>
+                          @endif
+                        </a>
+                      @else
+                        <div class="v-group v-flex v-whitespace-normal">
+                          <p class="v-flex-auto v-truncate v-font-medium v-text-gray-900"
+                             style="{{ isset($event['color']) ? 'color:' . $event['color'] : '' }}">
+                            {{ $event['title'] }}
+                          </p>
+                          @if(isset($event['time']) && !empty($event['time']))
+                            <time datetime="{{ $dayDate }}T{{ $event['time'] }}"
+                                  class="v-ml-3 v-hidden v-flex-none v-text-gray-500 xl:v-block">
+                              {{ $event['time'] }}
+                            </time>
+                          @endif
+                        </div>
+                      @endif
                       @if(isset($event['description']) && !empty($event['description']))
                         <p class="v-text-xs v-text-gray-500 v-truncate v-mt-1">{{ $event['description'] }}</p>
                       @endif
@@ -233,7 +242,7 @@
          x-show="mobileEventsVisible"
          x-cloak>
       <div class="v-text-center v-mb-4">
-        <h2 class="v-text-lg v-font-semibold v-text-gray-900" x-text="selectedDay"></h2>
+        <h2 class="v-text-lg v-font-semibold v-text-gray-900" x-text="new Date(selectedDay).toLocaleDateString('en-US', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})"></h2>
       </div>
 
       <ol class="v-divide-y v-divide-gray-100 v-overflow-hidden v-rounded-lg v-bg-white v-text-sm v-shadow-sm v-ring-1 v-ring-black/5"
@@ -248,7 +257,7 @@
                  class="v-mt-1 v-text-gray-600 v-text-sm"></p>
               <time x-show="event.time" :datetime="selectedDay + 'T' + event.time"
                     class="v-mt-2 v-flex v-items-center v-text-gray-700">
-                <svg class="v-mr-2 v-size-5 v-text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                <svg class="v-mr-2 v-size-5 v-text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" clip-rule="evenodd" />
                 </svg>
                 <span x-text="event.time"></span>

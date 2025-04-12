@@ -242,6 +242,9 @@
 .v-h-2 {
   height: 0.5rem;
 }
+.v-h-2\.5 {
+  height: 0.625rem;
+}
 .v-h-3 {
   height: 0.75rem;
 }
@@ -277,6 +280,9 @@
 }
 .v-w-2 {
   width: 0.5rem;
+}
+.v-w-2\.5 {
+  width: 0.625rem;
 }
 .v-w-3 {
   width: 0.75rem;
@@ -478,9 +484,6 @@
 }
 .v-rounded-lg {
   border-radius: 0.5rem;
-}
-.v-rounded-md {
-  border-radius: 0.375rem;
 }
 .v-rounded-t {
   border-top-left-radius: 0.25rem;
@@ -5612,10 +5615,6 @@
 .v-bg-blue-400\/95 {
   background-color: rgb(99 169 247 / 0.95);
 }
-.v-bg-blue-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(239 246 255 / var(--tw-bg-opacity, 1));
-}
 .v-bg-blue-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));
@@ -10197,6 +10196,9 @@
 }
 .v-p-4 {
   padding: 1rem;
+}
+.v-p-5 {
+  padding: 1.25rem;
 }
 .v-p-6 {
   padding: 1.5rem;

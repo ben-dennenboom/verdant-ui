@@ -25,74 +25,51 @@
   $selectedDay = $selectedDate->format('Y-m-d');
 @endphp
 
-<div class="v-lg:flex v-lg:h-full v-lg:flex-col">
-  <header class="v-flex v-items-center v-justify-between v-border-b v-border-gray-200 v-px-6 v-py-4 v-lg:flex-none">
-    <h1 class="v-text-base v-font-semibold v-text-gray-900">
-      <time datetime="{{ $selectedDate->format('Y-m') }}">{{ $monthName }} {{ $year }}</time>
-    </h1>
-    <div class="v-flex v-items-center">
-      <div class="v-relative v-flex v-items-center v-rounded-md v-bg-white v-shadow-xs v-md:items-stretch">
-        <a href="?date={{ $prevMonth }}"
-           class="v-flex v-h-9 v-w-12 v-items-center v-justify-center v-rounded-l-md v-border-y v-border-l v-border-gray-300 v-pr-1 v-text-gray-400 hover:v-text-gray-500 focus:v-relative v-md:w-9 v-md:pr-0 v-md:hover:v-bg-gray-50">
-          <span class="v-sr-only">Previous month</span>
-          <svg class="v-size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd"
-                  d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"
-                  clip-rule="evenodd"/>
+<div x-data="{
+    selectedDay: null,
+    mobileEventsVisible: false,
+    showEvents(day) {
+        this.selectedDay = day;
+        this.mobileEventsVisible = true;
+    },
+    getEvents(date) {
+        return {{ Js::from($events) }}.filter(event => event.date === date);
+    }
+}">
+  <div class="v-shadow-sm v-border v-border-gray-200 v-bg-white v-rounded-lg v-overflow-hidden">
+    <div class="v-flex v-items-center v-justify-between v-p-4 v-border-b v-border-gray-200">
+      <h2 class="v-text-xl v-font-semibold v-text-gray-900">
+        {{ $monthName }} {{ $year }}
+      </h2>
+      <div class="v-flex v-items-center v-space-x-1">
+        <a href="?date={{ $prevMonth }}" class="v-p-2 v-text-gray-500 hover:v-text-gray-700 v-rounded-md hover:v-bg-gray-100">
+          <svg class="v-w-5 v-h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
         </a>
-        <a href="?date={{ $today }}"
-           class="v-hidden v-border-y v-border-gray-300 v-px-3.5 v-text-sm v-font-semibold v-text-gray-900 hover:v-bg-gray-50 focus:v-relative v-md:block">Today</a>
-        <span class="v-relative -v-mx-px v-h-5 v-w-px v-bg-gray-300 v-md:hidden"></span>
-        <a href="?date={{ $nextMonth }}"
-           class="v-flex v-h-9 v-w-12 v-items-center v-justify-center v-rounded-r-md v-border-y v-border-r v-border-gray-300 v-pl-1 v-text-gray-400 hover:v-text-gray-500 focus:v-relative v-md:w-9 v-md:pl-0 v-md:hover:v-bg-gray-50">
-          <span class="v-sr-only">Next month</span>
-          <svg class="v-size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd"
-                  d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                  clip-rule="evenodd"/>
+        <a href="?date={{ $nextMonth }}" class="v-p-2 v-text-gray-500 hover:v-text-gray-700 v-rounded-md hover:v-bg-gray-100">
+          <svg class="v-w-5 v-h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
         </a>
       </div>
     </div>
-  </header>
 
-  <div class="v-shadow-sm v-ring-1 v-ring-black/5 v-lg:flex v-lg:flex-auto v-lg:flex-col">
-    <div class="v-grid v-grid-cols-7 v-gap-px v-border-b v-border-gray-300 v-bg-gray-200 v-text-center v-text-xs/6 v-font-semibold v-text-gray-700 v-lg:flex-none">
-      <div class="v-flex v-justify-center v-bg-white v-py-2">
-        <span>M</span>
-        <span class="v-sr-only sm:v-not-sr-only">on</span>
+    <div class="v-flex v-flex-col">
+      <div class="v-grid v-grid-cols-7 v-border-b v-border-gray-200">
+        <div class="v-py-2 v-text-center v-text-sm v-font-medium v-text-gray-700">Mon</div>
+        <div class="v-py-2 v-text-center v-text-sm v-font-medium v-text-gray-700">Tue</div>
+        <div class="v-py-2 v-text-center v-text-sm v-font-medium v-text-gray-700">Wed</div>
+        <div class="v-py-2 v-text-center v-text-sm v-font-medium v-text-gray-700">Thu</div>
+        <div class="v-py-2 v-text-center v-text-sm v-font-medium v-text-gray-700">Fri</div>
+        <div class="v-py-2 v-text-center v-text-sm v-font-medium v-text-gray-700">Sat</div>
+        <div class="v-py-2 v-text-center v-text-sm v-font-medium v-text-gray-700">Sun</div>
       </div>
-      <div class="v-flex v-justify-center v-bg-white v-py-2">
-        <span>T</span>
-        <span class="v-sr-only sm:v-not-sr-only">ue</span>
-      </div>
-      <div class="v-flex v-justify-center v-bg-white v-py-2">
-        <span>W</span>
-        <span class="v-sr-only sm:v-not-sr-only">ed</span>
-      </div>
-      <div class="v-flex v-justify-center v-bg-white v-py-2">
-        <span>T</span>
-        <span class="v-sr-only sm:v-not-sr-only">hu</span>
-      </div>
-      <div class="v-flex v-justify-center v-bg-white v-py-2">
-        <span>F</span>
-        <span class="v-sr-only sm:v-not-sr-only">ri</span>
-      </div>
-      <div class="v-flex v-justify-center v-bg-white v-py-2">
-        <span>S</span>
-        <span class="v-sr-only sm:v-not-sr-only">at</span>
-      </div>
-      <div class="v-flex v-justify-center v-bg-white v-py-2">
-        <span>S</span>
-        <span class="v-sr-only sm:v-not-sr-only">un</span>
-      </div>
-    </div>
 
-    <div class="v-flex v-bg-gray-200 v-text-xs/6 v-text-gray-700 v-lg:flex-auto">
-      <div class="v-hidden v-w-full v-lg:grid v-lg:grid-cols-7 v-lg:grid-rows-6 v-lg:gap-px">
+      <div class="v-grid v-grid-cols-7 v-divide-x v-divide-gray-200 v-divide-y v-flex-grow">
         @php
           $currentDay = $startOfCalendar->copy();
+          $weeksCount = ceil($endOfCalendar->diffInDays($startOfCalendar) / 7);
         @endphp
 
         @while($currentDay <= $endOfCalendar)
@@ -101,98 +78,44 @@
             $isCurrentMonth = $currentDay->month === $selectedDate->month;
             $isToday = $currentDay->isToday();
             $dayEvents = collect($events)->where('date', $dayDate)->all();
+            $hasEvents = count($dayEvents) > 0;
           @endphp
 
-          <div class="v-relative v-px-3 v-py-2 {{ $isCurrentMonth ? 'v-bg-white' : 'v-bg-gray-50 v-text-gray-500' }}">
-            <time datetime="{{ $dayDate }}"
-                  class="{{ $isToday ? 'v-flex v-size-6 v-items-center v-justify-center v-rounded-full v-bg-primary-600 v-font-semibold v-text-white' : '' }}">
-              {{ $currentDay->format('j') }}
-            </time>
+          <div class="v-min-h-[80px] v-relative v-p-1 {{ $isCurrentMonth ? 'v-bg-white' : 'v-bg-gray-50' }} {{ $isToday ? 'v-bg-blue-50' : '' }} v-overflow-hidden"
+               @click="showEvents('{{ $dayDate }}')">
 
-            @if(count($dayEvents) > 0)
-              <ol class="v-mt-2">
-                @foreach($dayEvents as $event)
-                  <li>
-                    @if(isset($event['link']))
-                      <a href="{{ $event['link'] }}" class="v-group v-flex">
-                        <p class="v-flex-auto v-truncate v-font-medium v-text-gray-900 group-hover:v-text-primary-600"
-                           style="{{ isset($event['color']) ? 'color:' . $event['color'] : '' }}">
-                          {{ $event['title'] }}
-                        </p>
-                        @if(isset($event['time']))
-                          <time datetime="{{ $dayDate }}T{{ $event['time'] }}"
-                                class="v-ml-3 v-hidden v-flex-none v-text-gray-500 group-hover:v-text-primary-600 xl:v-block">
-                            {{ $event['time'] }}
-                          </time>
-                        @endif
-                      </a>
-                    @else
-                      <div class="v-group v-flex">
-                        <p class="v-flex-auto v-truncate v-font-medium v-text-gray-900"
-                           style="{{ isset($event['color']) ? 'color:' . $event['color'] : '' }}">
-                          {{ $event['title'] }}
-                        </p>
-                        @if(isset($event['time']))
-                          <time datetime="{{ $dayDate }}T{{ $event['time'] }}"
-                                class="v-ml-3 v-hidden v-flex-none v-text-gray-500 xl:v-block">
-                            {{ $event['time'] }}
-                          </time>
-                        @endif
-                      </div>
-                    @endif
-                  </li>
-                @endforeach
-              </ol>
-            @endif
+            <div class="v-z-10 v-relative">
+              <div class="v-flex v-items-start v-justify-between">
+                <div class="v-relative">
+                  @if($isToday)
+                    <div class="v-absolute v-top-0 v-left-0 v-w-7 v-h-7 v-rounded-full v-bg-primary-500"></div>
+                  @endif
+                  <span class="v-text-sm {{ $isCurrentMonth ? '' : 'v-text-gray-400' }} {{ $isToday ? 'v-text-white v-z-10 v-relative v-font-bold v-flex v-items-center v-justify-center v-w-7 v-h-7' : '' }}">
+                                        {{ $currentDay->format('j') }}
+                                    </span>
+                </div>
+
+                @if($hasEvents && count($dayEvents) <= 3)
+                  <div class="v-flex v-space-x-1 v-mt-1 lg:v-hidden">
+                    @foreach($dayEvents as $event)
+                      <span class="v-w-2 v-h-2 v-rounded-full" style="background-color: {{ $event['color'] ?? '#9CA3AF' }}"></span>
+                    @endforeach
+                  </div>
+                @endif
+              </div>
+
+              @if($hasEvents)
+                <div class="v-mt-1 v-hidden lg:v-block">
+                  @foreach($dayEvents as $event)
+                    <div class="v-text-xs v-mb-1 v-truncate v-rounded v-px-1 v-py-0.5 {{ $isCurrentMonth ? '' : 'v-opacity-50' }}"
+                         style="background-color: {{ $event['color'] ?? '#9CA3AF' }}; color: white;">
+                      {{ $event['title'] }}
+                    </div>
+                  @endforeach
+                </div>
+              @endif
+            </div>
           </div>
-
-          @php
-            $currentDay->addDay();
-          @endphp
-        @endwhile
-      </div>
-
-      <div class="v-isolate v-grid v-w-full v-grid-cols-7 v-grid-rows-6 v-gap-px v-lg:hidden"
-           x-data="{ selectedDay: '{{ $selectedDay }}' }">
-        @php
-          $currentDay = $startOfCalendar->copy();
-        @endphp
-
-        @while($currentDay <= $endOfCalendar)
-          @php
-            $dayDate = $currentDay->format('Y-m-d');
-            $isCurrentMonth = $currentDay->month === $selectedDate->month;
-            $isToday = $currentDay->isToday();
-            $isSelected = $dayDate === $selectedDay;
-            $dayEvents = collect($events)->where('date', $dayDate)->all();
-          @endphp
-
-          <button type="button"
-                  @click="selectedDay = '{{ $dayDate }}'"
-                  class="v-flex v-h-14 v-flex-col v-px-3 v-py-2 hover:v-bg-gray-100 focus:v-z-10
-                                {{ $isCurrentMonth ? 'v-bg-white' : 'v-bg-gray-50' }}
-                                {{ $isToday ? 'v-font-semibold v-text-primary-600' : '' }}
-                                {{ $isSelected ? 'v-font-semibold' : '' }}
-                                {{ $isCurrentMonth && !$isToday ? 'v-text-gray-900' : '' }}
-                                {{ !$isCurrentMonth && !$isToday ? 'v-text-gray-500' : '' }}">
-
-            <time datetime="{{ $dayDate }}"
-                  class="v-ml-auto {{ $isSelected ? 'v-flex v-size-6 v-items-center v-justify-center v-rounded-full' : '' }} {{ $isSelected && $isToday ? 'v-bg-primary-600' : '' }} {{ $isSelected && !$isToday ? 'v-bg-gray-900 v-text-white' : '' }}">
-              {{ $currentDay->format('j') }}
-            </time>
-
-            @if(count($dayEvents) > 0)
-              <span class="v-sr-only">{{ count($dayEvents) }} events</span>
-              <span class="-v-mx-0.5 v-mt-auto v-flex v-flex-wrap-reverse">
-                                @foreach($dayEvents as $event)
-                  <span class="v-mx-0.5 v-mb-1 v-size-1.5 v-rounded-full"
-                        style="background-color: {{ $event['color'] ?? '#9CA3AF' }}"></span>
-                @endforeach
-                            </span>
-            @else
-              <span class="v-sr-only">No events</span>
-            @endif
-          </button>
 
           @php
             $currentDay->addDay();
@@ -202,36 +125,48 @@
     </div>
   </div>
 
-  <div class="v-px-4 v-py-10 sm:v-px-6 v-lg:hidden" x-data="{
-        getEvents(date) {
-            return {{ json_encode($events) }}.filter(event => event.date === date);
-        }
-    }" x-show="selectedDay" x-cloak>
-    <ol class="v-divide-y v-divide-gray-100 v-overflow-hidden v-rounded-lg v-bg-white v-text-sm v-shadow-sm v-ring-1 v-ring-black/5">
-      <template x-for="event in getEvents(selectedDay)" :key="event.id">
-        <li class="v-group v-flex v-p-4 v-pr-6 focus-within:v-bg-gray-50 hover:v-bg-gray-50">
-          <div class="v-flex-auto">
-            <p class="v-font-semibold v-text-gray-900" :style="event.color ? `color: ${event.color}` : ''"
-               x-text="event.title"></p>
-            <template x-if="event.time">
-              <time :datetime="`${selectedDay}T${event.time}`" class="v-mt-2 v-flex v-items-center v-text-gray-700">
-                <svg class="v-mr-2 v-size-5 v-text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd"
-                        d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z"
-                        clip-rule="evenodd"/>
-                </svg>
-                <span x-text="event.time"></span>
-              </time>
-            </template>
-          </div>
-          <template x-if="event.link">
-            <a :href="event.link"
-               class="v-ml-6 v-flex-none v-self-center v-rounded-md v-bg-white v-px-3 v-py-2 v-font-semibold v-text-gray-900 v-opacity-0 v-shadow-xs v-ring-1 v-ring-gray-300 v-ring-inset group-hover:v-opacity-100 hover:v-ring-gray-400 focus:v-opacity-100">
-              View<span class="v-sr-only">, </span><span x-text="event.title" class="v-sr-only"></span>
-            </a>
+  <div x-show="selectedDay"
+       x-cloak
+       class="v-fixed v-inset-0 v-z-50 v-overflow-y-auto"
+       @click.away="selectedDay = null">
+    <div class="v-flex v-min-h-screen v-items-end v-justify-center v-p-4 v-text-center sm:v-items-center sm:v-p-0">
+      <div class="v-relative v-transform v-transition-all v-bg-white v-rounded-lg v-overflow-hidden v-shadow-xl v-w-full v-max-w-lg v-p-6">
+        <div class="v-absolute v-top-0 v-right-0 v-p-4">
+          <button @click="selectedDay = null" class="v-text-gray-400 hover:v-text-gray-500">
+            <svg class="v-h-6 v-w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <h3 class="v-text-lg v-font-semibold v-mb-4" x-text="selectedDay ? new Date(selectedDay).toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'}) : ''"></h3>
+
+        <template x-if="selectedDay && getEvents(selectedDay).length === 0">
+          <p class="v-text-gray-500 v-py-4">No events scheduled for this day.</p>
+        </template>
+
+        <div class="v-space-y-3">
+          <template x-for="event in getEvents(selectedDay)" :key="event.id">
+            <div class="v-flex v-items-start v-p-3 v-rounded-lg" :style="`background-color: ${event.color}25`">
+              <div class="v-flex-1">
+                <h4 class="v-font-semibold v-text-sm" :style="`color: ${event.color}`" x-text="event.title"></h4>
+                <template x-if="event.time">
+                  <p class="v-text-xs v-text-gray-600 v-mt-1" x-text="event.time"></p>
+                </template>
+                <template x-if="event.description">
+                  <p class="v-text-sm v-text-gray-700 v-mt-1" x-text="event.description"></p>
+                </template>
+              </div>
+              <template x-if="event.link">
+                <a :href="event.link" class="v-text-xs v-py-1 v-px-2 v-bg-white v-rounded v-shadow-sm v-ml-2"
+                   :style="`color: ${event.color}; border: 1px solid ${event.color}`">
+                  View
+                </a>
+              </template>
+            </div>
           </template>
-        </li>
-      </template>
-    </ol>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

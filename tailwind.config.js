@@ -29,17 +29,17 @@ export default {
           900: '#1F2937',
         },
         primary: {
-          DEFAULT: '#E9500E', // cc_orange
-          50: '#FEF2EC',
-          100: '#FDE5D9',
-          200: '#FBCBB3',
-          300: '#F8B18D',
-          400: '#F69767',
-          500: '#F47D41',
-          600: '#F1631B',
-          700: '#E9500E', // Original cc_orange
-          800: '#B83F0B',
-          900: '#872E08',
+          DEFAULT: '#0C5E82', // cc_blue
+          50: '#E6F6FC',
+          100: '#CCEDF9',
+          200: '#99DBF3',
+          300: '#66C9ED',
+          400: '#33B7E7',
+          500: '#139cd8',
+          600: '#107DAD',
+          700: '#139cd8', // Main blue color
+          800: '#0C5E82',
+          900: '#083F57',
         },
         secondary: {
           DEFAULT: '#2d3441', // cc_gray

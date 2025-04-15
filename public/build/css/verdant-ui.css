@@ -15192,14 +15192,14 @@
   background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
 }
 
-.hover\:v-bg-primary-600:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(16 125 173 / var(--tw-bg-opacity, 1));
-}
-
 .hover\:v-bg-primary-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(19 156 216 / var(--tw-bg-opacity, 1));
+}
+
+.hover\:v-bg-primary-800:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(12 94 130 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:v-bg-red-700:hover {
@@ -15287,9 +15287,9 @@
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
-.focus\:v-ring-primary-400:focus {
+.focus\:v-ring-primary-500:focus {
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(51 183 231 / var(--tw-ring-opacity, 1));
+  --tw-ring-color: rgb(19 156 216 / var(--tw-ring-opacity, 1));
 }
 
 .focus\:v-ring-red-500:focus {

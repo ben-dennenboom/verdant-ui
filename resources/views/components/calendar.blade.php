@@ -24,17 +24,30 @@
 @endphp
 
 <div x-data="{
-    selectedDay: null,
-    showEvents(day) {
-        this.selectedDay = day;
-    },
-    hideEvents() {
-        this.selectedDay = null;
-    },
+    selectedDay: '{{ $today }}',
+    events: {{ Js::from($events) }},
+
     getEvents(date) {
-        return {{ Js::from($events) }}.filter(event => event.date === date);
+        if (!this.events) return [];
+        return this.events.filter(event => event.date === date);
+    },
+
+    formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+        });
+    },
+
+    selectDay(day) {
+        this.selectedDay = day;
     }
-}">
+}"
+     x-init="selectDay('{{ $today }}')">
+
   <div class="v-shadow-sm v-border v-border-gray-200 v-bg-white v-rounded-lg v-overflow-hidden">
     <div class="v-flex v-items-center v-justify-between v-p-5 v-border-b v-border-gray-100">
       <h2 class="v-text-2xl v-font-medium v-text-gray-900">
@@ -80,8 +93,15 @@
             $hasEvents = count($dayEvents) > 0;
           @endphp
 
-          <div class="v-min-h-[80px] v-relative v-p-2 {{ $isCurrentMonth ? 'v-bg-white' : 'v-bg-gray-50' }} v-overflow-hidden hover:v-bg-gray-50 v-cursor-pointer"
-               @click="showEvents('{{ $dayDate }}')">
+          <div
+                  class="v-min-h-[80px] v-relative v-p-2 v-cursor-pointer v-transition-colors v-duration-200"
+                  :class="{
+                            'v-bg-white': '{{ $isCurrentMonth }}' && selectedDay !== '{{ $dayDate }}',
+                            'v-bg-gray-50': !('{{ $isCurrentMonth }}') && selectedDay !== '{{ $dayDate }}',
+                            'v-bg-gray-100': selectedDay === '{{ $dayDate }}',
+                            'hover:v-bg-gray-50': selectedDay !== '{{ $dayDate }}'
+                         }"
+                  @click="selectDay('{{ $dayDate }}')">
 
             <div class="v-z-10 v-relative">
               <div class="v-flex v-items-start v-justify-between">
@@ -124,49 +144,33 @@
     </div>
   </div>
 
-  <div x-show="selectedDay"
-       x-cloak
-       class="v-fixed v-inset-0 v-z-50 v-overflow-y-auto"
-       @click.away="hideEvents()">
-    <div class="v-flex v-min-h-screen v-items-end v-justify-center v-p-4 v-text-center sm:v-items-center sm:v-p-0">
-      <div class="v-relative v-transform v-transition-all v-bg-white v-rounded-lg v-overflow-hidden v-shadow-xl v-w-full v-max-w-lg v-p-6">
-        <div class="v-absolute v-top-0 v-right-0 v-p-4">
-          <button @click="hideEvents()" class="v-text-gray-400 hover:v-text-gray-500">
-            <svg class="v-h-6 v-w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
+  <div class="v-mt-6 v-bg-white v-rounded-lg v-border v-border-gray-200 v-shadow-sm v-overflow-hidden">
+    <div class="v-p-5 v-border-b v-border-gray-100">
+      <span class="v-text-lg v-font-semibold v-text-gray-900" x-text="formatDate(selectedDay)"></span>
+    </div>
+
+    <div class="v-p-5">
+      <template x-if="getEvents(selectedDay).length === 0">
+        <div class="v-py-4 v-text-center">
+          <p class="v-text-gray-500">No events scheduled for this day.</p>
         </div>
+      </template>
 
-        <h3 class="v-text-lg v-font-semibold v-mb-4" x-text="selectedDay ? new Date(selectedDay).toLocaleDateString('en-US', {weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'}) : ''"></h3>
-
-        <template x-if="selectedDay && getEvents(selectedDay).length === 0">
-          <div class="v-py-4 v-text-center">
-            <p class="v-text-gray-500">No events scheduled for this day.</p>
-          </div>
-        </template>
-
-        <div class="v-space-y-3">
-          <template x-for="event in getEvents(selectedDay)" :key="event.id">
-            <div class="v-flex v-items-start v-p-3 v-rounded-lg" :style="`background-color: ${event.color}25`">
-              <div class="v-flex-1">
-                <h4 class="v-font-semibold v-text-sm" :style="`color: ${event.color}`" x-text="event.title"></h4>
-                <template x-if="event.time">
-                  <p class="v-text-xs v-text-gray-600 v-mt-1" x-text="event.time"></p>
-                </template>
-                <template x-if="event.description">
-                  <p class="v-text-sm v-text-gray-700 v-mt-1" x-text="event.description"></p>
-                </template>
-              </div>
-              <template x-if="event.link">
-                <a :href="event.link" class="v-text-xs v-py-1 v-px-2 v-bg-white v-rounded v-shadow-sm v-ml-2"
-                   :style="`color: ${event.color}; border: 1px solid ${event.color}`">
-                  View
-                </a>
+      <div class="v-grid v-gap-4">
+        <template x-for="(event, index) in getEvents(selectedDay)" :key="index">
+          <a :href="event.link || '#'" class="v-flex v-items-start v-p-3 v-rounded-lg v-cursor-pointer v-no-underline hover:v-border hover:v-border-gray-300 hover:v-shadow-sm"
+             :style="`background-color: ${event.color}15`">
+            <div class="v-flex-1">
+              <h4 class="v-font-semibold v-text-sm" :style="`color: ${event.color}`" x-text="event.title"></h4>
+              <template x-if="event.time">
+                <p class="v-text-xs v-text-gray-600 v-mt-1" x-text="event.time"></p>
+              </template>
+              <template x-if="event.description">
+                <p class="v-text-sm v-text-gray-700 v-mt-1" x-text="event.description"></p>
               </template>
             </div>
-          </template>
-        </div>
+          </a>
+        </template>
       </div>
     </div>
   </div>

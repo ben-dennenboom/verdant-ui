@@ -107,7 +107,7 @@
               <div class="v-flex v-items-start v-justify-between">
                 <div class="v-relative">
                   @if($isToday)
-                    <div class="v-absolute v-top-0 v-left-0 v-w-7 v-h-7 v-rounded-full" style="background-color: #F97316;"></div>
+                    <div class="v-absolute v-top-0 v-left-0 v-w-7 v-h-7 v-rounded-full" style="background-color: #45BFBD;"></div>
                   @endif
                   <span class="v-text-sm {{ $isCurrentMonth ? '' : 'v-text-gray-400' }} {{ $isToday ? 'v-text-white v-z-10 v-relative v-font-bold v-flex v-items-center v-justify-center v-w-7 v-h-7' : '' }}">
                                         {{ $currentDay->format('j') }}
@@ -159,9 +159,9 @@
       <div class="v-grid v-gap-4">
         <template x-for="(event, index) in getEvents(selectedDay)" :key="index">
           <a :href="event.link || '#'" class="v-flex v-items-start v-p-3 v-rounded-lg v-cursor-pointer v-no-underline hover:v-border hover:v-border-gray-300 hover:v-shadow-sm"
-             :style="`background-color: ${event.color}15`">
+             :style="`background-color: ${event.color}15; border-left: 4px ${event.color} solid;`">
             <div class="v-flex-1">
-              <h4 class="v-font-semibold v-text-sm" :style="`color: ${event.color}`" x-text="event.title"></h4>
+              <span class="v-font-semibold v-text-sm" :style="`color: ${event.color}`" x-text="event.title"></h4>
               <template x-if="event.time">
                 <p class="v-text-xs v-text-gray-600 v-mt-1" x-text="event.time"></p>
               </template>

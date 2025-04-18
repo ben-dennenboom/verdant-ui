@@ -161,7 +161,7 @@
           <a :href="event.link || '#'" class="v-flex v-items-start v-p-3 v-rounded-lg v-cursor-pointer v-no-underline hover:v-border hover:v-border-gray-300 hover:v-shadow-sm"
              :style="`background-color: ${event.color}15; border-left: 4px ${event.color} solid;`">
             <div class="v-flex-1">
-              <span class="v-font-semibold v-text-sm" :style="`color: ${event.color}`" x-text="event.title"></h4>
+              <span class="v-font-semibold v-text-sm" :style="`color: ${event.color}`" x-text="event.title"></span>
               <template x-if="event.time">
                 <p class="v-text-xs v-text-gray-600 v-mt-1" x-text="event.time"></p>
               </template>

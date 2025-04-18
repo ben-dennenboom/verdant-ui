@@ -21,6 +21,9 @@ const fontAwesomeDir = path.join(vendorDir, 'fontawesome');
 fs.mkdirSync(path.join(fontAwesomeDir, 'css'), {recursive: true});
 fs.mkdirSync(path.join(fontAwesomeDir, 'webfonts'), {recursive: true});
 
+const alpineDir = path.join(vendorDir, 'alpine');
+fs.mkdirSync(alpineDir, {recursive: true});
+
 const cssInput = fs.readFileSync(
     path.join(__dirname, 'resources', 'css', 'verdant-ui.css'),
     'utf8'
@@ -48,6 +51,10 @@ const downloads = [
   {
     url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css',
     dest: path.join(fontAwesomeDir, 'css', 'all.min.css')
+  },
+  {
+    url: 'https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js',
+    dest: path.join(alpineDir, 'alpine.min.js')
   }
 ];
 

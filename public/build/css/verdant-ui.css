@@ -104,6 +104,9 @@
   --tw-contain-paint:  ;
   --tw-contain-style:  ;
 }
+[class*="v-"] {
+  border: 0 solid;
+}
 .v-fixed {
   position: fixed;
 }
@@ -15130,6 +15133,10 @@
 }
 .v-ease-out {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+[class*="v-"] {
+  border: 0 solid;
 }
 
 .richtext-editor ul,

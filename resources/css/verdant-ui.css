@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+[class*="v-"] {
+  border: 0 solid;
+}
+
 .richtext-editor ul,
 .richtext-content ul {
   list-style-type: disc !important;

@@ -9,10 +9,18 @@ class VerdantUI
         $verdantCssPath = self::assetPath('css/verdant-ui.css');
         $verdantJsPath = self::assetPath('js/verdant-ui.js');
         $fontAwesomePath = self::assetPath('vendor/fontawesome/css/all.min.css');
+        $alpineJsPath = self::assetPath('vendor/alpine/alpine.min.js');
+
+        $includeAlpine = config('verdant.assets.include_alpine', true);
+        $includeFontawesome = config('verdant.assets.include_fontawesome', true);
+
+        $alpine = $includeAlpine ? "<script src=\"{$alpineJsPath}\" defer></script>" : "";
+        $fontawesome = $includeFontawesome ? "<link rel=\"stylesheet\" href=\"{$fontAwesomePath}\">" : "";
 
         return <<<HTML
-        <link rel="stylesheet" href="{$fontAwesomePath}">
+        {$fontawesome}
         <link rel="stylesheet" href="{$verdantCssPath}">
+        {$alpine}
         <script src="{$verdantJsPath}" defer></script>
         <script>
             window.verdantPrefix = "v-"

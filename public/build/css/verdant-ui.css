@@ -185,9 +185,6 @@
 .v-ml-2 {
   margin-left: 0.5rem;
 }
-.v-ml-3 {
-  margin-left: 0.75rem;
-}
 .v-ml-6 {
   margin-left: 1.5rem;
 }
@@ -199,9 +196,6 @@
 }
 .v-mr-2 {
   margin-right: 0.5rem;
-}
-.v-mr-4 {
-  margin-right: 1rem;
 }
 .v-mt-1 {
   margin-top: 0.25rem;
@@ -409,11 +403,6 @@
   --tw-space-x-reverse: 0;
   margin-right: calc(0.25rem * var(--tw-space-x-reverse));
   margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
-}
-.v-space-x-4 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(1rem * var(--tw-space-x-reverse));
-  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
 }
 .v-space-y-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
@@ -10285,10 +10274,6 @@
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
-.v-text-xl {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-}
 .v-text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -15514,9 +15499,6 @@
 }
 
 @media (min-width: 768px) {
-  .md\:v-inline-block {
-    display: inline-block;
-  }
   .md\:v-flex {
     display: flex;
   }

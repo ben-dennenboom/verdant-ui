@@ -130,7 +130,6 @@
 
 <script>
   document.addEventListener('alpine:init', () => {
-    console.trace();
 
     Alpine.data('imageCropper', (config) => ({
       name: config.name,
@@ -151,7 +150,6 @@
       tempImageData: null,
 
       init() {
-        console.log('initializing image cropper for', this.name);
         if (this.initialSrc) {
           this.croppedImage = this.initialSrc;
         }

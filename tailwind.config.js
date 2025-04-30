@@ -170,14 +170,6 @@ export default {
         },
       });
     },
-
-    function({ addBase, theme, config }) {
-      addBase({
-        '[class*="v-"]': {
-          border: '0 solid',
-        },
-      });
-    },
   ],
   corePlugins: {
     preflight: false,

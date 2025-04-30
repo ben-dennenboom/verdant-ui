@@ -24,7 +24,7 @@ class VerdantUI
         <link rel="stylesheet" href="{$verdantCssPath}">
         <link rel="stylesheet" href="{$cropperCssPath}">
         {$alpine}
-        <script src=\"{$cropperJsPath}\" defer></script>
+        <script src="{$cropperJsPath}" defer></script>
         <script src="{$verdantJsPath}" defer></script>
         <script>
             window.verdantPrefix = "v-"

@@ -150,10 +150,6 @@
       tempImageData: null,
 
       init() {
-        if (this.initialSrc) {
-          this.croppedImage = this.initialSrc;
-        }
-
         const aspectRatio = config.aspectRatio || null;
         if (aspectRatio && aspectRatio.includes(':')) {
           const [width, height] = aspectRatio.split(':').map(Number);

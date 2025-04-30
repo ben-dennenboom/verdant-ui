@@ -55,7 +55,15 @@ const downloads = [
   {
     url: 'https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js',
     dest: path.join(alpineDir, 'alpine.min.js')
-  }
+  },
+  {
+    url: 'https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css',
+    dest: path.join(buildDir, 'cropper.min.css')
+  },
+  {
+    url: 'https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js',
+    dest: path.join(jsDir, 'cropper.min.js')
+  },
 ];
 
 const webfonts = [

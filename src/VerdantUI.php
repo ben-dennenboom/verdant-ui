@@ -10,6 +10,8 @@ class VerdantUI
         $verdantJsPath = self::assetPath('js/verdant-ui.js');
         $fontAwesomePath = self::assetPath('vendor/fontawesome/css/all.min.css');
         $alpineJsPath = self::assetPath('vendor/alpine/alpine.min.js');
+        $cropperJsPath = self::assetPath('js/cropper.min.js');
+        $cropperCssPath = self::assetPath('css/cropper.min.css');
 
         $includeAlpine = config('verdant.assets.include_alpine', true);
         $includeFontawesome = config('verdant.assets.include_fontawesome', true);
@@ -20,7 +22,9 @@ class VerdantUI
         return <<<HTML
         {$fontawesome}
         <link rel="stylesheet" href="{$verdantCssPath}">
+        <link rel="stylesheet" href="{$cropperCssPath}">
         {$alpine}
+        <script src="{$cropperJsPath}" defer></script>
         <script src="{$verdantJsPath}" defer></script>
         <script>
             window.verdantPrefix = "v-"

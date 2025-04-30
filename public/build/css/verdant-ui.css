@@ -104,9 +104,6 @@
   --tw-contain-paint:  ;
   --tw-contain-style:  ;
 }
-[class*="v-"] {
-  border: 0 solid;
-}
 .v-fixed {
   position: fixed;
 }

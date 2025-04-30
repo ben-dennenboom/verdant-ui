@@ -5,10 +5,11 @@
     'aspectRatio' => null,
     'minWidth' => 0,
     'minHeight' => 0,
-    'maxWidth' => 2000,
-    'maxHeight' => 2000,
+    'maxWidth' => 5000,
+    'maxHeight' => 5000,
     'required' => false,
     'uploadUrl' => null,
+    'maxScale' => 512,
 ])
 
 <div class="v-mb-4"
@@ -22,7 +23,8 @@
         maxHeight: {{ $maxHeight }},
         uploadUrl: '{{ $uploadUrl }}',
         required: {{ $required ? 'true' : 'false' }},
-        csrfToken: '{{ csrf_token() }}'
+        csrfToken: '{{ csrf_token() }}',
+        maxScale: {{ $maxScale }}
      })">
 
   @if($label)
@@ -147,6 +149,7 @@
       uploadUrl: config.uploadUrl || '',
       csrfToken: config.csrfToken || '',
       required: config.required || false,
+      maxScale: config.maxScale !== undefined ? config.maxScale : 512,
       tempImageData: null,
 
       init() {
@@ -276,7 +279,26 @@
             return;
           }
 
-          const croppedData = canvas.toDataURL('image/jpeg', 0.8);
+          let finalCanvas = canvas;
+          if (this.maxScale > 0 && (canvas.width > this.maxScale || canvas.height > this.maxScale)) {
+            finalCanvas = document.createElement('canvas');
+            const ctx = finalCanvas.getContext('2d');
+
+            let newWidth, newHeight;
+            if (canvas.width > canvas.height) {
+              newWidth = this.maxScale;
+              newHeight = Math.round(canvas.height * this.maxScale / canvas.width);
+            } else {
+              newHeight = this.maxScale;
+              newWidth = Math.round(canvas.width * this.maxScale / canvas.height);
+            }
+
+            finalCanvas.width = newWidth;
+            finalCanvas.height = newHeight;
+            ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, newWidth, newHeight);
+          }
+
+          const croppedData = finalCanvas.toDataURL('image/jpeg', 0.85);
 
           if (this.uploadUrl) {
             await this.uploadImage(croppedData);

@@ -14,7 +14,7 @@
 <div class="v-mb-4"
      x-data="imageCropper({
         name: '{{ $name }}',
-        src: '{{ $src ?? asset('vendor/verdant/images/placeholder.jpg') }}',
+        src: '{{ $src }}',
         aspectRatio: '{{ $aspectRatio }}',
         minWidth: {{ $minWidth }},
         minHeight: {{ $minHeight }},
@@ -66,10 +66,10 @@
       <input type="file"
              accept="image/*"
              class="v-hidden"
-             :id="name + '_input'"
+             x-ref="fileInput"
              @change="handleFileSelect">
 
-      <x-v-button.secondary type="button" @click="$el.previousElementSibling.click()" icon="image">
+      <x-v-button.secondary type="button" @click="selectFile" icon="image">
         {{ $uploadUrl ? 'Upload Image' : 'Select Image' }}
       </x-v-button.secondary>
 
@@ -128,95 +128,113 @@
   </template>
 </div>
 
-@pushonce('scripts')
-  <script src="{{ asset('vendor/verdant/js/cropper.min.js') }}"></script>
-  <script>
-    document.addEventListener('alpine:init', () => {
-      Alpine.data('imageCropper', ({
-                                     name,
-                                     src,
-                                     aspectRatio,
-                                     minWidth,
-                                     minHeight,
-                                     maxWidth,
-                                     maxHeight,
-                                     uploadUrl,
-                                     required,
-                                     csrfToken
-                                   }) => ({
-        name: name,
-        showModal: false,
-        initialSrc: src,
-        preview: src,
-        croppedImage: '',
-        error: '',
-        cropper: null,
-        aspectRatioValue: null,
+<script>
+  document.addEventListener('alpine:init', () => {
+    console.trace();
 
-        init() {
-          if (aspectRatio && aspectRatio.includes(':')) {
-            const [width, height] = aspectRatio.split(':').map(Number);
+    Alpine.data('imageCropper', (config) => ({
+      name: config.name,
+      showModal: false,
+      initialSrc: config.src || '',
+      preview: config.src || '',
+      croppedImage: '',
+      error: '',
+      cropper: null,
+      aspectRatioValue: null,
+      minWidth: config.minWidth || 0,
+      minHeight: config.minHeight || 0,
+      maxWidth: config.maxWidth || 2000,
+      maxHeight: config.maxHeight || 2000,
+      uploadUrl: config.uploadUrl || '',
+      csrfToken: config.csrfToken || '',
+      required: config.required || false,
+      tempImageData: null,
+
+      init() {
+        console.log('initializing image cropper for', this.name);
+        if (this.initialSrc) {
+          this.croppedImage = this.initialSrc;
+        }
+
+        const aspectRatio = config.aspectRatio || null;
+        if (aspectRatio && aspectRatio.includes(':')) {
+          const [width, height] = aspectRatio.split(':').map(Number);
+          if (!isNaN(width) && !isNaN(height) && height !== 0) {
             this.aspectRatioValue = width / height;
-          } else if (aspectRatio && !isNaN(aspectRatio)) {
-            this.aspectRatioValue = Number(aspectRatio);
           }
-        },
+        } else if (aspectRatio && !isNaN(aspectRatio)) {
+          this.aspectRatioValue = Number(aspectRatio);
+        }
+      },
 
-        handleFileSelect(event) {
-          const file = event.target.files[0];
-          if (!file) return;
+      selectFile() {
+        this.$refs.fileInput.click();
+      },
 
-          this.error = '';
+      handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
 
-          if (file.size > 5 * 1024 * 1024) {
-            this.error = 'File size exceeds 5MB limit';
-            event.target.value = '';
-            return;
-          }
+        this.error = '';
 
-          const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-          if (!validTypes.includes(file.type)) {
-            this.error = 'Invalid file type. Please use JPG, PNG, GIF, or WebP images.';
-            event.target.value = '';
-            return;
-          }
+        const currentFile = file;
+        this.$refs.fileInput.value = '';
 
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-              if (img.width < minWidth || img.height < minHeight) {
-                this.error = `Image dimensions (${img.width}x${img.height}px) too small. Minimum size is ${minWidth}x${minHeight}px`;
-                event.target.value = '';
-                return;
-              }
+        if (currentFile.size > 5 * 1024 * 1024) {
+          this.error = 'File size exceeds 5MB limit';
+          return;
+        }
 
-              if (img.width > maxWidth || img.height > maxHeight) {
-                this.error = `Image dimensions (${img.width}x${img.height}px) too large. Maximum size is ${maxWidth}x${maxHeight}px`;
-                event.target.value = '';
-                return;
-              }
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!validTypes.includes(currentFile.type)) {
+          this.error = 'Invalid file type. Please use JPG, PNG, GIF, or WebP images.';
+          return;
+        }
 
-              this.$refs.cropperImage.src = e.target.result;
-              this.openCropModal();
-            };
-            img.src = e.target.result;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            if (img.width < this.minWidth || img.height < this.minHeight) {
+              this.error = `Image dimensions (${img.width}x${img.height}px) too small. Minimum size is ${this.minWidth}x${this.minHeight}px`;
+              return;
+            }
+
+            if (img.width > this.maxWidth || img.height > this.maxHeight) {
+              this.error = `Image dimensions (${img.width}x${img.height}px) too large. Maximum size is ${this.maxWidth}x${this.maxHeight}px`;
+              return;
+            }
+
+            this.tempImageData = e.target.result;
+            this.openCropModal();
           };
-          reader.readAsDataURL(file);
-        },
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(currentFile);
+      },
 
-        openCropModal() {
-          this.showModal = true;
-          this.$nextTick(() => {
-            this.initCropper();
-          });
-        },
-
-        initCropper() {
-          if (this.cropper) {
-            this.cropper.destroy();
+      openCropModal() {
+        if (!this.tempImageData) {
+          if (!this.preview || this.preview === this.initialSrc) {
+            this.error = "No image selected for cropping";
+            return;
           }
+          this.tempImageData = this.preview;
+        }
 
+        this.showModal = true;
+        this.$nextTick(() => {
+          if (this.$refs.cropperImage) {
+            this.$refs.cropperImage.src = this.tempImageData;
+            this.initCropper();
+          }
+        });
+      },
+
+      initCropper() {
+        this.destroyCropper();
+
+        try {
           this.cropper = new Cropper(this.$refs.cropperImage, {
             viewMode: 1,
             aspectRatio: this.aspectRatioValue,
@@ -231,22 +249,30 @@
               let width = event.detail.width;
               let height = event.detail.height;
 
-              if (width < minWidth || height < minHeight) {
+              if (width < this.minWidth || height < this.minHeight) {
                 this.cropper.setData({
-                  width: Math.max(minWidth, width),
-                  height: Math.max(minHeight, height),
+                  width: Math.max(this.minWidth, width),
+                  height: Math.max(this.minHeight, height),
                 });
               }
             },
           });
-        },
+        } catch (err) {
+          console.error('Failed to initialize cropper:', err);
+          this.error = 'Failed to initialize image cropper';
+        }
+      },
 
-        async applyCrop() {
-          if (!this.cropper) return;
+      async applyCrop() {
+        if (!this.cropper) {
+          this.error = 'Image cropper not initialized';
+          return;
+        }
 
+        try {
           const canvas = this.cropper.getCroppedCanvas({
-            maxWidth: maxWidth,
-            maxHeight: maxHeight,
+            maxWidth: this.maxWidth,
+            maxHeight: this.maxHeight,
             fillColor: '#fff',
             imageSmoothingQuality: 'high',
           });
@@ -258,64 +284,74 @@
 
           const croppedData = canvas.toDataURL('image/jpeg', 0.8);
 
-          if (uploadUrl) {
+          if (this.uploadUrl) {
             await this.uploadImage(croppedData);
           } else {
             this.preview = croppedData;
             this.croppedImage = croppedData;
-          }
-
-          this.showModal = false;
-          this.destroyCropper();
-        },
-
-        async uploadImage(imageData) {
-          try {
-            const response = await fetch(uploadUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
-              },
-              body: JSON.stringify({image: imageData})
-            });
-
-            if (!response.ok) {
-              throw new Error('Upload failed');
-            }
-
-            const data = await response.json();
-            this.preview = data.url;
-            this.croppedImage = data.path || data.url;
 
             this.$dispatch('image-cropped', {
               name: this.name,
-              url: data.url,
-              path: data.path || data.url
+              data: croppedData
             });
-
-          } catch (error) {
-            console.error('Upload failed:', error);
-            this.error = 'Failed to upload image. Please try again.';
           }
-        },
 
-        cancelCrop() {
           this.showModal = false;
           this.destroyCropper();
-        },
-
-        destroyCropper() {
-          if (this.cropper) {
-            this.cropper.destroy();
-            this.cropper = null;
-          }
+          this.tempImageData = null;
+        } catch (err) {
+          console.error('Failed to crop image:', err);
+          this.error = 'Failed to crop image';
         }
-      }));
-    });
-  </script>
-@endpushonce
+      },
 
-@pushonce('styles')
-  <link rel="stylesheet" href="{{ asset('vendor/verdant/css/cropper.css') }}">
-@endpushonce
+      async uploadImage(imageData) {
+        try {
+          const response = await fetch(this.uploadUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': this.csrfToken
+            },
+            body: JSON.stringify({image: imageData})
+          });
+
+          if (!response.ok) {
+            throw new Error('Upload failed');
+          }
+
+          const data = await response.json();
+          this.preview = data.url;
+          this.croppedImage = data.path || data.url;
+
+          this.$dispatch('image-cropped', {
+            name: this.name,
+            url: data.url,
+            path: data.path || data.url
+          });
+
+        } catch (error) {
+          console.error('Upload failed:', error);
+          this.error = 'Failed to upload image. Please try again.';
+        }
+      },
+
+      cancelCrop() {
+        this.showModal = false;
+        this.destroyCropper();
+        this.tempImageData = null;
+      },
+
+      destroyCropper() {
+        if (this.cropper) {
+          try {
+            this.cropper.destroy();
+          } catch (err) {
+            console.error('Error destroying cropper:', err);
+          }
+          this.cropper = null;
+        }
+      }
+    }));
+  });
+</script>

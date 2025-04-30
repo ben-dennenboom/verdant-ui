@@ -42,29 +42,27 @@
   </x-v-modal>
 </div>
 
-@pushonce('scripts')
-  <script>
-    function resetFilterForm() {
-      const form = document.getElementById('{{ $id }}-form');
+<script>
+  function resetFilterForm() {
+    const form = document.getElementById('{{ $id }}-form');
 
-      form.querySelectorAll('input[type="text"], input[type="password"], input[type="file"], select, textarea')
-          .forEach(element => element.value = '');
+    form.querySelectorAll('input[type="text"], input[type="password"], input[type="file"], select, textarea')
+        .forEach(element => element.value = '');
 
-      form.querySelectorAll('input[type="checkbox"], input[type="radio"]')
-          .forEach(element => element.checked = false);
+    form.querySelectorAll('input[type="checkbox"], input[type="radio"]')
+        .forEach(element => element.checked = false);
 
-      form.querySelectorAll('select').forEach(select => {
-        select.value = '';
-        if (select.classList.contains('selectpicker')) {
-          if (typeof $(select).selectpicker === 'function') {
-            $(select).selectpicker('refresh');
-          }
+    form.querySelectorAll('select').forEach(select => {
+      select.value = '';
+      if (select.classList.contains('selectpicker')) {
+        if (typeof $(select).selectpicker === 'function') {
+          $(select).selectpicker('refresh');
         }
-      });
-    }
+      }
+    });
+  }
 
-    function clearAllFilters() {
-      window.location.href = window.location.pathname + '?reset_filter';
-    }
-  </script>
-@endpushonce
+  function clearAllFilters() {
+    window.location.href = window.location.pathname + '?reset_filter';
+  }
+</script>

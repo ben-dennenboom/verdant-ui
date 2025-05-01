@@ -60,7 +60,7 @@
   <div x-show="error" class="v-text-red-600 v-text-sm v-mb-2" x-text="error"></div>
 
   <div class="v-flex v-flex-col v-mb-4 v-gap-4">
-    <div x-show="preview" class="v-max-w-md v-border v-border-secondary-300 v-rounded">
+    <div x-show="preview" class="v-max-w-[300px] v-border v-border-secondary-300 v-rounded">
       <img :src="preview" alt="Preview" class="v-w-full v-h-auto v-max-h-64 v-object-contain v-rounded">
     </div>
 

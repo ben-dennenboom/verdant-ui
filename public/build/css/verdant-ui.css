@@ -318,11 +318,11 @@
 .v-max-w-4xl {
   max-width: 56rem;
 }
+.v-max-w-\[300px\] {
+  max-width: 300px;
+}
 .v-max-w-full {
   max-width: 100%;
-}
-.v-max-w-md {
-  max-width: 28rem;
 }
 .v-flex-1 {
   flex: 1 1 0%;

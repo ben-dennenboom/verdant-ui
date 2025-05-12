@@ -74,8 +74,8 @@
         <i class="fa-solid fa-list-ol"></i>
       </button>
       <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300"></div>
-      <button type="button" @click="pasteWithoutFormat"
-              :class="{'v-bg-gray-200': isActive('insertOrderedList') }"
+      <button type="button" @click="pasteWithoutFormat()"
+              :class="{'v-bg-gray-200': isActive('pasteWithoutFormat') }"
               class="v-p-1 v-ml-1 hover:v-bg-gray-200">
         <i class="fa-solid fa-paste"></i>
       </button>

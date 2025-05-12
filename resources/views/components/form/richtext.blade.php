@@ -138,8 +138,8 @@
       },
 
       pasteWithoutFormat() {
-console.log('paste')
-        const clipboardData = event.clipboardData || window.clipboardData;
+        console.log('paste')
+        const clipboardData = window.clipboardData;
 
         console.log(clipboardData)
         if (!clipboardData) {

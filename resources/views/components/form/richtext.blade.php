@@ -139,7 +139,7 @@
 
       pasteWithoutFormat() {
         console.log('paste')
-        const clipboardData = window.clipboardData;
+          const clipboardData = event.clipboardData || window.clipboardData; // Use event.clipboardData for modern browsers
 
         console.log(clipboardData)
         if (!clipboardData) {

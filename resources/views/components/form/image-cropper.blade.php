@@ -10,6 +10,7 @@
     'required' => false,
     'uploadUrl' => null,
     'maxScale' => 512,
+    'disableCrop' => false,
 ])
 
 <div class="v-mb-4"
@@ -24,7 +25,8 @@
         uploadUrl: '{{ $uploadUrl }}',
         required: {{ $required ? 'true' : 'false' }},
         csrfToken: '{{ csrf_token() }}',
-        maxScale: {{ $maxScale }}
+        maxScale: {{ $maxScale }},
+        disableCrop: {{ $disableCrop ? 'true' : 'false' }},
      })">
 
   @if($label)
@@ -76,7 +78,7 @@
       </x-v-button.secondary>
 
       <x-v-button.light
-              x-show="preview && preview !== initialSrc"
+              x-show="preview && preview !== initialSrc && disableCrop === false"
               type="button"
               @click="openCropModal"
               icon="crop">
@@ -151,6 +153,7 @@
       required: config.required || false,
       maxScale: config.maxScale !== undefined ? config.maxScale : 512,
       tempImageData: null,
+      disableCrop: config.disableCrop || false,
 
       init() {
         const aspectRatio = config.aspectRatio || null;
@@ -203,7 +206,44 @@
             }
 
             this.tempImageData = e.target.result;
-            this.openCropModal();
+            if (this.disableCrop) {
+              if (this.maxScale > 0 && (img.width > this.maxScale || img.height > this.maxScale)) {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                let newWidth, newHeight;
+                if (img.width > img.height) {
+                  newWidth = this.maxScale;
+                  newHeight = Math.round(img.height * this.maxScale / img.width);
+                } else {
+                  newHeight = this.maxScale;
+                  newWidth = Math.round(img.width * this.maxScale / img.height);
+                }
+
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+                ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, newWidth, newHeight);
+
+                const scaledImage = canvas.toDataURL('image/jpeg', 0.85);
+                this.preview = scaledImage;
+                this.croppedImage = scaledImage;
+
+                this.$dispatch('image-cropped', {
+                  name: this.name,
+                  data: scaledImage
+                });
+              } else {
+                this.preview = e.target.result;
+                this.croppedImage = e.target.result;
+
+                this.$dispatch('image-cropped', {
+                  name: this.name,
+                  data: e.target.result
+                });
+              }
+            } else {
+              this.openCropModal();
+            }
           };
           img.src = e.target.result;
         };

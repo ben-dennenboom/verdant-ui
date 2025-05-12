@@ -138,22 +138,26 @@
       },
 
       pasteWithoutFormat() {
-
+console.log('paste')
         const clipboardData = event.clipboardData || window.clipboardData;
 
+        console.log(clipboardData)
         if (!clipboardData) {
             return;
         }
 
         const plainText = clipboardData.getData('text/plain');
 
+        console.log(plainText)
         if(!plainText) {
           return;
         }
 
         document.execCommand('insertText', false, plainText);
+        console.log("ok")
         this.$refs.editor.focus();
         this.updateContent();
+        console.log("refresh?")
       },
 
       handleTab(e) {

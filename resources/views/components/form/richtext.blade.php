@@ -113,6 +113,8 @@
           this.$refs.editor.focus()
           this.$refs.editor.scrollIntoView({behavior: 'smooth', block: 'center'})
         }
+
+        this.$refs.editor.addEventListener('paste', this.handlePaste.bind(this));
       },
 
       toggleFormat(command) {
@@ -129,6 +131,15 @@
 
       isActive(command) {
         return document.queryCommandState(command)
+      },
+
+      handlePaste(event) {
+        event.preventDefault();
+
+        const clipboardData = event.clipboardData || window.clipboardData;
+        const plainText = clipboardData.getData('text/plain');
+
+        document.execCommand('insertText', false, plainText);
       },
 
       handleTab(e) {

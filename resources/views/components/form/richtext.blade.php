@@ -73,9 +73,11 @@
               class="v-p-1 v-ml-1 hover:v-bg-gray-200">
         <i class="fa-solid fa-list-ol"></i>
       </button>
+
       <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300"></div>
-      <button type="button" @click="removeStyle()"
-              :class="{'v-bg-gray-200': isActive('removeStyle') }"
+
+      <button type="button" @click="clearFormatting()"
+              title="Clear formatting"
               class="v-p-1 v-ml-1 hover:v-bg-gray-200">
         <i class="fa-solid fa-eraser"></i>
       </button>
@@ -97,70 +99,79 @@
   @enderror
 </div>
 
-<script>
-  document.addEventListener('alpine:init', () => {
-    Alpine.data('richText', (uniqueName) => ({
-      content: '',
-      uniqueName: uniqueName,
+@pushonce('scripts')
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('richText', (uniqueName) => ({
+        content: '',
+        uniqueName: uniqueName,
 
-      init() {
-        this.name = this.$el.getAttribute('data-name')
-        this.label = this.$el.getAttribute('data-label')
-        this.required = this.$el.hasAttribute('data-required')
-        this.error = this.$el.getAttribute('data-error')
+        init() {
+          this.name = this.$el.getAttribute('data-name')
+          this.label = this.$el.getAttribute('data-label')
+          this.required = this.$el.hasAttribute('data-required')
+          this.error = this.$el.getAttribute('data-error')
 
-        const value = this.$el.getAttribute('data-value')
-        if (value) {
-          this.$refs.editor.innerHTML = value
-          this.content = value
-        }
+          const value = this.$el.getAttribute('data-value')
+          if (value) {
+            this.$refs.editor.innerHTML = value
+            this.content = value
+          }
 
-        if (this.error) {
+          if (this.error) {
+            this.$refs.editor.focus()
+            this.$refs.editor.scrollIntoView({behavior: 'smooth', block: 'center'})
+          }
+        },
+
+        toggleFormat(command) {
+          document.execCommand(command, false, null)
           this.$refs.editor.focus()
-          this.$refs.editor.scrollIntoView({behavior: 'smooth', block: 'center'})
+          this.updateContent()
+        },
+
+        alignText(alignment) {
+          document.execCommand('justify' + alignment.charAt(0).toUpperCase() + alignment.slice(1))
+          this.$refs.editor.focus()
+          this.updateContent()
+        },
+
+        isActive(command) {
+          return document.queryCommandState(command)
+        },
+
+        handleTab(e) {
+          if (this.isActive('insertUnorderedList') || this.isActive('insertOrderedList')) {
+            document.execCommand('indent', false, null)
+          } else {
+            document.execCommand('insertHTML', false, '&emsp;')
+          }
+          this.updateContent()
+        },
+
+        clearFormatting() {
+          const plainText = this.$refs.editor.innerText || this.$refs.editor.textContent
+
+          this.$refs.editor.innerHTML = ''
+
+          if (plainText.trim()) {
+            this.$refs.editor.textContent = plainText
+          }
+
+          this.$refs.editor.focus()
+          this.updateContent()
+        },
+
+        updateContent() {
+          let newContent = this.$refs.editor.innerHTML.trim()
+          if (newContent.replace(/<[^>]*>|&nbsp;?/gm, '').trim() === '') {
+            newContent = ''
+          }
+
+          this.content = newContent
+          this.$dispatch('editor-updated', {content: newContent})
         }
-      },
-
-      toggleFormat(command) {
-        document.execCommand(command, false, null)
-        this.$refs.editor.focus()
-        this.updateContent()
-      },
-
-      alignText(alignment) {
-        document.execCommand('justify' + alignment.charAt(0).toUpperCase() + alignment.slice(1))
-        this.$refs.editor.focus()
-        this.updateContent()
-      },
-
-      isActive(command) {
-        return document.queryCommandState(command)
-      },
-
-      removeStyle() {
-        document.execCommand('removeFormat', false, null)
-        this.$refs.editor.focus()
-        this.updateContent()
-      },
-
-      handleTab(e) {
-        if (this.isActive('insertUnorderedList') || this.isActive('insertOrderedList')) {
-          document.execCommand('indent', false, null)
-        } else {
-          document.execCommand('insertHTML', false, '&emsp;')
-        }
-        this.updateContent()
-      },
-
-      updateContent() {
-        let newContent = this.$refs.editor.innerHTML.trim()
-        if (newContent.replace(/<[^>]*>|&nbsp;?/gm, '').trim() === '') {
-          newContent = ''
-        }
-
-        this.content = newContent
-        this.$dispatch('editor-updated', {content: newContent})
-      }
-    }))
-  })
-</script>
+      }))
+    })
+  </script>
+@endpushonce

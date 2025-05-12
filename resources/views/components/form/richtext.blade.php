@@ -73,6 +73,12 @@
               class="v-p-1 v-ml-1 hover:v-bg-gray-200">
         <i class="fa-solid fa-list-ol"></i>
       </button>
+      <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300"></div>
+      <button type="button" @click="pasteWithoutFormat"
+              :class="{'v-bg-gray-200': isActive('insertOrderedList') }"
+              class="v-p-1 v-ml-1 hover:v-bg-gray-200">
+        <i class="fa-solid fa-paste"></i>
+      </button>
     </div>
 
     <div x-ref="editor"
@@ -113,8 +119,6 @@
           this.$refs.editor.focus()
           this.$refs.editor.scrollIntoView({behavior: 'smooth', block: 'center'})
         }
-
-        this.$refs.editor.addEventListener('paste', this.handlePaste.bind(this));
       },
 
       toggleFormat(command) {
@@ -133,13 +137,23 @@
         return document.queryCommandState(command)
       },
 
-      handlePaste(event) {
-        event.preventDefault();
+      pasteWithoutFormat() {
 
         const clipboardData = event.clipboardData || window.clipboardData;
+
+        if (!clipboardData) {
+            return;
+        }
+
         const plainText = clipboardData.getData('text/plain');
 
+        if(!plainText) {
+          return;
+        }
+
         document.execCommand('insertText', false, plainText);
+        this.$refs.editor.focus();
+        this.updateContent();
       },
 
       handleTab(e) {

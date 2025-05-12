@@ -74,10 +74,10 @@
         <i class="fa-solid fa-list-ol"></i>
       </button>
       <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300"></div>
-      <button type="button" @click="pasteWithoutFormat()"
-              :class="{'v-bg-gray-200': isActive('pasteWithoutFormat') }"
+      <button type="button" @click="removeStyle()"
+              :class="{'v-bg-gray-200': isActive('removeStyle') }"
               class="v-p-1 v-ml-1 hover:v-bg-gray-200">
-        <i class="fa-solid fa-paste"></i>
+        <i class="fa-solid fa-eraser"></i>
       </button>
     </div>
 
@@ -137,27 +137,10 @@
         return document.queryCommandState(command)
       },
 
-      pasteWithoutFormat() {
-        console.log('paste')
-          const clipboardData = event.clipboardData || window.clipboardData; // Use event.clipboardData for modern browsers
-
-        console.log(clipboardData)
-        if (!clipboardData) {
-            return;
-        }
-
-        const plainText = clipboardData.getData('text/plain');
-
-        console.log(plainText)
-        if(!plainText) {
-          return;
-        }
-
-        document.execCommand('insertText', false, plainText);
-        console.log("ok")
-        this.$refs.editor.focus();
-        this.updateContent();
-        console.log("refresh?")
+      removeStyle() {
+        document.execCommand('removeFormat', false, null)
+        this.$refs.editor.focus()
+        this.updateContent()
       },
 
       handleTab(e) {

@@ -118,7 +118,7 @@
                        placeholder="Search...">
             </div>
 
-            <ul class="v-max-h-60 v-overflow-auto v-py-1">
+            <ul class="v-max-h-60 v-overflow-auto v-py-1 v-list-none">
                 <template x-for="(option, index) in filteredOptions()" :key="index">
                     <li @click="toggleOption(option)"
                         :class="{'v-bg-secondary-100': isSelected(option) }"

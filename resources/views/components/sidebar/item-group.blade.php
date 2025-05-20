@@ -23,7 +23,7 @@
     </button>
 
     <ul x-show="open"
-        class="v-ml-6 v-mt-1">
+        class="v-ml-6 v-mt-1 v-list-none">
         {{ $slot }}
     </ul>
 </div>

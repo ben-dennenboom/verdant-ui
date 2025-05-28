@@ -29,35 +29,65 @@ export default {
           900: '#1F2937',
         },
         primary: {
-          DEFAULT: '#0C5E82', // cc_blue
-          50: '#E6F6FC',
-          100: '#CCEDF9',
-          200: '#99DBF3',
-          300: '#66C9ED',
-          400: '#33B7E7',
-          500: '#139cd8',
-          600: '#107DAD',
-          700: '#139cd8', // Main blue color
-          800: '#0C5E82',
-          900: '#083F57',
+          DEFAULT: 'rgb(var(--color-primary) / <alpha-value>)',
+          50: 'rgb(var(--color-primary-50) / <alpha-value>)',
+          100: 'rgb(var(--color-primary-100) / <alpha-value>)',
+          200: 'rgb(var(--color-primary-200) / <alpha-value>)',
+          300: 'rgb(var(--color-primary-300) / <alpha-value>)',
+          400: 'rgb(var(--color-primary-400) / <alpha-value>)',
+          500: 'rgb(var(--color-primary-500) / <alpha-value>)',
+          600: 'rgb(var(--color-primary-600) / <alpha-value>)',
+          700: 'rgb(var(--color-primary-700) / <alpha-value>)',
+          800: 'rgb(var(--color-primary-800) / <alpha-value>)',
+          900: 'rgb(var(--color-primary-900) / <alpha-value>)',
         },
         secondary: {
-          DEFAULT: '#2d3441', // cc_gray
-          50: '#F7F8F9',
-          100: '#EFF1F3',
-          200: '#DFE2E7',
-          300: '#CFD4DB',
-          400: '#BFC6CF',
-          500: '#AFB8C3',
-          600: '#8E9CAD',
-          700: '#6D7F97',
-          800: '#4C6381',
-          900: '#2d3441', // Original cc_gray
+          DEFAULT: 'rgb(var(--color-secondary) / <alpha-value>)',
+          50: 'rgb(var(--color-secondary-50) / <alpha-value>)',
+          100: 'rgb(var(--color-secondary-100) / <alpha-value>)',
+          200: 'rgb(var(--color-secondary-200) / <alpha-value>)',
+          300: 'rgb(var(--color-secondary-300) / <alpha-value>)',
+          400: 'rgb(var(--color-secondary-400) / <alpha-value>)',
+          500: 'rgb(var(--color-secondary-500) / <alpha-value>)',
+          600: 'rgb(var(--color-secondary-600) / <alpha-value>)',
+          700: 'rgb(var(--color-secondary-700) / <alpha-value>)',
+          800: 'rgb(var(--color-secondary-800) / <alpha-value>)',
+          900: 'rgb(var(--color-secondary-900) / <alpha-value>)',
         },
       }
     }
   },
   plugins: [
+    function({ addBase, theme }) {
+      addBase({
+        ':root': {
+          '--color-primary': '12 94 130',
+          '--color-primary-50': '230 246 252',
+          '--color-primary-100': '204 237 249',
+          '--color-primary-200': '153 219 243',
+          '--color-primary-300': '102 201 237',
+          '--color-primary-400': '51 183 231',
+          '--color-primary-500': '19 156 216',
+          '--color-primary-600': '16 125 173',
+          '--color-primary-700': '19 156 216',
+          '--color-primary-800': '12 94 130',
+          '--color-primary-900': '8 63 87',
+
+          '--color-secondary': '45 52 65',
+          '--color-secondary-50': '247 248 249',
+          '--color-secondary-100': '239 241 243',
+          '--color-secondary-200': '223 226 231',
+          '--color-secondary-300': '207 212 219',
+          '--color-secondary-400': '191 198 207',
+          '--color-secondary-500': '175 184 195',
+          '--color-secondary-600': '142 156 173',
+          '--color-secondary-700': '109 127 151',
+          '--color-secondary-800': '76 99 129',
+          '--color-secondary-900': '45 52 65',
+        }
+      });
+    },
+
     function({ addComponents, theme }) {
       const formStyles = {
         '.v-form-input': {
@@ -167,6 +197,14 @@ export default {
           borderCollapse: 'collapse',
           borderColor: 'inherit',
           textIndent: '0',
+        },
+      });
+    },
+
+    function({ addBase, theme, config }) {
+      addBase({
+        '[class*="v-"]': {
+          border: '0 solid',
         },
       });
     },

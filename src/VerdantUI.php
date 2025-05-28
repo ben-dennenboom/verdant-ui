@@ -18,11 +18,13 @@ class VerdantUI
 
         $alpine = $includeAlpine ? "<script src=\"{$alpineJsPath}\" defer></script>" : "";
         $fontawesome = $includeFontawesome ? "<link rel=\"stylesheet\" href=\"{$fontAwesomePath}\">" : "";
+        $customColors = self::getCustomColorsCSS();
 
         return <<<HTML
         {$fontawesome}
         <link rel="stylesheet" href="{$verdantCssPath}">
         <link rel="stylesheet" href="{$cropperCssPath}">
+        <style>{$customColors}</style>
         {$alpine}
         <script src="{$cropperJsPath}" defer></script>
         <script src="{$verdantJsPath}" defer></script>
@@ -30,6 +32,53 @@ class VerdantUI
             window.verdantPrefix = "v-"
         </script>
         HTML;
+    }
+
+    private static function getCustomColorsCSS(): string
+    {
+        $primaryColors = config('verdant.theme.colors.primary', []);
+        $secondaryColors = config('verdant.theme.colors.secondary', []);
+
+        if (empty($primaryColors) && empty($secondaryColors)) {
+            return '';
+        }
+
+        $css = ':root {';
+
+        if (!empty($primaryColors)) {
+            foreach ($primaryColors as $shade => $color) {
+                $rgb = self::hexToRgb($color);
+                $varName = $shade === 'default' ? '--color-primary' : "--color-primary-{$shade}";
+                $css .= "{$varName}: {$rgb};";
+            }
+        }
+
+        if (!empty($secondaryColors)) {
+            foreach ($secondaryColors as $shade => $color) {
+                $rgb = self::hexToRgb($color);
+                $varName = $shade === 'default' ? '--color-secondary' : "--color-secondary-{$shade}";
+                $css .= "{$varName}: {$rgb};";
+            }
+        }
+
+        $css .= '}';
+
+        return $css;
+    }
+
+    private static function hexToRgb(string $hex): string
+    {
+        $hex = ltrim($hex, '#');
+
+        if (strlen($hex) === 3) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        return "{$r} {$g} {$b}";
     }
 
     private static function assetPath($path)

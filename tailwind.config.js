@@ -199,15 +199,7 @@ export default {
           textIndent: '0',
         },
       });
-    },
-
-    function({ addBase, theme, config }) {
-      addBase({
-        '[class*="v-"]': {
-          border: '0 solid',
-        },
-      });
-    },
+    }
   ],
   corePlugins: {
     preflight: false,

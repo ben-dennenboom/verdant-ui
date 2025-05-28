@@ -128,9 +128,6 @@
   --color-secondary-800: 76 99 129;
   --color-secondary-900: 45 52 65;
 }
-[class*="v-"] {
-  border: 0 solid;
-}
 .v-fixed {
   position: fixed;
 }

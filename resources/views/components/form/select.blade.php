@@ -2,7 +2,7 @@
 
 @php
     $cleanName = str_replace(['[]', '[', ']'], ['', '.', ''], $name);
-    $selected = old($cleanName, $selected);
+    $fallbackSelected = old($cleanName, $selected);
     $id = uniqid();
 
     $labels = [];
@@ -11,13 +11,24 @@
             $labels[$option->{$valueKey}] = $labelKey($option);
         }
     }
+
+    $xModelVar = $attributes->get('x-model');
 @endphp
 
 <div class="v-mb-4"
      x-data="{
-        open: false,
+        isOpen: false,
         search: '',
-        selected: @js($multiple ? (is_array($selected) ? $selected : []) : $selected),
+        @if($xModelVar)
+        get selected() {
+            return {{ $xModelVar }};
+        },
+        set selected(value) {
+            {{ $xModelVar }} = value;
+        },
+        @else
+        selected: @js($multiple ? (is_array($fallbackSelected) ? $fallbackSelected : []) : $fallbackSelected),
+        @endif
         options: @js($options),
         labels: @js($labels),
         multiple: @js($multiple),
@@ -49,13 +60,13 @@
                 const value = this.getValue(option);
                 const index = this.selected.indexOf(value);
                 if (index === -1) {
-                    this.selected.push(value);
+                    this.selected = [...this.selected, value];
                 } else {
-                    this.selected.splice(index, 1);
+                    this.selected = this.selected.filter((_, i) => i !== index);
                 }
             } else {
                 this.selected = this.getValue(option);
-                this.open = false;
+                this.isOpen = false;
             }
         },
         reset() {
@@ -79,7 +90,7 @@
             return [...labels.slice(0, 5), `+${labels.length - 5} more`];
         }
     }"
-     x-init="$watch('open', value => { if (!value) search = ''; })"
+     x-init="$watch('isOpen', value => { if (!value) search = ''; })"
 >
     <div class="v-flex v-items-center v-justify-between">
         <label for="{{ $id }}" class="v-block v-font-medium v-text-gray-700">{{ $label }}</label>
@@ -88,7 +99,7 @@
 
     <div class="v-relative v-mt-1">
         <button type="button"
-                @click="open = !open"
+                @click="isOpen = !isOpen"
                 class="v-bg-white v-relative v-w-full v-border v-border-secondary-300 v-shadow-sm v-px-4 v-py-2 v-text-left focus:v-ring-secondary-500 focus:v-border-secondary-500"
                 tabindex="0">
             <div x-show="!selectedLabels().length" class="v-text-gray-500">
@@ -109,11 +120,11 @@
             </span>
         </button>
 
-        <div x-show="open" @click.away="open = false"
+        <div x-show="isOpen" @click.away="isOpen = false"
              class="v-absolute v-z-10 v-mt-1 v-w-full v-bg-white v-border v-border-secondary-300 v-shadow-sm">
             <div class="v-p-2">
                 <input type="text" x-model="search" x-ref="searchInput"
-                       x-init="$watch('open', value => { if (value) $nextTick(() => $refs.searchInput.focus()); })"
+                       x-init="$watch('isOpen', value => { if (value) $nextTick(() => $refs.searchInput.focus()); })"
                        class="v-w-full v-border v-border-secondary-300 v-shadow-sm v-px-3 v-py-2 focus:v-ring-secondary-500 focus:v-border-secondary-500"
                        placeholder="Search...">
             </div>

@@ -116,12 +116,12 @@
           <span x-text="getMonthName()"></span> <span x-text="getYear()"></span>
         </h2>
         <div class="v-inline-flex v-items-center v-rounded-lg v-border v-border-gray-200 v-overflow-hidden">
-          <button @click="previousMonth()" class="v-p-2 v-text-gray-500 hover:v-text-gray-700 hover:v-bg-gray-50">
+          <button type="button" @click="previousMonth()" class="v-p-2 v-text-gray-500 hover:v-text-gray-700 hover:v-bg-gray-50">
             <svg class="v-w-5 v-h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
           </button>
-          <button @click="nextMonth()" class="v-p-2 v-text-gray-500 hover:v-text-gray-700 hover:v-bg-gray-50">
+          <button type="button" @click="nextMonth()" class="v-p-2 v-text-gray-500 hover:v-text-gray-700 hover:v-bg-gray-50">
             <svg class="v-w-5 v-h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
@@ -198,7 +198,7 @@
          class="v-bg-white v-rounded-lg v-border v-border-gray-200 v-shadow-sm v-overflow-hidden v-h-fit v-sticky v-top-4">
       <div class="v-p-5 v-border-b v-border-gray-100 v-flex v-justify-between v-items-center">
         <span class="v-text-lg v-font-semibold v-text-gray-900" x-text="formatDate(selectedDay)"></span>
-        <button @click="selectedDay = null; selectedSlot = null" class="v-text-gray-400 hover:v-text-gray-600"
+        <button type="button" @click="selectedDay = null; selectedSlot = null" class="v-text-gray-400 hover:v-text-gray-600"
                 title="Close panel">
           <svg class="v-w-5 v-h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>

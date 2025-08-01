@@ -1,0 +1,37 @@
+services:
+  php:
+    build:
+      context: ..
+      dockerfile: demo/Dockerfile
+    container_name: verdant_php
+    working_dir: /var/www/demo
+    volumes:
+      - ../:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - verdant
+
+  nginx:
+    image: nginx:alpine
+    container_name: verdant_nginx
+    ports:
+      - "89:80"
+    volumes:
+      - ../:/var/www
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - verdant
+
+  mailhog:
+    image: jcalonso/mailhog:latest
+    platform: linux/arm64
+    container_name: verdant_mailhog
+    ports:
+      - "1027:1025"
+      - "8027:8025"
+    networks:
+      - verdant
+
+networks:
+  verdant:

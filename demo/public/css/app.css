@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
+
+body {
+  font-family: 'Karla', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.demo-gradient {
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+}

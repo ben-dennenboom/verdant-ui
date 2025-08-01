@@ -75,29 +75,31 @@
     getCalendarDays() {
         const year = this.currentDate.getFullYear();
         const month = this.currentDate.getMonth();
-        
+
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
-        
+
         const startCalendar = new Date(firstDay);
         startCalendar.setDate(startCalendar.getDate() - (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1));
-        
+
         const endCalendar = new Date(lastDay);
         endCalendar.setDate(endCalendar.getDate() + (7 - (lastDay.getDay() === 0 ? 7 : lastDay.getDay())));
-        
+
         const days = [];
         const current = new Date(startCalendar);
-        
+
         while (current <= endCalendar) {
             days.push({
-                date: current.toISOString().split('T')[0],
+                date: current.getFullYear() + '-' +
+                      String(current.getMonth() + 1).padStart(2, '0') + '-' +
+                      String(current.getDate()).padStart(2, '0'),
                 day: current.getDate(),
                 isCurrentMonth: current.getMonth() === month,
                 isToday: current.toDateString() === new Date().toDateString()
             });
             current.setDate(current.getDate() + 1);
         }
-        
+
         return days;
     }
 }">

@@ -106,13 +106,8 @@
 
   <input type="hidden" name="{{ $name }}"/>
 
-  <div class="v-mb-4 v-p-3 v-bg-gray-50 v-rounded-lg v-border">
-    <div class="v-text-sm v-font-medium v-text-gray-700 v-mb-1">Selected Timeslot:</div>
-    <div class="v-text-lg v-font-semibold v-text-gray-900" x-text="getSelectedSlotDisplay()"></div>
-  </div>
-
-  <div :class="selectedDay ? 'v-grid v-grid-cols-1 lg:v-grid-cols-3 v-gap-6' : 'v-block'">
-    <div class="lg:v-col-span-2 v-shadow-sm v-border v-border-gray-200 v-bg-white v-rounded-lg v-overflow-hidden">
+  <div class="v-grid v-grid-cols-1 md:v-grid-cols-2 v-gap-6">
+    <div class="v-order-2 md:v-order-1 v-shadow-sm v-border v-border-gray-200 v-bg-white v-rounded-lg v-overflow-hidden">
       <div class="v-flex v-items-center v-justify-between v-p-5 v-border-b v-border-gray-100">
         <h2 class="v-text-2xl v-font-medium v-text-gray-900">
           <span x-text="getMonthName()"></span> <span x-text="getYear()"></span>
@@ -194,62 +189,66 @@
       </div>
     </div>
 
-    <div x-show="selectedDay" x-transition:enter="v-transition v-ease-out v-duration-300"
-         x-transition:enter-start="v-opacity-0 v-transform v-translate-x-4"
-         x-transition:enter-end="v-opacity-100 v-transform v-translate-x-0"
-         class="v-bg-white v-rounded-lg v-border v-border-gray-200 v-shadow-sm v-overflow-hidden v-h-fit v-sticky v-top-4">
-      <div class="v-p-5 v-border-b v-border-gray-100 v-flex v-justify-between v-items-center">
-        <span class="v-text-lg v-font-semibold v-text-gray-900" x-text="formatDate(selectedDay)"></span>
-        <button type="button" @click="selectedDay = null; selectedSlot = null" class="v-text-gray-400 hover:v-text-gray-600"
-                title="Close panel">
-          <svg class="v-w-5 v-h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
+    <div class="v-order-1 md:v-order-2 v-space-y-4">
+      <div class="v-p-3 v-bg-gray-50 v-rounded-lg v-border">
+        <div class="v-text-sm v-font-medium v-text-gray-700 v-mb-1">Selected Timeslot:</div>
+        <div class="v-text-lg v-font-semibold v-text-gray-900" x-text="getSelectedSlotDisplay()"></div>
       </div>
 
-      <div class="v-p-5">
-        <template x-if="getTimeslots(selectedDay).length === 0">
-          <div class="v-py-4 v-text-center">
-            <p class="v-text-gray-500">No available timeslots for this day.</p>
-          </div>
-        </template>
+      <div x-show="selectedDay"
+           class="v-bg-white v-rounded-lg v-border v-border-gray-200 v-shadow-sm v-overflow-hidden">
+        <div class="v-p-5 v-border-b v-border-gray-100 v-flex v-justify-between v-items-center">
+          <span class="v-text-lg v-font-semibold v-text-gray-900" x-text="formatDate(selectedDay)"></span>
+          <button type="button" @click="selectedDay = null; selectedSlot = null" class="v-text-gray-400 hover:v-text-gray-600">
+            <svg class="v-w-5 v-h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
 
-        <div class="v-space-y-3">
-          <template x-for="(slot, index) in getTimeslots(selectedDay)" :key="index">
-            <button
-                    type="button"
-                    @click="selectSlot(slot)"
-                    class="v-w-full v-p-3 v-text-left v-rounded-lg v-border v-transition-all v-duration-200"
-                    :class="{
-                'v-border-blue-500 v-bg-blue-50 v-text-blue-900': selectedSlot && selectedSlot.id === slot.id,
-                'v-border-gray-200 v-bg-white hover:v-border-gray-300 hover:v-bg-gray-50 v-text-gray-900': !selectedSlot || selectedSlot.id !== slot.id
-              }">
-              <div class="v-flex v-items-center v-justify-between">
-                <div class="v-flex v-items-center v-space-x-3">
-                  <div class="v-flex-shrink-0">
-                    <svg class="v-w-5 v-h-5 v-text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <div class="v-font-medium" x-text="slot.time"></div>
-                    <div class="v-text-sm v-text-gray-500" x-text="slot.duration || '30 minutes'"></div>
-                  </div>
-                </div>
-                <div class="v-flex-shrink-0">
-                  <template x-if="selectedSlot && selectedSlot.id === slot.id">
-                    <svg class="v-w-5 v-h-5 v-text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                  </template>
-                </div>
-              </div>
-            </button>
+        <div class="v-p-5">
+          <template x-if="getTimeslots(selectedDay).length === 0">
+            <div class="v-py-4 v-text-center">
+              <p class="v-text-gray-500">No available timeslots for this day.</p>
+            </div>
           </template>
+
+          <div class="v-space-y-3">
+            <template x-for="(slot, index) in getTimeslots(selectedDay)" :key="index">
+              <button
+                      type="button"
+                      @click="selectSlot(slot)"
+                      class="v-w-full v-p-3 v-text-left v-rounded-lg v-border v-transition-all v-duration-200"
+                      :class="{
+                  'v-border-blue-500 v-bg-blue-50 v-text-blue-900': selectedSlot && selectedSlot.id === slot.id,
+                  'v-border-gray-200 v-bg-white hover:v-border-gray-300 hover:v-bg-gray-50 v-text-gray-900': !selectedSlot || selectedSlot.id !== slot.id
+                }">
+                <div class="v-flex v-items-center v-justify-between">
+                  <div class="v-flex v-items-center v-space-x-3">
+                    <div class="v-flex-shrink-0">
+                      <svg class="v-w-5 v-h-5 v-text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="v-font-medium" x-text="slot.time"></div>
+                      <div class="v-text-sm v-text-gray-500" x-text="slot.duration || '30 minutes'"></div>
+                    </div>
+                  </div>
+                  <div class="v-flex-shrink-0">
+                    <template x-if="selectedSlot && selectedSlot.id === slot.id">
+                      <svg class="v-w-5 v-h-5 v-text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                              clip-rule="evenodd"></path>
+                      </svg>
+                    </template>
+                  </div>
+                </div>
+              </button>
+            </template>
+          </div>
         </div>
       </div>
     </div>

@@ -62,8 +62,8 @@
   <div x-show="error" class="v-text-red-600 v-text-sm v-mb-2" x-text="error"></div>
 
   <div class="v-flex v-flex-col v-mb-4 v-gap-4">
-    <div x-show="preview" class="v-max-w-[300px] v-border v-border-secondary-300 v-rounded">
-      <img :src="preview" alt="Preview" class="v-w-full v-h-auto v-max-h-64 v-object-contain v-rounded">
+    <div x-show="preview" class="v-w-fit v-max-w-[300px] v-border v-border-secondary-300 v-rounded v-overflow-hidden">
+      <img :src="preview" alt="Preview" class="v-max-w-full v-max-h-64 v-h-auto v-object-contain v-rounded">
     </div>
 
     <div class="v-flex v-gap-2">
@@ -224,7 +224,7 @@
                 canvas.height = newHeight;
                 ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, newWidth, newHeight);
 
-                const scaledImage = canvas.toDataURL('image/jpeg', 0.85);
+                const scaledImage = canvas.toDataURL('image/png');
                 this.preview = scaledImage;
                 this.croppedImage = scaledImage;
 
@@ -310,7 +310,6 @@
           const canvas = this.cropper.getCroppedCanvas({
             maxWidth: this.maxWidth,
             maxHeight: this.maxHeight,
-            fillColor: '#fff',
             imageSmoothingQuality: 'high',
           });
 
@@ -338,7 +337,7 @@
             ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, newWidth, newHeight);
           }
 
-          const croppedData = finalCanvas.toDataURL('image/jpeg', 0.85);
+          const croppedData = finalCanvas.toDataURL('image/png');
 
           if (this.uploadUrl) {
             await this.uploadImage(croppedData);

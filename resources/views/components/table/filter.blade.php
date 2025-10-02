@@ -8,7 +8,7 @@
 <x-v-button.light @click="$dispatch('open-modal', '{{ $id }}')" icon="filter" outline>
   Filter
   @if(!empty($filter))
-    <span class="v-ml-2">{{ count($filter) }}</span>
+    <span class="v-ml-2">{{ count(array_filter($filter, fn($v) => is_null($v) === false )) }}</span>
   @endif
 </x-v-button.light>
 
@@ -46,17 +46,23 @@
   function resetFilterForm() {
     const form = document.getElementById('{{ $id }}-form');
 
-    form.querySelectorAll('input[type="text"], input[type="password"], input[type="file"], select, textarea')
-        .forEach(element => element.value = '');
+    form.querySelectorAll('input[type="text"], input[type="password"], input[type="file"], input[type="email"], input[type="number"], input[type="date"], input[type="datetime-local"], textarea')
+        .forEach(element => {
+          element.value = '';
+          element.dispatchEvent(new Event('input', {bubbles: true}));
+        });
 
     form.querySelectorAll('input[type="checkbox"], input[type="radio"]')
-        .forEach(element => element.checked = false);
+        .forEach(element => {
+          element.checked = false;
+          element.dispatchEvent(new Event('change', {bubbles: true}));
+        });
 
-    form.querySelectorAll('select').forEach(select => {
-      select.value = '';
-      if (select.classList.contains('selectpicker')) {
-        if (typeof $(select).selectpicker === 'function') {
-          $(select).selectpicker('refresh');
+    form.querySelectorAll('[x-data]').forEach(element => {
+      if (element._x_dataStack && element._x_dataStack.length > 0) {
+        const data = element._x_dataStack[0];
+        if (typeof data.reset === 'function') {
+          data.reset();
         }
       }
     });

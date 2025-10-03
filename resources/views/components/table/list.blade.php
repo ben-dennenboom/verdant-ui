@@ -8,7 +8,7 @@
     }
 }"
      x-init="$nextTick(() => checkScroll()); window.addEventListener('resize', () => checkScroll())"
-     class="v-rounded v-bg-white v-border v-border-gray-200 {{ $class }}">
+     class="v-rounded v-bg-surface v-border v-border-border {{ $class }}">
 
     <div x-show="hasScroll"
          x-transition:enter="v-transition v-ease-out v-duration-300"
@@ -25,11 +25,11 @@
         <div x-ref="tableWrapper"
              @scroll.throttle.50ms="$el.scrollLeft > 0 ? $el.classList.add('is-scrolled') : $el.classList.remove('is-scrolled')"
              class="v-overflow-x-auto">
-            <table class="v-min-w-full v-divide-y v-divide-gray-200">
-                <thead class="v-bg-gray-50">
+            <table class="v-min-w-full v-divide-y v-divide-border">
+                <thead class="v-bg-muted">
                 {{ $header }}
                 </thead>
-                <tbody class="v-bg-white v-divide-y v-divide-gray-200">
+                <tbody class="v-bg-surface v-divide-y v-divide-border">
                 {{ $slot }}
                 </tbody>
             </table>
@@ -37,7 +37,7 @@
     </div>
 
     @if(isset($pagination))
-        <div class="v-px-6 v-py-4 v-border-t v-border-gray-200">
+        <div class="v-px-6 v-py-4 v-border-t v-border-border">
             {{ $pagination }}
         </div>
     @endif

@@ -8,7 +8,7 @@
         <input type="{{ $type }}" name="{{ $name }}" id="{{ $name }}"
                value="{{ old($name, $value) }}"
             {{ $required ? 'required' : '' }}
-            {{ $attributes->merge(['class' => 'v-form-input v-rounded v-mt-1 v-block v-w-full v-shadow-sm sm:v-text-sm']) }}>
+            {{ $attributes->merge(['class' => 'v-form-input v-rounded v-mt-1 focus:v-ring-primary-500 focus:v-border-primary-500 v-block v-w-full v-shadow-sm sm:v-text-sm v-border-border']) }}>
         @error($name)
         <p class="v-mt-2 v-text-red-600">{{ $message }}</p>
         @enderror

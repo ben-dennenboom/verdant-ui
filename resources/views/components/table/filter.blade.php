@@ -7,7 +7,10 @@
 
 <x-v-button.light @click="$dispatch('open-modal', '{{ $id }}')" icon="filter" outline>
   Filter
-  @if(!empty($filter))
+  @php
+    $count = !empty($filter) ? count(array_filter($filter, fn($v) => is_null($v) === false )) : 0;
+  @endphp
+  @if($count > 0)
     <span class="v-ml-2">{{ count(array_filter($filter, fn($v) => is_null($v) === false )) }}</span>
   @endif
 </x-v-button.light>
@@ -34,7 +37,7 @@
         <x-v-button.light outline @click="$dispatch('close-modal', '{{ $id }}')">Cancel</x-v-button.light>
 
         <x-v-button.group align="right">
-          <x-v-button.warning outline @click="resetFilterForm()">Reset Filter</x-v-button.warning>
+          <x-v-button.danger outline @click="resetFilterForm()">Reset Filter</x-v-button.danger>
           <x-v-button.primary type="submit">Apply Filter</x-v-button.primary>
         </x-v-button.group>
       </div>

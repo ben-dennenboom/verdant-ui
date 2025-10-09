@@ -1429,6 +1429,11 @@
   color: rgb(var(--color-secondary-400) / var(--tw-text-opacity, 1));
 }
 
+.dark\:v-text-white:is([data-theme="dark"] *) {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
 .dark\:v-text-yellow-300:is([data-theme="dark"] *) {
   --tw-text-opacity: 1;
   color: rgb(253 224 71 / var(--tw-text-opacity, 1));
@@ -1502,6 +1507,11 @@
 .dark\:hover\:v-text-secondary-100:hover:is([data-theme="dark"] *) {
   --tw-text-opacity: 1;
   color: rgb(var(--color-secondary-100) / var(--tw-text-opacity, 1));
+}
+
+.dark\:hover\:v-text-white:hover:is([data-theme="dark"] *) {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
 @media (min-width: 640px) {

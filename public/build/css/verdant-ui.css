@@ -15744,6 +15744,66 @@
   color: rgb(156 163 175 / var(--tw-placeholder-opacity, 1));
 }
 
+.dark\:hover\:v-bg-gray-600:hover:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1));
+}
+
+.dark\:hover\:v-bg-gray-700:hover:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
+}
+
+.dark\:hover\:v-bg-gray-800:hover:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity, 1));
+}
+
+.dark\:hover\:v-bg-primary-600:hover:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--color-primary-600) / var(--tw-bg-opacity, 1));
+}
+
+.dark\:hover\:v-bg-primary-700:hover:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--color-primary-700) / var(--tw-bg-opacity, 1));
+}
+
+.dark\:hover\:v-bg-red-700:hover:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(185 28 28 / var(--tw-bg-opacity, 1));
+}
+
+.dark\:hover\:v-bg-secondary-600:hover:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--color-secondary-600) / var(--tw-bg-opacity, 1));
+}
+
+.dark\:hover\:v-bg-secondary-700:hover:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--color-secondary-700) / var(--tw-bg-opacity, 1));
+}
+
+.dark\:hover\:v-bg-yellow-600:hover:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(202 138 4 / var(--tw-bg-opacity, 1));
+}
+
+.dark\:hover\:v-text-gray-100:hover:is([data-theme="dark"] *) {
+  --tw-text-opacity: 1;
+  color: rgb(243 244 246 / var(--tw-text-opacity, 1));
+}
+
+.dark\:hover\:v-text-gray-300:hover:is([data-theme="dark"] *) {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity, 1));
+}
+
+.dark\:hover\:v-text-secondary-100:hover:is([data-theme="dark"] *) {
+  --tw-text-opacity: 1;
+  color: rgb(var(--color-secondary-100) / var(--tw-text-opacity, 1));
+}
+
 @media (min-width: 640px) {
   .sm\:v-mx-0 {
     margin-left: 0px;

@@ -9,7 +9,7 @@
   <a href="{{ $route }}"{{
           $attributes->merge(
             [
-                'class' => 'v-rounded v-flex v-items-center v-py-3 v-px-4 ' . ($active ? 'active v-bg-primary-700 v-dark:v-bg-primary-600 v-text-white hover:v-bg-primary-800 v-dark:hover:v-bg-primary-700 hover:v-text-white' : 'v-text-gray-600 v-dark:v-text-gray-300 hover:v-bg-gray-100 v-dark:hover:v-bg-gray-700 hover:v-text-gray-900 v-dark:hover:v-text-gray-100'),
+                'class' => 'v-rounded v-flex v-items-center v-py-3 v-px-4 ' . ($active ? 'active v-bg-primary-700 dark:v-bg-primary-600 v-text-white hover:v-bg-primary-800 dark:v-hover:v-bg-primary-700 hover:v-text-white' : 'v-text-gray-600 dark:v-text-gray-300 hover:v-bg-gray-100 dark:v-hover:v-bg-gray-700 hover:v-text-gray-900 dark:v-hover:v-text-gray-100'),
             ]
           )
     }}>

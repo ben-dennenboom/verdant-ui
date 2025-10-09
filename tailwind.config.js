@@ -14,6 +14,10 @@ export default {
     {
       pattern: /dark:v-(bg|text|border)-(red|green|blue|orange|yellow|gray|primary|secondary)-[1-9]00/,
     },
+    {
+      pattern: /dark:hover:v-(bg|text|border)-(red|green|blue|orange|yellow|gray|primary|secondary)-[1-9]00/,
+
+    },
   ],
   theme: {
     extend: {

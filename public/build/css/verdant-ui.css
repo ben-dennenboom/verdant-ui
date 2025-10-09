@@ -15769,6 +15769,11 @@
   background-color: rgb(var(--color-primary-700) / var(--tw-bg-opacity, 1));
 }
 
+.dark\:hover\:v-bg-red-600:hover:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
+}
+
 .dark\:hover\:v-bg-red-700:hover:is([data-theme="dark"] *) {
   --tw-bg-opacity: 1;
   background-color: rgb(185 28 28 / var(--tw-bg-opacity, 1));

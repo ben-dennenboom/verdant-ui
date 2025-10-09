@@ -22,7 +22,7 @@
     class="v-fixed v-inset-0 v-z-50"
     style="display: none;"
 >
-    <div class="v-absolute v-inset-0 v-bg-gray-500 dark:v-bg-gray-900 v-bg-opacity-75 dark:v-bg-opacity-80 v-transition-opacity"
+    <div class="v-absolute v-inset-0 v-bg-gray-700 dark:v-bg-gray-900 v-bg-opacity-75 dark:v-bg-opacity-80 v-transition-opacity"
          x-show="show"
          x-transition:enter="v-ease-out v-duration-300"
          x-transition:enter-start="v-opacity-0"

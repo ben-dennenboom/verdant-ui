@@ -8,26 +8,6 @@ export default {
     "./resources/**/*.js",
   ],
   safelist: [
-    // Basic v- prefixed classes
-    {
-      pattern: /v-(bg|text|border)-(red|green|blue|orange|yellow|gray|primary|secondary)-([1-9]00|50)/,
-    },
-    // Dark mode classes
-    {
-      pattern: /dark:v-(bg|text|border)-(red|green|blue|orange|yellow|gray|primary|secondary)-([1-9]00|50)/,
-    },
-    // Hover states
-    {
-      pattern: /hover:v-(bg|text|border)-(red|green|blue|orange|yellow|gray|primary|secondary)-([1-9]00|50)/,
-    },
-    // Dark hover states
-    {
-      pattern: /dark:hover:v-(bg|text|border)-(red|green|blue|orange|yellow|gray|primary|secondary)-([1-9]00|50)/,
-    },
-    // Focus states
-    {
-      pattern: /focus:v-(ring|border)-(red|green|blue|orange|yellow|gray|primary|secondary)-([1-9]00|50)/,
-    },
     // All button classes that are dynamically generated
     'v-bg-transparent',
     'v-border-transparent', 

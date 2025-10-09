@@ -17,7 +17,7 @@
          x-transition:leave="v-transition v-ease-in v-duration-200"
          x-transition:leave-start="v-opacity-100"
          x-transition:leave-end="v-opacity-0"
-         class="v-px-4 v-py-2 v-bg-primary-100 dark:v-bg-primary-800 v-border-b v-border-primary-100 dark:v-border-primary-700 v-text-sm v-text-primary-700 dark:v-text-primary-300 v-text-right">
+         class="v-px-4 v-py-2 v-bg-primary-100 dark:v-bg-primary-100 v-border-b v-border-primary-100 dark:v-border-primary-100 v-text-sm v-text-primary-700 dark:v-text-primary-700 v-text-right">
         <i class="fas fa-long-arrow-right v-mr-2"></i>
     </div>
 

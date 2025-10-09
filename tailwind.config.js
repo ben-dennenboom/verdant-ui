@@ -6,6 +6,7 @@ export default {
   content: [
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
+    "./safelist-classes.txt",
   ],
   safelist: [
     // All button classes that are dynamically generated

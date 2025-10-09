@@ -34,7 +34,7 @@
                     >
                         <input type="hidden" name="items[{{ $index }}][id]" value="{{ $item['id'] }}">
 
-                        <div class="v-cursor-move v-text-gray-400 dark:v-text-gray-500 hover:v-text-gray-600 dark:v-hover:v-text-gray-300">
+                        <div class="v-cursor-move v-text-gray-400 dark:v-text-gray-500 hover:v-text-gray-600 dark:hover:v-text-gray-300">
                             <i class="fas fa-grip-vertical"></i>
                         </div>
 
@@ -47,7 +47,7 @@
                                 <button
                                     type="button"
                                     onclick="this.closest('div[draggable]').previousElementSibling?.before(this.closest('div[draggable]'))"
-                                    class="v-text-gray-400 dark:v-text-gray-500 hover:v-text-gray-600 dark:v-hover:v-text-gray-300"
+                                    class="v-text-gray-400 dark:v-text-gray-500 hover:v-text-gray-600 dark:hover:v-text-gray-300"
                                 >
                                     <i class="fas fa-arrow-up"></i>
                                 </button>
@@ -57,7 +57,7 @@
                                 <button
                                     type="button"
                                     onclick="this.closest('div[draggable]').nextElementSibling?.after(this.closest('div[draggable]'))"
-                                    class="v-text-gray-400 dark:v-text-gray-500 hover:v-text-gray-600 dark:v-hover:v-text-gray-300"
+                                    class="v-text-gray-400 dark:v-text-gray-500 hover:v-text-gray-600 dark:hover:v-text-gray-300"
                                 >
                                     <i class="fas fa-arrow-down"></i>
                                 </button>

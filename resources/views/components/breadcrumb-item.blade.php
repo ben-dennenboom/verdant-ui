@@ -6,7 +6,7 @@
     @endif
 
     @if($route)
-        <a href="{{ $route }}" class="v-inline-flex v-text-sm v-font-medium v-text-gray-700 dark:v-text-gray-300 hover:v-text-gray-900 dark:v-hover:v-text-gray-100">
+        <a href="{{ $route }}" class="v-inline-flex v-text-sm v-font-medium v-text-gray-700 dark:v-text-gray-300 hover:v-text-gray-900 dark:hover:v-text-gray-100">
             {!! $label !!}
         </a>
     @else

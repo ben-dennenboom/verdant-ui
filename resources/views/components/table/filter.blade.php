@@ -25,7 +25,7 @@
     <form id="{{ $id }}-form" class="v-form v-auto-filter" method="get" action="{{ $route }}">
       <div class="sm:v-flex sm:v-items-start">
         <div class="v-w-full">
-          <h3 class="v-text-lg v-font-medium v-leading-6 v-text-gray-900" id="modal-title">
+          <h3 class="v-text-lg v-font-medium v-leading-6 v-text-gray-900 v-dark:v-text-gray-100" id="modal-title">
             {{ $title }}
           </h3>
           <div class="v-mt-4 v-mb-4 v-space-y-4">

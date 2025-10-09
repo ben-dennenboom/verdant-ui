@@ -1,16 +1,16 @@
 @props(['last' => false, 'route' => null, 'label' => '', 'icon' => null])
 
-<li class="v-flex v-items-center v-m-0 v-text-gray-700">
+<li class="v-flex v-items-center v-m-0 v-text-gray-700 v-dark:v-text-gray-300">
     @if($icon)
         <i class="fas fa-{{ $icon }} v-mr-2"></i>
     @endif
 
     @if($route)
-        <a href="{{ $route }}" class="v-inline-flex v-text-sm v-font-medium">
+        <a href="{{ $route }}" class="v-inline-flex v-text-sm v-font-medium v-text-gray-700 v-dark:v-text-gray-300 hover:v-text-gray-900 v-dark:hover:v-text-gray-100">
             {!! $label !!}
         </a>
     @else
-        <span class="v-text-sm v-font-medium v-text-gray-500">{!! $label !!}</span>
+        <span class="v-text-sm v-font-medium v-text-gray-500 v-dark:v-text-gray-400">{!! $label !!}</span>
     @endif
 
     @if($last === false)

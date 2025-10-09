@@ -93,26 +93,26 @@
      x-init="$watch('isOpen', value => { if (!value) search = ''; })"
 >
     <div class="v-flex v-items-center v-justify-between">
-        <label for="{{ $id }}" class="v-block v-font-medium v-text-gray-700">{{ $label }}</label>
+        <label for="{{ $id }}" class="v-block v-font-medium v-text-gray-700 v-dark:v-text-gray-300">{{ $label }}</label>
         <button type="button" @click="reset" class="v-text-red-500 v-text-sm">reset</button>
     </div>
 
     <div class="v-relative v-mt-1">
         <button type="button"
                 @click="isOpen = !isOpen"
-                class="v-bg-white v-relative v-w-full v-border v-border-secondary-300 v-shadow-sm v-px-4 v-py-2 v-text-left focus:v-ring-secondary-500 focus:v-border-secondary-500"
+                class="v-bg-white v-dark:v-bg-gray-800 v-relative v-w-full v-border v-border-secondary-300 v-dark:v-border-gray-600 v-shadow-sm v-px-4 v-py-2 v-text-left focus:v-ring-secondary-500 focus:v-border-secondary-500 v-text-gray-900 v-dark:v-text-gray-100"
                 tabindex="0">
-            <div x-show="!selectedLabels().length" class="v-text-gray-500">
+            <div x-show="!selectedLabels().length" class="v-text-gray-500 v-dark:v-text-gray-400">
                 Nothing selected
             </div>
             <div x-show="selectedLabels().length" class="v-flex v-flex-wrap v-gap-1">
                 <template x-for="(label, index) in displayedLabels()" :key="index">
-                    <span class="v-inline-flex v-items-center v-px-2 v-py-0.5 v-bg-gray-100 v-text-gray-800"
+                    <span class="v-inline-flex v-items-center v-px-2 v-py-0.5 v-bg-gray-100 v-dark:v-bg-gray-700 v-text-gray-800 v-dark:v-text-gray-200"
                           x-text="label"></span>
                 </template>
             </div>
             <span class="v-absolute v-inset-y-0 v-right-0 v-flex v-items-center v-pr-2">
-                <svg class="v-h-5 v-w-5 v-text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <svg class="v-h-5 v-w-5 v-text-gray-400 v-dark:v-text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
                           d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
                           clip-rule="evenodd"/>
@@ -121,19 +121,19 @@
         </button>
 
         <div x-show="isOpen" @click.away="isOpen = false"
-             class="v-absolute v-z-10 v-mt-1 v-w-full v-bg-white v-border v-border-secondary-300 v-shadow-sm">
+             class="v-absolute v-z-10 v-mt-1 v-w-full v-bg-white v-dark:v-bg-gray-800 v-border v-border-secondary-300 v-dark:v-border-gray-600 v-shadow-sm">
             <div class="v-p-2">
                 <input type="text" x-model="search" x-ref="searchInput"
                        x-init="$watch('isOpen', value => { if (value) $nextTick(() => $refs.searchInput.focus()); })"
-                       class="v-w-full v-border v-border-secondary-300 v-shadow-sm v-px-3 v-py-2 focus:v-ring-secondary-500 focus:v-border-secondary-500"
+                       class="v-w-full v-border v-border-secondary-300 v-dark:v-border-gray-600 v-shadow-sm v-px-3 v-py-2 focus:v-ring-secondary-500 focus:v-border-secondary-500 v-bg-white v-dark:v-bg-gray-700 v-text-gray-900 v-dark:v-text-gray-100 v-dark:placeholder-gray-400"
                        placeholder="Search...">
             </div>
 
             <ul class="v-max-h-60 v-overflow-auto v-py-1 v-list-none">
                 <template x-for="(option, index) in filteredOptions()" :key="index">
                     <li @click="toggleOption(option)"
-                        :class="{'v-bg-secondary-100': isSelected(option) }"
-                        class="v-px-4 v-py-2 v-cursor-pointer hover:v-bg-gray-100">
+                        :class="{'v-bg-secondary-100 v-dark:v-bg-secondary-800': isSelected(option) }"
+                        class="v-px-4 v-py-2 v-cursor-pointer hover:v-bg-gray-100 v-dark:hover:v-bg-gray-700 v-text-gray-900 v-dark:v-text-gray-100">
                         <span x-text="getLabel(option)"></span>
                     </li>
                 </template>

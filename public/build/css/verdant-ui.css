@@ -1325,6 +1325,11 @@
   background-color: rgb(31 41 55 / var(--tw-bg-opacity, 1));
 }
 
+.dark\:v-bg-primary-100:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--color-primary-100) / var(--tw-bg-opacity, 1));
+}
+
 .dark\:v-bg-primary-600:is([data-theme="dark"] *) {
   --tw-bg-opacity: 1;
   background-color: rgb(var(--color-primary-600) / var(--tw-bg-opacity, 1));
@@ -1367,6 +1372,11 @@
 
 .dark\:v-bg-opacity-80:is([data-theme="dark"] *) {
   --tw-bg-opacity: 0.8;
+}
+
+.dark\:v-text-black:is([data-theme="dark"] *) {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity, 1));
 }
 
 .dark\:v-text-gray-100:is([data-theme="dark"] *) {

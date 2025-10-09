@@ -15754,14 +15754,9 @@
   background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
 }
 
-.dark\:hover\:v-bg-gray-800:hover:is([data-theme="dark"] *) {
+.dark\:hover\:v-bg-primary-500:hover:is([data-theme="dark"] *) {
   --tw-bg-opacity: 1;
-  background-color: rgb(31 41 55 / var(--tw-bg-opacity, 1));
-}
-
-.dark\:hover\:v-bg-primary-600:hover:is([data-theme="dark"] *) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(var(--color-primary-600) / var(--tw-bg-opacity, 1));
+  background-color: rgb(var(--color-primary-500) / var(--tw-bg-opacity, 1));
 }
 
 .dark\:hover\:v-bg-primary-700:hover:is([data-theme="dark"] *) {
@@ -15769,29 +15764,24 @@
   background-color: rgb(var(--color-primary-700) / var(--tw-bg-opacity, 1));
 }
 
-.dark\:hover\:v-bg-red-600:hover:is([data-theme="dark"] *) {
+.dark\:hover\:v-bg-red-500:hover:is([data-theme="dark"] *) {
   --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
+  background-color: rgb(239 68 68 / var(--tw-bg-opacity, 1));
 }
 
-.dark\:hover\:v-bg-red-700:hover:is([data-theme="dark"] *) {
+.dark\:hover\:v-bg-secondary-500:hover:is([data-theme="dark"] *) {
   --tw-bg-opacity: 1;
-  background-color: rgb(185 28 28 / var(--tw-bg-opacity, 1));
+  background-color: rgb(var(--color-secondary-500) / var(--tw-bg-opacity, 1));
 }
 
-.dark\:hover\:v-bg-secondary-600:hover:is([data-theme="dark"] *) {
+.dark\:hover\:v-bg-yellow-400:hover:is([data-theme="dark"] *) {
   --tw-bg-opacity: 1;
-  background-color: rgb(var(--color-secondary-600) / var(--tw-bg-opacity, 1));
+  background-color: rgb(250 204 21 / var(--tw-bg-opacity, 1));
 }
 
-.dark\:hover\:v-bg-secondary-700:hover:is([data-theme="dark"] *) {
+.dark\:hover\:v-bg-yellow-500:hover:is([data-theme="dark"] *) {
   --tw-bg-opacity: 1;
-  background-color: rgb(var(--color-secondary-700) / var(--tw-bg-opacity, 1));
-}
-
-.dark\:hover\:v-bg-yellow-600:hover:is([data-theme="dark"] *) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(202 138 4 / var(--tw-bg-opacity, 1));
+  background-color: rgb(234 179 8 / var(--tw-bg-opacity, 1));
 }
 
 .dark\:hover\:v-text-gray-100:hover:is([data-theme="dark"] *) {

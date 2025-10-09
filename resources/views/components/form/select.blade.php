@@ -132,7 +132,7 @@
             <ul class="v-max-h-60 v-overflow-auto v-py-1 v-list-none">
                 <template x-for="(option, index) in filteredOptions()" :key="index">
                     <li @click="toggleOption(option)"
-                        :class="{'v-bg-secondary-100 dark:v-bg-secondary-800': isSelected(option) }"
+                        :class="{'v-bg-primary-100 dark:v-bg-primary-800': isSelected(option) }"
                         class="v-px-4 v-py-2 v-cursor-pointer hover:v-bg-gray-100 dark:hover:v-bg-gray-700 v-text-gray-900 dark:v-text-gray-100">
                         <span x-text="getLabel(option)"></span>
                     </li>

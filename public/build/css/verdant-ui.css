@@ -1464,6 +1464,11 @@
   color: rgb(156 163 175 / var(--tw-placeholder-opacity, 1));
 }
 
+.dark\:odd\:v-bg-gray-700:nth-child(odd):is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
+}
+
 .dark\:hover\:v-bg-gray-600:hover:is([data-theme="dark"] *) {
   --tw-bg-opacity: 1;
   background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1));

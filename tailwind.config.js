@@ -2,13 +2,14 @@
 export default {
   prefix: 'v-',
   important: false,
+  darkMode: ['class', '[data-theme="dark"]'],
   content: [
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
   ],
   safelist: [
     {
-      pattern: /v-(bg|text|border)-(red|green|blue|orange|yellow|gray|primary|secondary)-[1-9]00/,
+      pattern: /^(dark:|sm:|md:|lg:|xl:|2xl:|hover:|focus:)?(bg|text|border)-(red|green|blue|orange|yellow|purple|gray|primary|secondary|white|black)-(50|100|200|300|400|500|600|700|800|900|950)$/
     },
   ],
   theme: {
@@ -54,6 +55,17 @@ export default {
           800: 'rgb(var(--color-secondary-800) / <alpha-value>)',
           900: 'rgb(var(--color-secondary-900) / <alpha-value>)',
         },
+        'v-bg': {
+          primary: 'rgb(var(--v-bg-primary) / <alpha-value>)',
+          secondary: 'rgb(var(--v-bg-secondary) / <alpha-value>)',
+        },
+        'v-text': {
+          primary: 'rgb(var(--v-text-primary) / <alpha-value>)',
+          secondary: 'rgb(var(--v-text-secondary) / <alpha-value>)',
+        },
+        'v-border': {
+          primary: 'rgb(var(--v-border-primary) / <alpha-value>)',
+        },
       }
     }
   },
@@ -84,6 +96,44 @@ export default {
           '--color-secondary-700': '109 127 151',
           '--color-secondary-800': '76 99 129',
           '--color-secondary-900': '45 52 65',
+
+          '--v-bg-primary': '255 255 255',
+          '--v-bg-secondary': '249 250 251',
+          '--v-text-primary': '17 24 39',
+          '--v-text-secondary': '107 114 128',
+          '--v-border-primary': '229 231 235',
+        },
+        
+        '[data-theme="dark"]': {
+          '--color-primary': '51 183 231',
+          '--color-primary-50': '8 63 87',
+          '--color-primary-100': '12 94 130',
+          '--color-primary-200': '16 125 173',
+          '--color-primary-300': '19 156 216',
+          '--color-primary-400': '51 183 231',
+          '--color-primary-500': '102 201 237',
+          '--color-primary-600': '51 183 231',
+          '--color-primary-700': '102 201 237',
+          '--color-primary-800': '153 219 243',
+          '--color-primary-900': '204 237 249',
+
+          '--color-secondary': '175 184 195',
+          '--color-secondary-50': '45 52 65',
+          '--color-secondary-100': '76 99 129',
+          '--color-secondary-200': '109 127 151',
+          '--color-secondary-300': '142 156 173',
+          '--color-secondary-400': '175 184 195',
+          '--color-secondary-500': '191 198 207',
+          '--color-secondary-600': '207 212 219',
+          '--color-secondary-700': '223 226 231',
+          '--color-secondary-800': '239 241 243',
+          '--color-secondary-900': '247 248 249',
+
+          '--v-bg-primary': '31 41 55',
+          '--v-bg-secondary': '17 24 39',
+          '--v-text-primary': '249 250 251',
+          '--v-text-secondary': '156 163 175',
+          '--v-border-primary': '75 85 99',
         }
       });
     },
@@ -102,10 +152,20 @@ export default {
           paddingLeft: theme('spacing.3'),
           fontSize: theme('fontSize.sm'),
           lineHeight: theme('lineHeight.normal'),
+          color: theme('colors.gray.900'),
           '&:focus': {
             outline: 'none',
             boxShadow: `0 0 0 3px ${theme('colors.blue.200')}`,
             borderColor: theme('colors.blue.300'),
+          },
+          '[data-theme="dark"] &': {
+            backgroundColor: theme('colors.gray.800'),
+            borderColor: theme('colors.gray.600'),
+            color: theme('colors.gray.100'),
+            '&:focus': {
+              boxShadow: `0 0 0 3px rgb(51 183 231 / 0.3)`,
+              borderColor: 'rgb(51 183 231)',
+            },
           },
         },
         '.v-form-checkbox': {
@@ -128,6 +188,14 @@ export default {
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
           },
+          '[data-theme="dark"] &': {
+            backgroundColor: theme('colors.gray.700'),
+            borderColor: theme('colors.gray.600'),
+            '&:focus': {
+              boxShadow: `0 0 0 3px rgb(51 183 231 / 0.3)`,
+              borderColor: 'rgb(51 183 231)',
+            },
+          },
         },
       };
 
@@ -145,6 +213,10 @@ export default {
           color: theme('colors.gray.900', '#1a202c'),
         },
 
+        [`[data-theme="dark"] .${scopeClass}`]: {
+          color: theme('colors.gray.100', '#f7fafc'),
+        },
+
         [`.${scopeClass} *`]: {
           boxSizing: 'border-box',
           borderWidth: '0',
@@ -152,6 +224,10 @@ export default {
           borderColor: theme('colors.gray.200', '#e2e8f0'),
           WebkitFontSmoothing: 'antialiased',
           MozOsxFontSmoothing: 'grayscale',
+        },
+
+        [`[data-theme="dark"] .${scopeClass} *`]: {
+          borderColor: theme('colors.gray.700', '#4a5568'),
         },
 
         [`.${scopeClass} *::before, .${scopeClass} *::after`]: {

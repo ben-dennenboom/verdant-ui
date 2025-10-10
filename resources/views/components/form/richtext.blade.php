@@ -10,7 +10,7 @@
 
   @if($label)
     <div class="v-flex v-items-center v-justify-between">
-      <label :for="name" class="v-block v-font-medium v-text-gray-700">
+      <label :for="name" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">
         {{ $label }}
         @if($required)
           <span class="v-text-red-500">*</span>
@@ -20,65 +20,65 @@
     </div>
   @endif
 
-  <div class="v-mb-2 v-border v-border-secondary-300 v-mt-1">
-    <div class="v-flex v-items-center v-p-2 v-bg-gray-50 v-border-b v-border-secondary-300">
+  <div class="v-mb-2 v-border v-border-secondary-300 dark:v-border-gray-600 v-mt-1">
+    <div class="v-flex v-items-center v-p-2 v-bg-gray-50 dark:v-bg-gray-700 v-border-b v-border-secondary-300 dark:v-border-gray-600">
       <button type="button" @click="toggleFormat('bold')"
-              :class="{'v-bg-gray-200': isActive('bold') }"
-              class="v-p-1 hover:v-bg-gray-200">
+              :class="{'v-bg-gray-200 dark:v-bg-gray-600': isActive('bold') }"
+              class="v-p-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
         <i class="fa-solid fa-bold"></i>
       </button>
       <button type="button" @click="toggleFormat('italic')"
-              :class="{'v-bg-gray-200': isActive('italic') }"
-              class="v-p-1 v-ml-1 hover:v-bg-gray-200">
+              :class="{'v-bg-gray-200 dark:v-bg-gray-600': isActive('italic') }"
+              class="v-p-1 v-ml-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
         <i class="fa-solid fa-italic"></i>
       </button>
       <button type="button" @click="toggleFormat('underline')"
-              :class="{'v-bg-gray-200': isActive('underline') }"
-              class="v-p-1 v-ml-1 hover:v-bg-gray-200">
+              :class="{'v-bg-gray-200 dark:v-bg-gray-600': isActive('underline') }"
+              class="v-p-1 v-ml-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
         <i class="fa-solid fa-underline"></i>
       </button>
 
-      <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300"></div>
+      <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300 dark:v-border-gray-600"></div>
 
       <button type="button" @click="alignText('left')"
               :class="{'v-bg-gray-200': isActive('justifyLeft') }"
-              class="v-p-1 hover:v-bg-gray-200">
+              class="v-p-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
         <i class="fa-solid fa-align-left"></i>
       </button>
       <button type="button" @click="alignText('center')"
               :class="{'v-bg-gray-200': isActive('justifyCenter') }"
-              class="v-p-1 v-ml-1 hover:v-bg-gray-200">
+              class="v-p-1 v-ml-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
         <i class="fa-solid fa-align-center"></i>
       </button>
       <button type="button" @click="alignText('right')"
               :class="{'v-bg-gray-200': isActive('justifyRight') }"
-              class="v-p-1 v-ml-1 hover:v-bg-gray-200">
+              class="v-p-1 v-ml-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
         <i class="fa-solid fa-align-right"></i>
       </button>
       <button type="button" @click="alignText('justify')"
               :class="{'v-bg-gray-200': isActive('justifyFull') }"
-              class="v-p-1 v-ml-1 hover:v-bg-gray-200">
+              class="v-p-1 v-ml-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
         <i class="fa-solid fa-align-justify"></i>
       </button>
 
-      <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300"></div>
+      <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300 dark:v-border-gray-600"></div>
 
       <button type="button" @click="toggleFormat('insertUnorderedList')"
               :class="{'v-bg-gray-200': isActive('insertUnorderedList') }"
-              class="v-p-1 hover:v-bg-gray-200">
+              class="v-p-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
         <i class="fa-solid fa-list-ul"></i>
       </button>
       <button type="button" @click="toggleFormat('insertOrderedList')"
               :class="{'v-bg-gray-200': isActive('insertOrderedList') }"
-              class="v-p-1 v-ml-1 hover:v-bg-gray-200">
+              class="v-p-1 v-ml-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
         <i class="fa-solid fa-list-ol"></i>
       </button>
 
-      <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300"></div>
+      <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300 dark:v-border-gray-600"></div>
 
       <button type="button" @click="clearFormatting()"
               title="Clear formatting"
-              class="v-p-1 v-ml-1 hover:v-bg-gray-200">
+              class="v-p-1 v-ml-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
         <i class="fa-solid fa-eraser"></i>
       </button>
     </div>
@@ -87,7 +87,7 @@
          contenteditable="true"
          @input.debounce.150ms="updateContent"
          @keydown.tab.prevent="handleTab"
-         class="richtext-editor v-px-3 v-py-2 v-min-h-[100px] focus:v-outline-none"
+         class="richtext-editor v-px-3 v-py-2 v-min-h-[100px] focus:v-outline-none v-bg-white dark:v-bg-gray-800 v-text-gray-900 dark:v-text-gray-100"
          :required="required">
     </div>
   </div>

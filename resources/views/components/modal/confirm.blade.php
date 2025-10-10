@@ -10,9 +10,9 @@
 
 @php
     $colors = [
-        'primary' => ['light' => 'v-bg-primary-100', 'text' => 'v-text-primary-700'],
-        'warning' => ['light' => 'v-bg-yellow-100', 'text' => 'v-text-yellow-600'],
-        'danger' => ['light' => 'v-bg-red-100', 'text' => 'v-text-red-700'],
+        'primary' => ['light' => 'v-bg-primary-100 dark:v-bg-primary-800', 'text' => 'v-text-primary-700 dark:v-text-primary-300'],
+        'warning' => ['light' => 'v-bg-yellow-100 dark:v-bg-yellow-800', 'text' => 'v-text-yellow-600 dark:v-text-yellow-300'],
+        'danger' => ['light' => 'v-bg-red-100 dark:v-bg-red-800', 'text' => 'v-text-red-700 dark:v-text-red-300'],
     ];
 
     $color = $colors[$type];
@@ -34,11 +34,11 @@
             </div>
 
             <div class="v-mt-3 v-text-center sm:v-mt-0 sm:v-ml-4 sm:v-text-left">
-                <h3 class="v-text-lg v-font-medium v-leading-6 v-text-gray-900" id="modal-title">
+                <h3 class="v-text-lg v-font-medium v-leading-6 v-text-gray-900 dark:v-text-gray-100" id="modal-title">
                     {{ $title }}
                 </h3>
                 <div class="v-mt-2">
-                    <p class="v-text-gray-500 v-text-wrap">
+                    <p class="v-text-gray-500 dark:v-text-gray-400 v-text-wrap">
                         {{ $message }}
                     </p>
                 </div>

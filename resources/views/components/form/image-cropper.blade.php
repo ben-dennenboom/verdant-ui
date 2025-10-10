@@ -30,7 +30,7 @@
      })">
 
   @if($label)
-    <label for="{{ $name }}_input" class="v-block v-font-medium v-text-gray-700 v-mb-1">
+    <label for="{{ $name }}_input" class="v-block v-font-medium v-text-gray-700 v-mb-1 dark:v-text-gray-300">
       {{ $label }}
       @if($required)
         <span class="v-text-red-500">*</span>

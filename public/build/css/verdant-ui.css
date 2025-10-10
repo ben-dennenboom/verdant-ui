@@ -1399,6 +1399,11 @@
   color: rgb(107 114 128 / var(--tw-text-opacity, 1));
 }
 
+.dark\:v-text-gray-700:is([data-theme="dark"] *) {
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
+}
+
 .dark\:v-text-primary-300:is([data-theme="dark"] *) {
   --tw-text-opacity: 1;
   color: rgb(var(--color-primary-300) / var(--tw-text-opacity, 1));

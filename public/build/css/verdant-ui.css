@@ -1464,6 +1464,11 @@
   background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
 }
 
+.dark\:hover\:v-bg-\[\#2d3441\]:hover:is([data-theme="dark"] *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(45 52 65 / var(--tw-bg-opacity, 1));
+}
+
 .dark\:hover\:v-bg-gray-600:hover:is([data-theme="dark"] *) {
   --tw-bg-opacity: 1;
   background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1));
@@ -1492,11 +1497,6 @@
 .dark\:hover\:v-bg-secondary-500:hover:is([data-theme="dark"] *) {
   --tw-bg-opacity: 1;
   background-color: rgb(var(--color-secondary-500) / var(--tw-bg-opacity, 1));
-}
-
-.dark\:hover\:v-bg-secondary-900:hover:is([data-theme="dark"] *) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(var(--color-secondary-900) / var(--tw-bg-opacity, 1));
 }
 
 .dark\:hover\:v-bg-yellow-400:hover:is([data-theme="dark"] *) {

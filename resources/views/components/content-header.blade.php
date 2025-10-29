@@ -1,6 +1,6 @@
 @props(['title', 'subtitle' => null])
 
-<div class="v-rounded-t v-bg-white dark:v-bg-gray-800 v-shadow-sm">
+<div class="v-rounded-t v-bg-white dark:v-bg-gray-800 v-shadow-sm dark:v-border-b dark:v-border-gray-700">
     <div class="v-py-6 v-px-4 sm:v-px-6 lg:v-px-8">
         <div class="v-flex v-flex-col lg:v-flex-row lg:v-items-center lg:v-justify-between v-gap-4">
             <div class="v-min-w-0">

@@ -1255,6 +1255,10 @@
   border-color: rgb(55 65 81 / var(--tw-divide-opacity, 1));
 }
 
+.dark\:v-border-b:is([data-theme="dark"] *) {
+  border-bottom-width: 1px;
+}
+
 .dark\:v-border-gray-600:is([data-theme="dark"] *) {
   --tw-border-opacity: 1;
   border-color: rgb(75 85 99 / var(--tw-border-opacity, 1));

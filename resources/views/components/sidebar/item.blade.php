@@ -1,8 +1,8 @@
-@props(['icon', 'route' => null, 'label', 'active' => null])
+@props(['icon', 'route' => null, 'routeParams' => [], 'label', 'active' => null])
 
 @php
   $active = $active ?? ($route && request()->routeIs($route));
-  $route = $route ? route($route) : '#';
+  $route = $route ? route($route, $routeParams) : '#';
 @endphp
 
 <li class="v-list-none">

@@ -76,6 +76,14 @@
 
       <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300 dark:v-border-gray-600"></div>
 
+      <button type="button" @click="insertLink()"
+              title="Insert link"
+              class="v-p-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
+        <i class="fa-solid fa-link"></i>
+      </button>
+
+      <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300 dark:v-border-gray-600"></div>
+
       <button type="button" @click="clearFormatting()"
               title="Clear formatting"
               class="v-p-1 v-ml-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
@@ -147,6 +155,26 @@
             document.execCommand('insertHTML', false, '&emsp;')
           }
           this.updateContent()
+        },
+
+        insertLink() {
+          const selection = window.getSelection()
+          const selectedText = selection.toString()
+
+          let url = prompt('Enter the URL:', 'https://')
+
+          if (url) {
+            if (selectedText) {
+              document.execCommand('createLink', false, url)
+            } else {
+              const linkText = prompt('Enter the link text:', url)
+              if (linkText) {
+                document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${linkText}</a>`)
+              }
+            }
+            this.$refs.editor.focus()
+            this.updateContent()
+          }
         },
 
         clearFormatting() {

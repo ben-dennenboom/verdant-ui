@@ -77,9 +77,15 @@
       <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300 dark:v-border-gray-600"></div>
 
       <button type="button" @click="insertLink()"
+              :class="{'v-bg-gray-200 dark:v-bg-gray-600': isLinkActive() }"
               title="Insert link"
               class="v-p-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
         <i class="fa-solid fa-link"></i>
+      </button>
+      <button type="button" @click="removeLink()"
+              title="Remove link"
+              class="v-p-1 v-ml-1 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 v-text-gray-700 dark:v-text-gray-300">
+        <i class="fa-solid fa-link-slash"></i>
       </button>
 
       <div class="v-h-4 v-mx-2 v-border-l v-border-secondary-300 dark:v-border-gray-600"></div>
@@ -157,23 +163,84 @@
           this.updateContent()
         },
 
+        isLinkActive() {
+          const selection = window.getSelection()
+          if (selection.rangeCount > 0) {
+            let node = selection.anchorNode
+            while (node && node !== this.$refs.editor) {
+              if (node.tagName === 'A') {
+                return true
+              }
+              node = node.parentNode
+            }
+          }
+          return false
+        },
+
         insertLink() {
           const selection = window.getSelection()
           const selectedText = selection.toString()
+
+          if (this.isLinkActive()) {
+            let node = selection.anchorNode
+            while (node && node !== this.$refs.editor) {
+              if (node.tagName === 'A') {
+                const currentUrl = node.getAttribute('href')
+                const newUrl = prompt('Edit the URL:', currentUrl)
+                if (newUrl) {
+                  node.setAttribute('href', newUrl)
+                  this.updateContent()
+                }
+                this.$refs.editor.focus()
+                return
+              }
+              node = node.parentNode
+            }
+          }
 
           let url = prompt('Enter the URL:', 'https://')
 
           if (url) {
             if (selectedText) {
               document.execCommand('createLink', false, url)
+              const selection = window.getSelection()
+              if (selection.rangeCount > 0) {
+                let node = selection.anchorNode
+                while (node && node !== this.$refs.editor) {
+                  if (node.tagName === 'A') {
+                    node.className = 'text-primary-600 dark:text-primary-400 hover:underline text-sm'
+                    node.setAttribute('target', '_blank')
+                    break
+                  }
+                  node = node.parentNode
+                }
+              }
             } else {
               const linkText = prompt('Enter the link text:', url)
               if (linkText) {
-                document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${linkText}</a>`)
+                document.execCommand('insertHTML', false, `<a href="${url}" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline text-sm">${linkText}</a>`)
               }
             }
             this.$refs.editor.focus()
             this.updateContent()
+          }
+        },
+
+        removeLink() {
+          const selection = window.getSelection()
+          if (selection.rangeCount > 0) {
+            let node = selection.anchorNode
+            while (node && node !== this.$refs.editor) {
+              if (node.tagName === 'A') {
+                const text = node.textContent
+                const textNode = document.createTextNode(text)
+                node.parentNode.replaceChild(textNode, node)
+                this.updateContent()
+                this.$refs.editor.focus()
+                return
+              }
+              node = node.parentNode
+            }
           }
         },
 

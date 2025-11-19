@@ -1,7 +1,7 @@
 @props(['name', 'label', 'value' => null, 'required' => false, 'checked' => false])
 
 <div class="v-mb-4 v-flex v-align-middle v-gap-4 v-items-center">
-    <label for="{{ $name }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{{ $label }}</label>
+    <label for="{{ $name }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{!! $label !!}</label>
     <input type="checkbox" name="{{ $name }}" id="{{ $name }}"
            value="{{ old($name, $value) }}"
         {{ $checked ? 'checked' : '' }}

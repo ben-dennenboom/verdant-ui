@@ -14,7 +14,7 @@
           )
     }}>
     <i class="fas fa-{{ $icon }} v-flex-none v-w-6"></i>
-    <span class="v-flex-1 v-ml-2">{{ $label }}</span>
+    <span class="v-flex-1 v-ml-2">{!! $label !!}</span>
     @if($slot->isNotEmpty())
       <i class="fas fa-chevron-down v-ml-auto"></i>
     @endif

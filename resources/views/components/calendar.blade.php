@@ -25,7 +25,7 @@
 
 <div x-data="{
     selectedDay: null,
-    events: {{ Js::from($events) }},
+    events: {{ \Illuminate\Support\Js::from($events) }},
 
     getEvents(date) {
         if (!this.events || !date) return [];

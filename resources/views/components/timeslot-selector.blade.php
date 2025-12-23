@@ -7,7 +7,7 @@
     selectedDay: null,
     selectedSlot: null,
     currentDate: new Date(),
-    timeslots: {{ Js::from($timeslots) }},
+    timeslots: {{ \Illuminate\Support\Js::from($timeslots) }},
 
     getTimeslots(date) {
         if (!this.timeslots || !date) return [];

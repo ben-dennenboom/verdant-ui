@@ -9,7 +9,8 @@ export default {
   ],
   safelist: [
     {
-      pattern: /^(dark:|sm:|md:|lg:|xl:|2xl:|hover:|focus:)?(bg|text|border)-(red|green|blue|orange|yellow|purple|gray|primary|secondary|white|black)-(50|100|200|300|400|500|600|700|800|900|950)$/
+      pattern: /(bg|text|border)-(red|green|blue|orange|yellow|purple|gray|primary|secondary|white|black)-(50|100|200|300|400|500|600|700|800|900|950)/,
+      variants: ['hover', 'focus', 'dark', 'group-hover', 'sm', 'md', 'lg'],
     },
   ],
   theme: {
@@ -70,7 +71,7 @@ export default {
     }
   },
   plugins: [
-    function({ addBase, theme }) {
+    function ({ addBase, theme }) {
       addBase({
         ':root': {
           '--color-primary': '12 94 130',
@@ -103,7 +104,7 @@ export default {
           '--v-text-secondary': '107 114 128',
           '--v-border-primary': '229 231 235',
         },
-        
+
         '[data-theme="dark"]': {
           '--color-primary': '51 183 231',
           '--color-primary-50': '8 63 87',
@@ -138,7 +139,7 @@ export default {
       });
     },
 
-    function({ addComponents, theme }) {
+    function ({ addComponents, theme }) {
       const formStyles = {
         '.v-form-input': {
           appearance: 'none',
@@ -202,7 +203,7 @@ export default {
       addComponents(formStyles);
     },
 
-    function({ addBase, theme, config }) {
+    function ({ addBase, theme, config }) {
       const scopeClass = 'v-scope';
 
       addBase({

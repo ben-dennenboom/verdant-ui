@@ -1,9 +1,9 @@
 @import '@fortawesome/fontawesome-free/css/all.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Richtext Editor Styles */
 .richtext-editor ul,
 .richtext-content ul {
   list-style-type: disc !important;
@@ -42,4 +42,147 @@
 .richtext-content li {
   display: list-item !important;
   list-style: inherit !important;
+}
+
+/* Grid Layout System - Using direct CSS to work with custom prefix */
+.v-grid-layout {
+    display: grid !important;
+    width: 100%;
+}
+
+/* Header styling */
+.v-grid-header-wrapper {
+    display: contents;
+}
+
+.v-grid-header-wrapper > div {
+    background-color: rgb(249 250 251);
+    padding:1rem;
+}
+
+:is(.dark .v-grid-header-wrapper > div) {
+    background-color: rgb(55 65 81); 
+}
+
+/* Body styling */
+.v-grid-body-wrapper {
+    display: contents;
+}
+
+/* Row grouping with border dividers like table */
+.v-contents-row {
+    display: contents;
+}
+
+.v-contents-row > div {
+    padding:1rem;
+    border-bottom-width: 1px;
+    border-color: rgb(229 231 235);
+}
+
+:is(.dark .v-contents-row > div) {
+    border-color: rgb(55 65 81);
+}
+
+/* Remove border from last row */
+.v-grid-body-wrapper > .v-contents-row:last-child > div {
+    border-bottom-width: 0;
+}
+
+/* Hover effect on row cells */
+.v-group:hover > div {
+    background-color: rgb(249 250 251);
+}
+
+:is(.dark .v-group:hover > div) {
+    background-color: #2d3441;
+}
+
+/* Grid header sorting icons */
+.v-grid-header-wrapper svg {
+    width: 0.75rem !important;
+    height: 0.75rem !important;
+    flex-shrink: 0;
+}
+
+/* Ensure header links display inline */
+.v-grid-header-wrapper a {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.25rem !important;
+}
+
+.v-grid-header-wrapper a > span {
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+/* Column span utilities */
+.v-col-span-1 { 
+    grid-column: span 1 / span 1 !important; 
+}
+
+.v-col-span-2 { 
+    grid-column: span 2 / span 2 !important; 
+}
+
+.v-col-span-3 { 
+    grid-column: span 3 / span 3 !important; 
+}
+
+.v-col-span-4 { 
+    grid-column: span 4 / span 4 !important; 
+}
+
+.v-col-span-5 { 
+    grid-column: span 5 / span 5 !important; 
+}
+
+.v-col-span-6 { 
+    grid-column: span 6 / span 6 !important; 
+}
+
+.v-col-span-7 { 
+    grid-column: span 7 / span 7 !important; 
+}
+
+.v-col-span-8 { 
+    grid-column: span 8 / span 8 !important; 
+}
+
+.v-col-span-full { 
+    grid-column: 1 / -1 !important; 
+}
+
+/* Grid column templates */
+.v-grid-cols-1 { 
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important; 
+}
+
+.v-grid-cols-2 { 
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important; 
+}
+
+.v-grid-cols-3 { 
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important; 
+}
+
+.v-grid-cols-4 { 
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important; 
+}
+
+.v-grid-cols-5 { 
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important; 
+}
+
+.v-grid-cols-6 { 
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important; 
+}
+
+.v-grid-cols-7 { 
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important; 
+}
+
+.v-grid-cols-8 { 
+    grid-template-columns: repeat(8, minmax(0, 1fr)) !important; 
 }

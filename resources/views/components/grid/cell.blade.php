@@ -1,6 +1,23 @@
-@props(['class' => '', 'span' => 1, 'nowrap' => false, 'label' => null])
+@props([
+    'class' => '',
+    'span' => 1,
+    'nowrap' => false,
+    'label' => null,
+    'hideable' => false,
+    'id' => null,
+])
 
 @php
+    /**
+     * COLUMN IDENTIFICATION
+     * We prioritize the ID, fallback to the label for visibility state tracking.
+     */
+    $columnId = $id ?? $label;
+
+    /**
+     * GRID SPANNING LOGIC
+     * Maps the numeric span prop to the utility classes defined in grid-utils.css.
+     */
     $spanClasses = [
         1 => 'v-col-span-1',
         2 => 'v-col-span-2',
@@ -12,23 +29,27 @@
         8 => 'v-col-span-8',
         'full' => 'v-col-span-full',
     ];
-    
+
     $spanClass = $spanClasses[$span] ?? null;
     $wrapClass = $nowrap ? 'v-whitespace-nowrap' : 'v-text-wrap';
 @endphp
 
-<div {{ $attributes->merge(['class' => "v-grid-cell v-px-6 v-py-4 v-font-medium v-text-gray-900 dark:v-text-gray-100 v-border-b v-border-gray-200 dark:v-border-gray-700 group-hover:v-bg-gray-50 dark:group-hover:v-bg-[#2d3441] $wrapClass $spanClass $class"]) }}
-     @if(!$spanClass && $span > 1) style="grid-column: span {{ $span }} / span {{ $span }};" @endif>
-    
-  <div class="v-cell-wrapper">
-    @if($label)
-        <span class="v-cell-tileview-label">
-            {{ $label }}
-        </span>
-    @endif
+<div @if ($hideable) x-show="isColumnVisible('{{ $columnId }}')"
+        x-cloak @endif
+    data-column-id="{{ $columnId }}" data-span="{{ $span }}"
+    {{ $attributes->merge([
+        'class' => "v-grid-cell v-group v-hideable-column v-px-6 v-py-4 v-font-medium v-text-gray-900 dark:v-text-gray-100 $wrapClass $spanClass $class",
+    ]) }}
+    @if (!$spanClass && $span > 1) style="grid-column: span {{ $span }} / span {{ $span }};" @endif>
+    <div class="v-cell-wrapper">
+        @if ($label)
+            <span class="v-cell-tileview-label">
+                {{ $label }}
+            </span>
+        @endif
 
-    <div class="v-cell-content">
-        {{ $slot }}
+        <div class="v-cell-content">
+            {{ $slot }}
+        </div>
     </div>
-  </div>
 </div>

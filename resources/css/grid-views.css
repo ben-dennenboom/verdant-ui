@@ -1,12 +1,24 @@
-/* Default: Hide tileLabels */
+/**
+ * GRID VIEWS
+ * Handles the visual transformation between Table and Tile (Card) modes.
+ */
+
+/* * 1. SHARED ELEMENTS 
+ * Common styles that apply regardless of the active view.
+ */
+
+/* Hide tile-specific labels by default (they only appear in Tile View) */
 .v-cell-tileview-label {
     display: none;
 }
 
-/*--- Tile view --- */
-/* TILE VIEW (responsive grid layout) */
+/**
+ * 2. TILE VIEW (CARD VIEW)
+ * Transforms the grid into a responsive gallery of cards.
+ */
 .v-tile-view {
     display: grid !important;
+    /* Automatically fills the row with cards, minimum 300px wide */
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
     gap: 1rem;
     padding: 1rem;
@@ -16,14 +28,19 @@
     overflow: visible !important;
 }
 
+/* Hide table headers in Tile View as card labels take over their role */
 .v-tile-view .v-grid-header-wrapper {
     display: none !important;
 }
 
+/* Ensure the body wrapper remains a neutral container for grid items */
 .v-tile-view .v-grid-body-wrapper {
     display: contents !important;
 }
 
+/* * ROW TO CARD TRANSFORMATION 
+ * Converts 'display: contents' rows into standalone physical cards.
+ */
 .v-tile-view .v-contents-row {
     display: block !important;
     background: white;
@@ -36,16 +53,21 @@
     overflow: hidden;
 }
 
+/* Lift effect on hover for better interactivity */
 .v-tile-view .v-contents-row:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
 }
 
+/* Dark mode support for Cards */
 :is(.dark .v-tile-view .v-contents-row) {
     background: rgb(31 41 55);
     border-color: rgb(55 65 81);
 }
 
+/* * CELL STYLING WITHIN CARDS
+ * Stacks cells vertically with separators.
+ */
 .v-tile-view .v-grid-cell {
     display: block !important;
     width: 100% !important;
@@ -62,6 +84,7 @@
     border-bottom-color: rgb(55 65 81) !important;
 }
 
+/* Layout for label-value pairs inside the card */
 .v-tile-view .v-cell-wrapper {
     display: flex;
     justify-content: space-between;
@@ -70,6 +93,7 @@
     overflow: hidden;
 }
 
+/* Stylized labels for card fields (e.g., "Created At") */
 .v-tile-view .v-cell-tileview-label {
     display: block;
     font-size: 0.75rem;
@@ -80,10 +104,12 @@
     flex-shrink: 0;
 }
 
+/* Dark mode for labels */
 :is(.dark .v-tile-view .v-cell-tileview-label) {
     color: #9ca3af;
 }
 
+/* Right-aligned content for card fields */
 .v-tile-view .v-cell-content {
     text-align: right;
     font-weight: 500;
@@ -93,31 +119,64 @@
     min-width: 0;
 }
 
-/* Responsive breakpoints voor tile view */
+/**
+ * 3. COLUMN VISIBILITY & UTILS
+ * Ensures hidden columns occupy no space and prevent flickering.
+ */
+
+/* Force hidden cells to collapse completely */
+.v-tile-view .v-grid-cell[style*="display: none"],
+.v-tile-view .v-grid-cell[x-cloak] {
+    display: none !important;
+}
+
+/* Ensure hideable columns respect the 'display: none' style in all views */
+.v-hideable-column[style*="display: none"] {
+    display: none !important;
+}
+
+/* Disable transitions during layout shifts for a snappier feel */
+.v-grid-layout .v-hideable-column {
+    transition: none;
+}
+
+/**
+ * 4. RESPONSIVE BREAKPOINTS
+ * Adjusts the card grid density based on screen size.
+ */
+
+/* Single column on mobile */
 @media (max-width: 640px) {
     .v-tile-view {
         grid-template-columns: 1fr !important;
     }
 }
 
+/* Two/Three columns on tablets */
 @media (min-width: 641px) and (max-width: 1024px) {
     .v-tile-view {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
     }
 }
 
+/* Optimized density for desktops */
 @media (min-width: 1025px) {
     .v-tile-view {
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
     }
 }
 
-/*--- Table view --- */
+/**
+ * 5. TABLE VIEW SPECIFIC OVERRIDES
+ */
 .v-table-view .v-cell-tileview-label {
     display: none !important;
 }
 
-/* Toggle Button Styling */
+/**
+ * 6. UI COMPONENTS
+ * Styles for the view toggle buttons and resets.
+ */
 .v-view-toggle-btn {
     width: 44px;
     height: 44px;

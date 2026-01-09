@@ -1,4 +1,13 @@
-/* Column span utilities */
+/**
+ * GRID UTILITIES
+ * Generic helper classes and specific component overrides for the grid system.
+ */
+
+/**
+ * 1. COLUMN SPANNING
+ * Controls how many columns an individual cell occupies.
+ * Note: These are typically applied to cells in Table View.
+ */
 .v-col-span-1 { grid-column: span 1 / span 1 !important; }
 .v-col-span-2 { grid-column: span 2 / span 2 !important; }
 .v-col-span-3 { grid-column: span 3 / span 3 !important; }
@@ -9,7 +18,11 @@
 .v-col-span-8 { grid-column: span 8 / span 8 !important; }
 .v-col-span-full { grid-column: 1 / -1 !important; }
 
-/* Grid column templates (Table View only) */
+/**
+ * 2. GRID COLUMN TEMPLATES
+ * Defines the total number of columns for the Table View layout.
+ * Prefixed with .v-table-view to ensure they don't conflict with Tile View logic.
+ */
 .v-table-view.v-grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
 .v-table-view.v-grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 .v-table-view.v-grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
@@ -18,3 +31,33 @@
 .v-table-view.v-grid-cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
 .v-table-view.v-grid-cols-7 { grid-template-columns: repeat(7, minmax(0, 1fr)) !important; }
 .v-table-view.v-grid-cols-8 { grid-template-columns: repeat(8, minmax(0, 1fr)) !important; }
+
+/**
+ * 3. GENERAL HELPERS
+ */
+
+/* Alpine.js x-cloak: Hides elements until Alpine has fully initialized */
+[x-cloak] { 
+    display: none !important; 
+}
+
+/* Global utility to force pointer cursor on interactive elements */
+.v-cursor-pointer {
+    cursor: pointer !important;
+}
+
+/**
+ * 4. COMPONENT OVERRIDES: RESET BUTTON
+ * High-priority hover styles to ensure the 'Manage Columns' reset button 
+ * maintains visibility against complex grid row background rules.
+ */
+button.v-text-primary-600:hover {
+    background-color: #2563eb !important; 
+    color: #ffffff !important;
+    border-color: #2563eb !important;
+}
+
+/* Ensures FontAwesome or other icons inside the button also turn white on hover */
+button.v-text-primary-600:hover i {
+    color: #ffffff !important;
+}

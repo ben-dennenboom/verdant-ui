@@ -1,47 +1,61 @@
-/* Base Grid Layout System */
+/**
+ * GRID LAYOUT SYSTEM
+ * Core structural rules for the Verdant Grid component.
+ * This file handles the "Table View" logic using CSS Grid.
+ */
+
+/* Main container: forces the grid context */
 .v-grid-layout {
     display: grid !important;
     width: 100%;
 }
 
-/* Header styling */
-.v-grid-header-wrapper {
+/* * Structural wrappers: 
+ * 'display: contents' is used so these wrappers don't interfere 
+ * with the direct relationship between cells and the parent grid.
+ */
+.v-grid-header-wrapper,
+.v-grid-body-wrapper{
     display: contents;
 }
 
-.v-grid-header-wrapper > div {
-    background-color: rgb(249 250 251);
-    padding: 1rem;
-}
-
-:is(.dark .v-grid-header-wrapper > div) {
-    background-color: rgb(55 65 81); 
-}
-
-/* Body & Row styling */
-.v-grid-body-wrapper {
-    display: contents;
-}
-
+/* Rows act as a structural group but must remain 'contents' in Table View */
 .v-contents-row {
     display: contents !important;
 }
 
+/* Basic cell styling for both Header and Body */
+.v-grid-header-wrapper > div,
 .v-contents-row > div {
     padding: 1rem;
     border-bottom-width: 1px;
     border-color: rgb(229 231 235);
 }
 
+/* Header-specific styling */
+.v-grid-header-wrapper > div {
+    background-color: rgb(249 250 251);
+    font-weight: 600;
+}
+
+/* Dark mode overrides for Header & Body */
+:is(.dark .v-grid-header-wrapper > div) {
+    background-color: rgb(55 65 81); 
+}
+
 :is(.dark .v-contents-row > div) {
     border-color: rgb(55 65 81);
 }
 
+/* Remove border from the last row to prevent double borders at bottom */
 .v-grid-body-wrapper > .v-contents-row:last-child > div {
     border-bottom-width: 0;
 }
 
-/* Hover effects */
+/**
+ * HOVER STATES
+ * Uses .v-group on the row/cell to trigger background changes
+ */
 .v-group:hover > div {
     background-color: rgb(249 250 251);
 }
@@ -50,7 +64,7 @@
     background-color: #2d3441;
 }
 
-/* Icons & Header Links */
+/* Header Links & SVG icons (Sorting arrows etc.) */
 .v-grid-header-wrapper svg {
     width: 0.75rem !important;
     height: 0.75rem !important;

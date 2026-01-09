@@ -1,0 +1,91 @@
+/* ==========================================================================
+   GRID TOOLBAR STYLES
+   ========================================================================== */
+
+/**
+ * Toolbar Spacer
+ * Reserved vertical space to prevent the fixed toolbar from overlapping 
+ * the content beneath it in the document flow.
+ */
+.v-toolbar-spacer {
+    min-height: 150px;
+}
+
+/**
+ * Main Toolbar Container
+ * Fixed positioning at the top-right of the viewport.
+ * Layered with shadow and ring for depth.
+ */
+.v-toolbar-fixed {
+    position: fixed !important;
+    right: 2rem !important;
+    top: 2rem !important;
+    width: fit-content !important;
+    background-color: white !important;
+    padding: 1rem 1.5rem; /* Optimized padding for better balance */
+    border-radius: 0.75rem;
+    z-index: 50 !important; /* Ensure it stays above all grid content */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Dark mode support for the main toolbar */
+.dark .v-toolbar-fixed {
+    background-color: rgb(31 41 55) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/**
+ * Hover Effect
+ * Increases depth when the user interacts with the toolbar.
+ */
+.v-toolbar-fixed:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-2px); /* Subtle lift effect */
+}
+
+/* ==========================================================================
+   COLUMN MANAGER DROPDOWN
+   ========================================================================== */
+
+/**
+ * Column Manager Dropdown
+ * High-depth shadow and specific padding for the column selection menu.
+ */
+.v-column-manager-dropdown {
+    padding: 1.5rem !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border-radius: 0.75rem;
+}
+
+/* Dark mode support for the dropdown */
+.dark .v-column-manager-dropdown {
+    background-color: rgb(31 41 55) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ==========================================================================
+   TOOLTIP & POSITIONING FIXES
+   ========================================================================== */
+
+/**
+ * Tooltip Container Adjustment
+ * Forces tooltips to align to the right edge of the toolbar to prevent 
+ * overflowing off-screen.
+ */
+.v-toolbar-fixed .v-absolute.v-z-50 {
+    left: auto !important;
+    right: 0 !important;
+    transform: translateX(0) !important;
+}
+
+/**
+ * Tooltip Arrow Adjustment
+ * Re-aligns the small indicator arrow to match the new container position.
+ */
+.v-toolbar-fixed .v-absolute.v-z-50 .v-absolute {
+    left: auto !important;
+    right: 0.75rem !important; /* Slightly adjusted for better centering */
+    transform: translateX(0) rotate(45deg) !important;
+}

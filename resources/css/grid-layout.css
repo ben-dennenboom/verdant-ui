@@ -1,0 +1,64 @@
+/* Base Grid Layout System */
+.v-grid-layout {
+    display: grid !important;
+    width: 100%;
+}
+
+/* Header styling */
+.v-grid-header-wrapper {
+    display: contents;
+}
+
+.v-grid-header-wrapper > div {
+    background-color: rgb(249 250 251);
+    padding: 1rem;
+}
+
+:is(.dark .v-grid-header-wrapper > div) {
+    background-color: rgb(55 65 81); 
+}
+
+/* Body & Row styling */
+.v-grid-body-wrapper {
+    display: contents;
+}
+
+.v-contents-row {
+    display: contents !important;
+}
+
+.v-contents-row > div {
+    padding: 1rem;
+    border-bottom-width: 1px;
+    border-color: rgb(229 231 235);
+}
+
+:is(.dark .v-contents-row > div) {
+    border-color: rgb(55 65 81);
+}
+
+.v-grid-body-wrapper > .v-contents-row:last-child > div {
+    border-bottom-width: 0;
+}
+
+/* Hover effects */
+.v-group:hover > div {
+    background-color: rgb(249 250 251);
+}
+
+:is(.dark .v-group:hover > div) {
+    background-color: #2d3441;
+}
+
+/* Icons & Header Links */
+.v-grid-header-wrapper svg {
+    width: 0.75rem !important;
+    height: 0.75rem !important;
+    flex-shrink: 0;
+}
+
+.v-grid-header-wrapper a {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.25rem !important;
+}

@@ -1,0 +1,139 @@
+/* Default: Hide tileLabels */
+.v-cell-tileview-label {
+    display: none;
+}
+
+/*--- Tile view --- */
+/* TILE VIEW (responsive grid layout) */
+.v-tile-view {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+    gap: 1rem;
+    padding: 1rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: auto !important;
+    overflow: visible !important;
+}
+
+.v-tile-view .v-grid-header-wrapper {
+    display: none !important;
+}
+
+.v-tile-view .v-grid-body-wrapper {
+    display: contents !important;
+}
+
+.v-tile-view .v-contents-row {
+    display: block !important;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.v-tile-view .v-contents-row:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+:is(.dark .v-tile-view .v-contents-row) {
+    background: rgb(31 41 55);
+    border-color: rgb(55 65 81);
+}
+
+.v-tile-view .v-grid-cell {
+    display: block !important;
+    width: 100% !important;
+    padding: 0.5rem 0 !important;
+    border-bottom: 1px solid #f3f4f6 !important;
+    overflow: hidden !important;
+}
+
+.v-tile-view .v-grid-cell:last-child {
+    border-bottom: none !important;
+}
+
+:is(.dark .v-tile-view .v-grid-cell) {
+    border-bottom-color: rgb(55 65 81) !important;
+}
+
+.v-tile-view .v-cell-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    overflow: hidden;
+}
+
+.v-tile-view .v-cell-tileview-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    flex-shrink: 0;
+}
+
+:is(.dark .v-tile-view .v-cell-tileview-label) {
+    color: #9ca3af;
+}
+
+.v-tile-view .v-cell-content {
+    text-align: right;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+/* Responsive breakpoints voor tile view */
+@media (max-width: 640px) {
+    .v-tile-view {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    .v-tile-view {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    }
+}
+
+@media (min-width: 1025px) {
+    .v-tile-view {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+    }
+}
+
+/*--- Table view --- */
+.v-table-view .v-cell-tileview-label {
+    display: none !important;
+}
+
+/* Toggle Button Styling */
+.v-view-toggle-btn {
+    width: 44px;
+    height: 44px;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s;
+}
+
+.v-view-toggle-btn:hover {
+    background-color: #e5e7eb;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+:is(.dark .v-view-toggle-btn) { background-color: rgb(55 65 81); }
+:is(.dark .v-view-toggle-btn i) { color: #d1d5db; }

@@ -14,8 +14,8 @@ function initializeVerdant() {
   window.vClass = function (classes) {
     if (!classes) return '';
     return classes.split(' ')
-        .map(cls => cls.startsWith(window.verdantPrefix) ? cls : window.verdantPrefix + cls)
-        .join(' ');
+      .map(cls => cls.startsWith(window.verdantPrefix) ? cls : window.verdantPrefix + cls)
+      .join(' ');
   };
 
   document.addEventListener('transitionend', function (e) {
@@ -23,15 +23,15 @@ function initializeVerdant() {
   });
 
   if (window.Alpine) {
-    Alpine.directive('vclass', (el, {expression}, {evaluateLater, effect}) => {
+    Alpine.directive('vclass', (el, { expression }, { evaluateLater, effect }) => {
       const evaluate = evaluateLater(expression);
 
       effect(() => {
         evaluate(value => {
           if (!value) return;
           const classes = value.split(' ')
-              .map(cls => cls.startsWith(window.verdantPrefix) ? cls : window.verdantPrefix + cls)
-              .join(' ');
+            .map(cls => cls.startsWith(window.verdantPrefix) ? cls : window.verdantPrefix + cls)
+            .join(' ');
           el.setAttribute('class', classes);
         });
       });

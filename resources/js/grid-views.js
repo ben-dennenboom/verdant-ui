@@ -26,6 +26,10 @@ window.gridComponent = function (config) {
         this.handleResize();
       });
 
+      this.$watch('tileView', () => {
+        this.$nextTick(() => this.checkScroll());
+      });
+
       this.$nextTick(() => {
         this.checkScroll();
       });
@@ -61,8 +65,9 @@ window.gridComponent = function (config) {
       this.$nextTick(() => {
         const wrapper = this.$refs.gridWrapper;
         if (wrapper) {
-          // Compare scrollable width with visible width
-          this.hasScroll = wrapper.scrollWidth > wrapper.clientWidth;
+          setTimeout(() => {
+            this.hasScroll = wrapper.scrollWidth > wrapper.clientWidth;
+          }, 10);
         }
       });
     },

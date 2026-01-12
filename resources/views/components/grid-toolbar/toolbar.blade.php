@@ -23,7 +23,9 @@
             </div>
         @endif
 
-        <div class="v-flex v-items-center v-border-l v-border-gray-200 v-pl-3 dark:v-border-gray-700">
+        <div x-show="hasScroll" x-transition:enter="v-transition v-ease-out v-duration-200"
+            x-transition:enter-start="v-opacity-0 v-scale-95" x-transition:enter-end="v-opacity-100 v-scale-100"
+            class="v-flex v-items-center v-border-l v-border-gray-200 v-pl-3 dark:v-border-gray-700">
             <x-v-grid-toolbar.scroll-to-end />
         </div>
     </div>

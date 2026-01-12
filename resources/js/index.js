@@ -1,2 +1,3 @@
 import './verdant-ui.js';
-import './grid-views.js';
+import './grid-store.js';
+import './grid-component.js';

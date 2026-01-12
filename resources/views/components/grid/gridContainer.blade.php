@@ -8,7 +8,8 @@
 <div data-grid-id="{{ $attributes->get('id', 'grid') }}"
     {{ $attributes->merge(['class' => "v-rounded-xl v-bg-white dark:v-bg-gray-800 v-border v-border-gray-200 dark:v-border-gray-700 v-overflow-hidden $class"]) }}>
 
-    <div x-ref="gridWrapper" :class="tileView ? 'v-p-4' : ''" class="v-relative v-overflow-x-auto v-overflow-y-visible">
+    <div x-ref="gridWrapper" :class="tileView ? 'v-p-4' : ''" class="v-relative v-overflow-x-auto v-overflow-y-visible"
+        @scroll.passive="updateScrollState($refs.gridWrapper)">
 
         <div x-ref="gridLayout" class="v-grid v-grid-layout" :class="tileView ? 'v-tile-view v-gap-4' : 'v-table-view'"
             :style="getGridStyle()">

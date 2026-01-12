@@ -1,8 +1,7 @@
 
 /**
  * GRID COMPONENT LOGIC
- * Manages the state and behavior of the Verdant Grid, including view toggling (Table vs. Tile),
- * column visibility management, and responsive overflow detection.
+ * Manages the Verdant Grid: column visibility, tile/table view, responsive scroll
  */
 window.gridComponent = function (config) {
   const id = (config.title || 'grid').replace(/\s+/g, '_').toLowerCase();
@@ -10,22 +9,61 @@ window.gridComponent = function (config) {
 
   return {
     id: id,
-    hasScroll: false,
-    tileView: config.initialTileView,
     hiddenColumns: JSON.parse(localStorage.getItem(storageKey)) || config.hiddenColumns || [],
     totalColumns: config.totalColumns || 4,
     mobileBreakpoint: 768,
+
+    // Getters and Setters
+    get hasScroll() {
+      return this.$store.grids.get(this.id).hasScroll;
+    },
+    get isAtStart() {
+      return this.$store.grids.get(this.id).isAtStart;
+    },
+    get isAtEnd() {
+      return this.$store.grids.get(this.id).isAtEnd;
+    },
+    get tileView() {
+      return this.$store.grids.get(this.id).tileView;
+    },
+    set tileView(value) {
+      this.$store.grids.update(this.id, { tileView: value });
+    },
 
     /**
      * Component Lifecycle Initialization
      */
     init() {
+      // Initialize store state
+      this.$store.grids.update(this.id, {
+        hasScroll: false,
+        isAtStart: true,
+        isAtEnd: false,
+        tileView: config.initialTileView || false
+      });
+
       this.handleResize();
 
+      // Scroll event
+      this.$nextTick(() => {
+        const wrapper = this.$refs.gridWrapper;
+
+        if (wrapper) {
+          const scrollHandler = () => {
+            this.updateScrollState(wrapper);
+          };
+
+          wrapper.addEventListener('scroll', scrollHandler, { passive: true });
+          this.updateScrollState(wrapper);
+        }
+      });
+
+      // Window resize
       window.addEventListener('resize', () => {
         this.handleResize();
       });
 
+      // Watch tileview changes
       this.$watch('tileView', () => {
         this.$nextTick(() => this.checkScroll());
       });
@@ -54,19 +92,38 @@ window.gridComponent = function (config) {
     },
 
     /**
+     * Updates scroll state: hasScroll, isAtStart, isAtEnd
+     */
+    updateScrollState(wrapper) {
+      const margin = 5;
+      const state = {
+        hasScroll: wrapper.scrollWidth > wrapper.clientWidth,
+        isAtStart: wrapper.scrollLeft <= margin,
+        isAtEnd: wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - margin
+      };
+
+      this.$store.grids.update(this.id, state);
+    },
+
+    /**
      * Detects if the Table View content is wider than its container
      * Used to show/hide the "Scroll for more" indicator
      */
     checkScroll() {
       if (this.tileView) {
-        this.hasScroll = false;
+        this.$store.grids.update(this.id, {
+          hasScroll: false,
+          isAtStart: false,
+          isAtEnd: false
+        });
         return;
       }
+
       this.$nextTick(() => {
         const wrapper = this.$refs.gridWrapper;
         if (wrapper) {
           setTimeout(() => {
-            this.hasScroll = wrapper.scrollWidth > wrapper.clientWidth;
+            this.updateScrollState(wrapper);
           }, 10);
         }
       });
@@ -143,33 +200,63 @@ window.gridComponent = function (config) {
     },
 
     /**
-     * Programmatically scrolls the grid to the far right end.
-     * It forces the necessary CSS properties to ensure the scroll action is 
+     * Programmatically scrolls the grid either to the start or the end.
+     * Centralizes the CSS adjustments and fallback logic to avoid duplication.
+     *
+     * @param {'start'|'end'} direction - Scroll direction
      */
-    scrollToEnd() {
+    scrollTo(direction = 'start') {
       const container = this.$refs.gridWrapper;
       const content = this.$refs.gridLayout;
 
-      if (container && content) {
-        container.style.overflowX = 'scroll';
-        container.style.display = 'block';
+      if (!container || !content) return;
 
-        content.style.width = 'max-content';
-        content.style.display = 'grid';
+      // Ensure scrollable CSS
+      container.style.overflowX = 'scroll';
+      container.style.display = 'block';
 
-        this.$nextTick(() => {
-          const targetScroll = container.scrollWidth - container.clientWidth;
+      content.style.width = 'max-content';
+      content.style.display = 'grid';
 
-          container.scrollLeft = targetScroll;
+      this.$nextTick(() => {
+        const targetScroll = direction === 'end'
+          ? container.scrollWidth - container.clientWidth
+          : 0;
 
-          setTimeout(() => {
-            if (container.scrollLeft === 0) {
-              const parent = container.parentElement;
+        container.scrollLeft = targetScroll;
+
+        // Update scroll state na scrollen
+        setTimeout(() => {
+          this.updateScrollState(container);
+        }, 50);
+
+        // Fallback voor browsers die mogelijk niet direct reageren
+        setTimeout(() => {
+          this.updateScrollState(container);
+
+          if (Math.abs(container.scrollLeft - targetScroll) > 5) {
+            const parent = container.parentElement;
+            if (parent) {
               parent.scrollLeft = targetScroll;
+              this.updateScrollState(parent);
             }
-          }, 50);
-        });
-      }
+          }
+        }, 150);
+      });
+    },
+
+    /**
+     * Scroll to the far right of the grid
+     */
+    scrollToEnd() {
+      this.scrollTo('end');
+    },
+
+    /**
+     * Scroll to the far left of the grid
+     */
+    scrollToStart() {
+      this.scrollTo('start');
     }
   }
 }

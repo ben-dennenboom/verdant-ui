@@ -3,9 +3,16 @@
     'title' => 'Filter',
     'id' => 'filterModal',
     'filter' => null,
+    'buttonAttributes' => [],
+    'clearButtonAttributes' => [],
 ])
 
-<x-v-button.light @click="$dispatch('open-modal', '{{ $id }}')" icon="filter" outline>
+<x-v-button.light
+    @click="$dispatch('open-modal', '{{ $id }}')"
+    icon="filter"
+    outline
+    {{ $attributes->merge($buttonAttributes) }}
+>
   Filter
   @php
     $count = !empty($filter) ? count(array_filter($filter, fn($v) => is_null($v) === false )) : 0;
@@ -16,7 +23,13 @@
 </x-v-button.light>
 
 @if($filter)
-  <x-v-button.light @click="clearAllFilters()" icon="times" outline tooltip="Clear Filters"></x-v-button.light>
+  <x-v-button.light
+      @click="clearAllFilters()"
+      icon="times"
+      outline
+      tooltip="Clear Filters"
+      {{ $attributes->merge($clearButtonAttributes) }}
+  ></x-v-button.light>
 @endif
 
 <div x-data="{ open: false }">

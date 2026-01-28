@@ -8,7 +8,7 @@
 
 <div x-data="{ open: false }" class="v-relative" {{ $attributes }}>
 
-    <x-button.toolbar @click="open = !open" tooltip="Manage Columns" tooltip-position="top">
+    <x-v-button.toolbar @click="open = !open" tooltip="Manage Columns" tooltip-position="top">
         <i class="fas fa-columns v-text-2xl v-text-gray-600 dark:v-text-gray-300"></i>
     </x-button.toolbar>
 

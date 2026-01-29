@@ -6,7 +6,7 @@
         @foreach ($row->cells as $cell)
             <div class="v-px-6 v-py-4 v-text-sm {{ $cell->class }}">
                 @if ($cell->isActions)
-                    <div class="v-flex v-justify-end v-gap-2">
+                    <div class="v-grid v-justify-items-center v-gap-2">
                         {{-- Custom render (Htmlable) --}}
                         @if ($cell->value instanceof \Illuminate\Contracts\Support\Htmlable)
                             {!! $cell->value->toHtml() !!}
@@ -19,6 +19,7 @@
                                     :component="$action['component']"
                                     :href="$action['href']"
                                     :new-window="!empty($action['target'])"
+                                    class="v-w-fit"
                                 >
                                     {{ $action['label'] }}
                                 </x-dynamic-component>

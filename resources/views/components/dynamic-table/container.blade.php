@@ -25,4 +25,6 @@
     <div class="v-block lg:v-hidden v-p-4">
         @include('verdant::components.dynamic-table.body-cards')
     </div>
+
+    @include('verdant::components.dynamic-table.pagination')
 </div>

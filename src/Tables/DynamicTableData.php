@@ -14,12 +14,14 @@ class DynamicTableData implements DynamicTableDataProvider
     protected array $headers;
 
     /**
-     * Rows can include an "actions" key with HTML/Htmlable content or
-     * an array of action definitions (label/route/params/button).
-     *
      * @var array<int, array<string, mixed>|array<int, mixed>>
      */
     protected array $rows;
+
+    /**
+     * @var AbstractPaginator|null
+     */
+    protected ?AbstractPaginator $paginator = null;
 
     /**
      * @param array<int, string|array<string, mixed>> $headers
@@ -37,10 +39,12 @@ class DynamicTableData implements DynamicTableDataProvider
      */
     public static function from(array $headers, array $rows): self
     {
-        // Cache route existence checks for all actions
         $rows = self::cacheRouteExistence($rows);
 
-        return new self($headers, $rows);
+        $instance = new self($headers, $rows);
+        $instance->paginator = null;
+
+        return $instance;
     }
 
     public static function fromCollection(
@@ -52,9 +56,14 @@ class DynamicTableData implements DynamicTableDataProvider
             return new self([], []);
         }
 
-        $collection = $items instanceof AbstractPaginator
-            ? $items->getCollection()
-            : collect($items);
+        $instance = new self([], []);
+
+        if ($items instanceof AbstractPaginator) {
+            $instance->paginator = $items;
+            $collection = $items->getCollection();
+        } else {
+            $collection = collect($items);
+        }
 
         $headers = [];
         foreach ($columns as $key => $definition) {
@@ -86,7 +95,6 @@ class DynamicTableData implements DynamicTableDataProvider
             if ($actions) {
                 $actionsValue = $actions($model);
 
-                // render override
                 if (is_array($actionsValue)) {
                     $render = null;
 
@@ -95,10 +103,8 @@ class DynamicTableData implements DynamicTableDataProvider
                         unset($actionsValue['render']);
                     }
 
-                    // numeric actions stay numeric
                     $row['actions'] = array_values($actionsValue);
 
-                    // attach custom render separately
                     if ($render) {
                         $row['actions_render'] = $render($row, $model);
                     }
@@ -112,10 +118,12 @@ class DynamicTableData implements DynamicTableDataProvider
             ->values()
             ->all();
 
-        // Cache route existence checks for all actions
         $rows = self::cacheRouteExistence($rows);
 
-        return new self($headers, $rows);
+        $instance->headers = $headers;
+        $instance->rows = $rows;
+
+        return $instance;
     }
 
     /**
@@ -132,6 +140,14 @@ class DynamicTableData implements DynamicTableDataProvider
     public function rows(): array
     {
         return $this->rows;
+    }
+
+    /**
+     * @return AbstractPaginator|null
+     */
+    public function paginator(): ?AbstractPaginator
+    {
+        return $this->paginator;
     }
 
     /**

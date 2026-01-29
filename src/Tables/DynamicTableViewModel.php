@@ -3,6 +3,7 @@
 namespace Dennenboom\VerdantUI\Tables;
 
 use Dennenboom\VerdantUI\Contracts\DynamicTableDataProvider;
+use Illuminate\Pagination\AbstractPaginator;
 
 final class DynamicTableViewModel
 {
@@ -12,6 +13,7 @@ final class DynamicTableViewModel
     public int $columnCount;
     public bool $usesKeys;
     public ?int $actionsColumnIndex;
+    public ?AbstractPaginator $paginator = null;
 
     private const ACTIONS_KEY = 'actions';
 
@@ -34,6 +36,10 @@ final class DynamicTableViewModel
 
         $vm->rows = self::normalizeRows($rows, $vm);
         $vm->columnCount = count($vm->headers);
+
+        if ($data instanceof DynamicTableDataProvider) {
+            $vm->paginator = $data->paginator();
+        }
 
         return $vm;
     }
@@ -70,7 +76,7 @@ final class DynamicTableViewModel
             $normalized[] = [
                 'label' => 'Actions',
                 'key' => self::ACTIONS_KEY,
-                'class' => 'v-text-right',
+                'class' => 'v-text-center',
             ];
         }
 

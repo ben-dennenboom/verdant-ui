@@ -2,6 +2,8 @@
 
 namespace Dennenboom\VerdantUI\Contracts;
 
+use Illuminate\Pagination\AbstractPaginator;
+
 interface DynamicTableDataProvider
 {
     /**
@@ -13,4 +15,9 @@ interface DynamicTableDataProvider
      * @return array<int, array<string, mixed>|array<int, mixed>>
      */
     public function rows(): array;
+
+    /**
+     * @return AbstractPaginator|null
+     */
+    public function paginator(): ?AbstractPaginator;
 }

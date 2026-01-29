@@ -24,6 +24,11 @@ class DynamicTableData implements DynamicTableDataProvider
     protected ?AbstractPaginator $paginator = null;
 
     /**
+     * @var DynamicTableSort|null
+     */
+    protected ?DynamicTableSort $sort = null;
+
+    /**
      * @param array<int, string|array<string, mixed>> $headers
      * @param array<int, array<string, mixed>|array<int, mixed>> $rows
      */
@@ -67,10 +72,20 @@ class DynamicTableData implements DynamicTableDataProvider
 
         $headers = [];
         foreach ($columns as $key => $definition) {
-            $headers[] = [
-                'key' => $key,
-                'label' => is_array($definition) ? $definition['label'] : $definition,
-            ];
+            $headers[] = is_array($definition) ?
+                array_merge(
+                    [
+                        'key'   => $key,
+                        'label' => $definition['label'],
+                    ],
+                    array_intersect_key(
+                        $definition,
+                        ['sortable' => true]
+                    )
+                ) : [
+                    'key'   => $key,
+                    'label' => $definition,
+                ];
         }
 
         $rows = $collection->map(function ($model) use ($columns, $actions) {
@@ -148,6 +163,33 @@ class DynamicTableData implements DynamicTableDataProvider
     public function paginator(): ?AbstractPaginator
     {
         return $this->paginator;
+    }
+
+    public function sort(): ?DynamicTableSort
+    {
+        return $this->sort;
+    }
+
+    public function withSorting(DynamicTableSort $sort): self
+    {
+        $this->sort = $sort;
+
+        if ($this->paginator) {
+            return $this;
+        }
+
+        if ($sort->key) {
+            usort($this->rows, function ($a, $b) use ($sort) {
+                $av = data_get($a, $sort->key);
+                $bv = data_get($b, $sort->key);
+
+                return $sort->direction === 'asc'
+                    ? $av <=> $bv
+                    : $bv <=> $av;
+            });
+        }
+
+        return $this;
     }
 
     /**

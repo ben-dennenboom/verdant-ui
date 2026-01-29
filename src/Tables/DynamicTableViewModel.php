@@ -14,6 +14,7 @@ final class DynamicTableViewModel
     public bool $usesKeys;
     public ?int $actionsColumnIndex;
     public ?AbstractPaginator $paginator = null;
+    public ?DynamicTableSort $sort = null;
 
     private const ACTIONS_KEY = 'actions';
 
@@ -36,6 +37,10 @@ final class DynamicTableViewModel
 
         $vm->rows = self::normalizeRows($rows, $vm);
         $vm->columnCount = count($vm->headers);
+
+        if ($data instanceof DynamicTableData) {
+            $vm->sort = $data->sort();
+        }
 
         if ($data instanceof DynamicTableDataProvider) {
             $vm->paginator = $data->paginator();
@@ -77,6 +82,7 @@ final class DynamicTableViewModel
                 'label' => 'Actions',
                 'key' => self::ACTIONS_KEY,
                 'class' => 'v-text-center',
+                'sortable' => false,
             ];
         }
 

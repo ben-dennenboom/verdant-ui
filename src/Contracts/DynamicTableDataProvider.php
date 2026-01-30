@@ -2,6 +2,7 @@
 
 namespace Dennenboom\VerdantUI\Contracts;
 
+use Dennenboom\VerdantUI\Tables\DynamicTableSort;
 use Illuminate\Pagination\AbstractPaginator;
 
 interface DynamicTableDataProvider
@@ -20,4 +21,9 @@ interface DynamicTableDataProvider
      * @return AbstractPaginator|null
      */
     public function paginator(): ?AbstractPaginator;
+
+    /**
+     * @return DynamicTableSort|null
+     */
+    public function sort(): ?DynamicTableSort;
 }

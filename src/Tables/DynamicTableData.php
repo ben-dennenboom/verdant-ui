@@ -178,14 +178,27 @@ class DynamicTableData implements DynamicTableDataProvider
             return $this;
         }
 
-        if ($sort->key) {
+        if (count($sort->columns)) {
             usort($this->rows, function ($a, $b) use ($sort) {
-                $av = data_get($a, $sort->key);
-                $bv = data_get($b, $sort->key);
+                foreach ($sort->columns as $col) {
+                    $av = data_get($a, $col['key']);
+                    $bv = data_get($b, $col['key']);
 
-                return $sort->direction === 'asc'
-                    ? $av <=> $bv
-                    : $bv <=> $av;
+                    if ($av === $bv) {
+                        continue;
+                    }
+
+                    if ($av === null) return 1;
+                    if ($bv === null) return -1;
+
+                    $cmp = $av <=> $bv;
+
+                    if ($cmp !== 0) {
+                        return $col['direction'] === 'asc' ? $cmp : -$cmp;
+                    }
+                }
+
+                return 0;
             });
         }
 

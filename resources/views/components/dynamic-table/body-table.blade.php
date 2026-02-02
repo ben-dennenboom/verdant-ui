@@ -1,10 +1,21 @@
 @forelse ($vm->rows as $row)
     <div
         class="v-grid hover:v-bg-gray-50 v-items-center"
-        style="grid-template-columns: repeat({{ $vm->columnCount }}, minmax(0,1fr));"
+        @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
+            :style="'grid-template-columns: repeat(' + Alpine.store('{{ $columnVisibility['storeKey'] }}').visibleCount + ', minmax(0,1fr))'"
+        @else
+            style="grid-template-columns: repeat({{ $vm->columnCount }}, minmax(0,1fr));"
+        @endif
     >
         @foreach ($row->cells as $cell)
-            <div class="v-px-6 v-py-4 v-text-sm {{ $cell->class }}">
+            @php
+                $columnKey = $vm->columnKeyForIndex($loop->index);
+            @endphp
+            <div class="v-px-6 v-py-4 v-text-sm {{ $cell->class }}"
+                @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
+                    x-show="isVisible('{{ $columnKey }}')"
+                @endif
+            >
                 @if ($cell->isActions)
                     <div class="v-grid v-justify-items-center v-gap-2">
                         {{-- Custom render (Htmlable) --}}

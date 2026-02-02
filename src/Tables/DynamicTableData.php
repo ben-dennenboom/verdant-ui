@@ -29,6 +29,16 @@ class DynamicTableData implements DynamicTableDataProvider
     protected ?DynamicTableSort $sort = null;
 
     /**
+     * @var string|null
+     */
+    protected ?string $columnVisibilityKey = null;
+
+    /**
+     * @var array<string>|null
+     */
+    protected ?array $defaultVisibleColumns = null;
+
+    /**
      * @param array<int, string|array<string, mixed>> $headers
      * @param array<int, array<string, mixed>|array<int, mixed>> $rows
      */
@@ -170,6 +180,27 @@ class DynamicTableData implements DynamicTableDataProvider
         return $this->sort;
     }
 
+    public function columnVisibilityKey(): ?string
+    {
+        return $this->columnVisibilityKey;
+    }
+
+    public function defaultVisibleColumns(): ?array
+    {
+        return $this->defaultVisibleColumns;
+    }
+
+    /**
+     * @param  array<string>|null  $defaultVisible
+     */
+    public function withColumnVisibility(string $key, ?array $defaultVisible = null): self
+    {
+        $this->columnVisibilityKey = $key;
+        $this->defaultVisibleColumns = $defaultVisible;
+
+        return $this;
+    }
+
     public function withSorting(DynamicTableSort $sort): self
     {
         $this->sort = $sort;
@@ -188,8 +219,8 @@ class DynamicTableData implements DynamicTableDataProvider
                         continue;
                     }
 
-                    if ($av === null) return 1;
-                    if ($bv === null) return -1;
+                    if (is_null($av)) return 1;
+                    if (is_null($bv)) return -1;
 
                     $cmp = $av <=> $bv;
 

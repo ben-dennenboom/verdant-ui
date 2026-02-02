@@ -26,4 +26,20 @@ interface DynamicTableDataProvider
      * @return DynamicTableSort|null
      */
     public function sort(): ?DynamicTableSort;
+
+    /**
+     * Storage key for column visibility preferences (e.g. for localStorage).
+     * Return null if this table does not support column visibility.
+     *
+     * @return string|null
+     */
+    public function columnVisibilityKey(): ?string;
+
+    /**
+     * Default visible column keys when no preference is stored.
+     * Return null to mean "all visible".
+     *
+     * @return array<string>|null
+     */
+    public function defaultVisibleColumns(): ?array;
 }

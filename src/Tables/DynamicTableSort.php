@@ -11,7 +11,13 @@ final class DynamicTableSort
         public readonly array $columns
     ) {}
 
-    public static function fromRequest(): self
+    /**
+     * Build sort state from request query (sort, direction).
+     * Optionally filter to only allowed column keys.
+     *
+     * @param  array<string>|null  $allowedKeys  When provided, only these column keys are included; null means no filter.
+     */
+    public static function fromRequest(?array $allowedKeys = null): self
     {
         $keys = array_filter(explode(',', (string) request('sort')));
         $dirs = array_filter(explode(',', (string) request('direction')));
@@ -19,6 +25,9 @@ final class DynamicTableSort
         $columns = [];
 
         foreach ($keys as $i => $key) {
+            if ($allowedKeys !== null && $allowedKeys !== [] && ! in_array($key, $allowedKeys, true)) {
+                continue;
+            }
             $columns[$key] = [
                 'key' => $key,
                 'direction' => ($dirs[$i] ?? 'asc') === 'desc' ? 'desc' : 'asc',

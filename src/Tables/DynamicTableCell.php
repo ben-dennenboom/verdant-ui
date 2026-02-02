@@ -19,28 +19,38 @@ final class DynamicTableCell
         $this->value = null;
 
         if ($isActions) {
-            if ($value instanceof Htmlable) {
-                $this->value = $value;
-                return;
-            }
-
-            if (is_array($value)) {
-                $this->actions = $this->resolveActions($value, $row);
-            }
-
-            // NEW: support rendered actions separately
-            if (isset($row['actions_render']) && $row['actions_render'] instanceof Htmlable) {
-                $this->value = $row['actions_render'];
-            }
+            $this->resolveActionCellContent($value, $row);
 
             return;
         }
 
-        // normal cells
+        $this->resolveRegularCellContent($value);
+    }
+
+    private function resolveActionCellContent(mixed $value, array $row): void
+    {
+        if ($value instanceof Htmlable) {
+            $this->value = $value;
+
+            return;
+        }
+
+        if (is_array($value)) {
+            $this->actions = $this->resolveActions($value, $row);
+        }
+
+        if (isset($row['actions_render']) && $row['actions_render'] instanceof Htmlable) {
+            $this->value = $row['actions_render'];
+        }
+    }
+
+    private function resolveRegularCellContent(mixed $value): void
+    {
         if (is_array($value)) {
             $this->value = $value['value'] ?? null;
             $this->class = $value['class'] ?? '';
-            $this->html  = $value['html'] ?? false;
+            $this->html = $value['html'] ?? false;
+
             return;
         }
 

@@ -2,10 +2,21 @@
         columns: @js($vm->sort?->columns ?? [])
     })"
     class="v-grid v-bg-gray-50 v-relative"
-    style="grid-template-columns: repeat({{ $vm->columnCount }}, minmax(0,1fr));"
+    @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
+        :style="'grid-template-columns: repeat(' + Alpine.store('{{ $columnVisibility['storeKey'] }}').visibleCount + ', minmax(0,1fr))'"
+    @else
+        style="grid-template-columns: repeat({{ $vm->columnCount }}, minmax(0,1fr));"
+    @endif
 >
     @foreach ($vm->headers as $header)
-        <div class="v-px-6 v-py-3 v-text-md v-font-semibold {{ $header['class'] ?? '' }}">
+        @php
+            $columnKey = $vm->columnKeyForIndex($loop->index);
+        @endphp
+        <div class="v-px-6 v-py-3 v-text-md v-font-semibold {{ $header['class'] ?? '' }}"
+            @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
+                x-show="Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}')"
+            @endif
+        >
             @if (!empty($header['sortable']) && !empty($header['key']))
                 <button
                     type="button"
@@ -45,6 +56,8 @@
 
 <script>
     document.addEventListener('alpine:init', () => {
+        if (Alpine.data('dynamicTableSort')) return;
+
         Alpine.data('dynamicTableSort', (initial) => ({
             columns: initial.columns ?? [],
 

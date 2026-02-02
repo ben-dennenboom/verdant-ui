@@ -15,6 +15,8 @@ final class DynamicTableViewModel
     public ?int $actionsColumnIndex;
     public ?AbstractPaginator $paginator = null;
     public ?DynamicTableSort $sort = null;
+    public ?string $columnVisibilityKey = null;
+    public ?array $defaultVisibleColumns = null;
 
     private const ACTIONS_KEY = 'actions';
 
@@ -31,19 +33,39 @@ final class DynamicTableViewModel
 
         $vm->headers = self::normalizeHeaders($headers, $rows);
         $vm->columnKeys = self::extractColumnKeys($vm->headers);
-        $vm->usesKeys = in_array(true, array_map(fn ($k) => $k !== null, $vm->columnKeys), true);
+        $vm->usesKeys = in_array(true, array_map(fn ($k) => !is_null($k), $vm->columnKeys), true);
 
-        $vm->actionsColumnIndex = array_search(self::ACTIONS_KEY, $vm->columnKeys, true) ?: null;
+        $idx = array_search(self::ACTIONS_KEY, $vm->columnKeys, true);
+        $vm->actionsColumnIndex = $idx !== false ? $idx : null;
 
         $vm->rows = self::normalizeRows($rows, $vm);
         $vm->columnCount = count($vm->headers);
 
-        if ($data instanceof DynamicTableData) {
+        if ($data instanceof DynamicTableDataProvider && !is_null($data->sort())) {
             $vm->sort = $data->sort();
         }
 
         if ($data instanceof DynamicTableDataProvider) {
             $vm->paginator = $data->paginator();
+
+            $visibilityKey = $data->columnVisibilityKey();
+            if (!is_null($visibilityKey)) {
+                $vm->columnVisibilityKey = $visibilityKey;
+            }
+
+            $defaultVisible = $data->defaultVisibleColumns();
+            if (!is_null($defaultVisible)) {
+                $vm->defaultVisibleColumns = $defaultVisible;
+            }
+        }
+
+        if (is_array($data)) {
+            if (isset($data['column_visibility_key'])) {
+                $vm->columnVisibilityKey = $data['column_visibility_key'];
+            }
+            if (isset($data['default_visible_columns'])) {
+                $vm->defaultVisibleColumns = $data['default_visible_columns'];
+            }
         }
 
         return $vm;
@@ -110,5 +132,31 @@ final class DynamicTableViewModel
         return array_map(function ($row) use ($vm) {
             return new DynamicTableRow($row, $vm);
         }, $rows);
+    }
+
+    /**
+     * Resolve the column key for a given index (used for visibility and grid alignment).
+     */
+    public function columnKeyForIndex(int $index): string
+    {
+        $key = $this->columnKeys[$index] ?? null;
+
+        return !is_null($key) ? (string) $key : 'col-' . $index;
+    }
+
+    /**
+     * Resolve the header label for a given column index.
+     */
+    public function headerLabel(int $index): string
+    {
+        $header = $this->headers[$index] ?? null;
+
+        if (is_null($header)) {
+            return (string) $index;
+        }
+
+        return is_array($header)
+            ? (string) ($header['label'] ?? $index)
+            : (string) $header;
     }
 }

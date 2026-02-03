@@ -17,6 +17,9 @@ final class DynamicTableViewModel
     public ?DynamicTableSort $sort = null;
     public ?string $columnVisibilityKey = null;
     public ?array $defaultVisibleColumns = null;
+    public ?array $searchableColumns = null;
+    public string $searchTerm = '';
+    public ?string $searchApiUrl = null;
 
     private const ACTIONS_KEY = 'actions';
 
@@ -57,6 +60,16 @@ final class DynamicTableViewModel
             if (!is_null($defaultVisible)) {
                 $vm->defaultVisibleColumns = $defaultVisible;
             }
+
+            $searchable = $data->searchableColumns();
+            if (!is_null($searchable)) {
+                $vm->searchableColumns = $searchable;
+            }
+
+            $apiUrl = $data->searchApiUrl();
+            if (!is_null($apiUrl)) {
+                $vm->searchApiUrl = $apiUrl;
+            }
         }
 
         if (is_array($data)) {
@@ -66,7 +79,17 @@ final class DynamicTableViewModel
             if (isset($data['default_visible_columns'])) {
                 $vm->defaultVisibleColumns = $data['default_visible_columns'];
             }
+            if (isset($data['searchable_columns'])) {
+                $vm->searchableColumns = $data['searchable_columns'];
+            }
+            if (isset($data['search_api_url'])) {
+                $vm->searchApiUrl = $data['search_api_url'];
+            }
         }
+
+        $vm->searchTerm = (string) (is_array($data) && isset($data['search_term'])
+            ? $data['search_term']
+            : request('search', ''));
 
         return $vm;
     }

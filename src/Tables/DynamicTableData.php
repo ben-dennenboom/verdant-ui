@@ -39,6 +39,16 @@ class DynamicTableData implements DynamicTableDataProvider
     protected ?array $defaultVisibleColumns = null;
 
     /**
+     * @var array<string>|null
+     */
+    protected ?array $searchableColumns = null;
+
+    /**
+     * @var string|null
+     */
+    protected ?string $searchApiUrl = null;
+
+    /**
      * @param array<int, string|array<string, mixed>> $headers
      * @param array<int, array<string, mixed>|array<int, mixed>> $rows
      */
@@ -190,6 +200,16 @@ class DynamicTableData implements DynamicTableDataProvider
         return $this->defaultVisibleColumns;
     }
 
+    public function searchableColumns(): ?array
+    {
+        return $this->searchableColumns;
+    }
+
+    public function searchApiUrl(): ?string
+    {
+        return $this->searchApiUrl;
+    }
+
     /**
      * @param  array<string>|null  $defaultVisible
      */
@@ -197,6 +217,23 @@ class DynamicTableData implements DynamicTableDataProvider
     {
         $this->columnVisibilityKey = $key;
         $this->defaultVisibleColumns = $defaultVisible;
+
+        return $this;
+    }
+
+    /**
+     * @param  array<string>  $columns
+     */
+    public function withSearchableColumns(array $columns): self
+    {
+        $this->searchableColumns = $columns;
+
+        return $this;
+    }
+
+    public function withSearchApiUrl(string $url): self
+    {
+        $this->searchApiUrl = $url;
 
         return $this;
     }

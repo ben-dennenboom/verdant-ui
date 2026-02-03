@@ -25,6 +25,8 @@
         'pinned' => $pinnedColumns,
         'defaultVisible' => $vm->defaultVisibleColumns,
     ] : null;
+    $showSearch = !empty($vm->searchableColumns);
+    $showToolbar = $showSearch || $visibilityKey;
 @endphp
 
 <div
@@ -40,11 +42,24 @@
         })"
     @endif
 >
-    @if($visibilityKey)
-        @include('verdant::components.dynamic-table.column-picker', [
-            'vm' => $vm,
-            'columnVisibilityConfig' => $columnVisibilityConfig,
-        ])
+    @if($showToolbar)
+        <div class="v-flex v-items-center v-justify-between v-gap-4 v-px-4 v-py-3 v-border-b v-border-gray-200 dark:v-border-gray-700">
+            @if($showSearch)
+                @include('verdant::components.dynamic-table.search-bar', [
+                    'searchTerm' => $vm->searchTerm,
+                    'paramName' => 'search',
+                    'placeholder' => 'Search…',
+                    'searchApiUrl' => $vm->searchApiUrl,
+                ])
+            @endif
+
+            @if($visibilityKey)
+                @include('verdant::components.dynamic-table.column-picker', [
+                    'vm' => $vm,
+                    'columnVisibilityConfig' => $columnVisibilityConfig,
+                ])
+            @endif
+        </div>
     @endif
 
     <div class="v-hidden lg:v-block v-overflow-x-auto">

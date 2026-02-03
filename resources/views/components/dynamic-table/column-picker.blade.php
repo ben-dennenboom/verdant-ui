@@ -9,7 +9,7 @@
     $columnsPanelId = 'columns-panel-' . $storeKey;
 @endphp
 
-<div class="v-flex v-items-center v-justify-end v-px-4 v-py-3 v-border-b v-border-gray-200 dark:v-border-gray-700">
+<div class="v-flex v-items-center v-justify-end v-px-4 v-py-3">
     <div class="v-relative" x-data="{ open: false, storeKey: @js($storeKey) }">
         <button
             type="button"
@@ -44,7 +44,7 @@
                 </button>
             </div>
 
-            <div class="v-max-h-64 v-space-y-2 v-overflow-auto">
+            <div class="v-max-h-64 v-space-y-2 v-overflow-auto v-pl-1 v-pt-1">
                 @foreach($vm->headers as $key => $header)
                     @php
                         $label = is_array($header) ? ($header['label'] ?? $key) : $header;
@@ -89,13 +89,13 @@
 <script>
 document.addEventListener('alpine:init', () => {
     if (Alpine.data('verdantTableColumns')) return;
+
     Alpine.data('verdantTableColumns', (config) => ({
         storageKey: config.storageKey ?? 'verdant.table.columns.default',
         storeKey: config.storeKey ?? 'vtd_default',
         allKeys: config.allKeys ?? [],
         pinned: config.pinned ?? ['actions'],
         defaultVisible: config.defaultVisible ?? null,
-
         visible: {},
 
         init() {
@@ -132,6 +132,7 @@ document.addEventListener('alpine:init', () => {
             const fromDefault = this.defaultVisible === null
                 ? true
                 : this.defaultVisible.includes(key);
+
             return isPinned ? true : fromDefault;
         },
 
@@ -158,6 +159,7 @@ document.addEventListener('alpine:init', () => {
             try {
                 localStorage.setItem(this.storageKey, JSON.stringify(this.visible));
             } catch (e) {}
+
             this.syncVisibleCount();
         },
 
@@ -166,6 +168,7 @@ document.addEventListener('alpine:init', () => {
             try {
                 localStorage.setItem(this.storageKey, JSON.stringify(this.visible));
             } catch (e) {}
+
             this.syncVisibleCount();
         },
 
@@ -173,17 +176,21 @@ document.addEventListener('alpine:init', () => {
             this.allKeys.forEach((k) => {
                 if (!this.pinned.includes(k)) this.visible[k] = false;
             });
+
             try {
                 localStorage.setItem(this.storageKey, JSON.stringify(this.visible));
             } catch (e) {}
+
             this.syncVisibleCount();
         },
 
         reset() {
             this.applyDefaults();
+
             try {
                 localStorage.setItem(this.storageKey, JSON.stringify(this.visible));
             } catch (e) {}
+
             this.syncVisibleCount();
         },
     }));

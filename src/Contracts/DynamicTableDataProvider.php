@@ -42,4 +42,22 @@ interface DynamicTableDataProvider
      * @return array<string>|null
      */
     public function defaultVisibleColumns(): ?array;
+
+    /**
+     * Column keys to search when the user submits the search bar.
+     * Return null to hide the search bar.
+     *
+     * @return array<string>|null
+     */
+    public function searchableColumns(): ?array;
+
+    /**
+     * URL for API search. When set, the search bar fetches from this URL (with ?q=...)
+     * and shows results in a dropdown; selecting an item navigates to its url.
+     * API should return JSON array of objects with at least "url" and "label".
+     * Return null to use form-submit search instead.
+     *
+     * @return string|null
+     */
+    public function searchApiUrl(): ?string;
 }

@@ -39,19 +39,19 @@
         </div>
     @endforeach
 
-        <template x-if="hasSorting()">
-            <button
-                type="button"
-                class="
-                    v-absolute v-right-3 v-top-1/2 -v-translate-y-1/2
-                    v-text-gray-400 hover:v-text-red-500
-                "
-                title="Reset sorting"
-                @click.stop="reset"
-            >
-                <i class="fa fa-xmark"></i>
-            </button>
-        </template>
+    <template x-if="hasSorting()">
+        <button
+            type="button"
+            class="
+                v-absolute v-right-3 v-top-1/2 -v-translate-y-1/2
+                v-text-gray-400 hover:v-text-red-500
+            "
+            title="Reset sorting"
+            @click.stop="reset"
+        >
+            <i class="fa fa-xmark"></i>
+        </button>
+    </template>
 </div>
 
 <script>

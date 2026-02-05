@@ -26,7 +26,8 @@
         'defaultVisible' => $vm->defaultVisibleColumns,
     ] : null;
     $showSearch = !empty($vm->searchableColumns);
-    $showToolbar = $showSearch || $visibilityKey;
+    $showFilter = !empty($vm->filterColumns);
+    $showToolbar = $showSearch || $visibilityKey || $showFilter;
 @endphp
 
 <div
@@ -50,6 +51,13 @@
                     'paramName' => 'search',
                     'placeholder' => 'Search…',
                     'searchApiUrl' => $vm->searchApiUrl,
+                ])
+            @endif
+
+            @if($showFilter)
+                @include('verdant::components.dynamic-table.filter-modal', [
+                    'vm' => $vm,
+                    'modalId' => 'v-dynamic-table-filter-' . ($storeKey ?? 'default'),
                 ])
             @endif
 

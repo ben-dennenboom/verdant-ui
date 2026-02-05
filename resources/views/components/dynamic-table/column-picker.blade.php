@@ -9,7 +9,7 @@
     $columnsPanelId = 'columns-panel-' . $storeKey;
 @endphp
 
-<div class="v-flex v-items-center v-justify-end v-px-4 v-py-3">
+<div class="v-flex v-items-center v-justify-end">
     <div class="v-relative" x-data="{ open: false, storeKey: @js($storeKey) }">
         <button
             type="button"

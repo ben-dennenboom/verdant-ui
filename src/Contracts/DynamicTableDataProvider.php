@@ -60,4 +60,13 @@ interface DynamicTableDataProvider
      * @return string|null
      */
     public function searchApiUrl(): ?string;
+
+    /**
+     * Filter definitions for the filter modal. Each item: key, label, type (text|number|date|checkbox|select),
+     * and for select: options (array of ['value' => x, 'label' => y] or value => label).
+     * Return null to hide the filter button/modal.
+     *
+     * @return array<int, array<string, mixed>>|null
+     */
+    public function filterColumns(): ?array;
 }

@@ -190,6 +190,7 @@ final class DynamicTableViewModel
                 'type' => (string) $filter['type'],
                 'placeholder' => $filter['placeholder'] ?? null,
                 'default' => $filter['default'] ?? null,
+                'multiple' => !empty($filter['multiple']),
             ];
             if (($filter['type'] ?? '') === 'select' && isset($filter['options']) && is_array($filter['options'])) {
                 $item['options'] = self::normalizeSelectOptions($filter['options']);
@@ -234,7 +235,12 @@ final class DynamicTableViewModel
             if ($key === null) {
                 continue;
             }
-            $values[$key] = request($key, $col['default'] ?? null);
+            $default = $col['default'] ?? null;
+            if (!empty($col['multiple'])) {
+                $values[$key] = request()->has($key) ? (array) request($key) : (is_array($default) ? $default : []);
+            } else {
+                $values[$key] = request($key, $default);
+            }
         }
 
         return $values;

@@ -88,10 +88,11 @@ class UserTableController extends Controller
             ->withColumnVisibility('users-table')
             ->withFilters([
                 [
-                    'key'     => 'status',
-                    'label'   => 'Status',
-                    'type'    => 'select',
-                    'options' => [
+                    'key'      => 'status',
+                    'label'    => 'Status',
+                    'type'     => 'select',
+                    'multiple' => true,
+                    'options'  => [
                         ['value' => '', 'label' => 'Any'],
                         ['value' => 'active', 'label' => 'Active'],
                         ['value' => 'inactive', 'label' => 'Inactive'],

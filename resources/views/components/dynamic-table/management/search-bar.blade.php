@@ -12,9 +12,10 @@
     $inputId = 'v-table-search-' . $paramName;
     $resultsId = 'v-table-search-results-' . $paramName;
     $inputWrapperClass = 'v-flex v-items-stretch v-rounded v-shadow-sm v-border v-border-secondary-300 dark:v-border-gray-600
-        v-bg-white dark:v-bg-gray-800 focus-within:v-ring-2 focus-within:v-ring-secondary-500 focus-within:v-border-secondary-500';
-    $inputClass = 'v-flex-1 v-min-w-0 v-border-0 v-bg-transparent v-rounded-l v-rounded-r-none v-px-3 v-py-2 v-shadow-sm
-        sm:v-text-sm v-text-gray-900 dark:v-text-gray-100 placeholder:v-text-gray-400 dark:placeholder:v-text-gray-500 focus:v-outline-none focus:v-ring-0';
+        v-bg-white dark:v-bg-gray-800 focus-within:v-ring-1 focus-within:v-ring-secondary-500 focus-within:v-border-secondary-500';
+    $inputClass = 'v-flex-1 v-min-w-0 v-border-0 v-border-r v-bg-transparent v-rounded-l v-rounded-r-none v-px-3 v-py-2
+        v-shadow-sm sm:v-text-sm v-text-gray-900 dark:v-text-gray-100 placeholder:v-text-gray-400
+        dark:placeholder:v-text-gray-500 focus:v-outline-none focus:v-ring-0 focus:v-border-secondary-500';
 @endphp
 
 <div

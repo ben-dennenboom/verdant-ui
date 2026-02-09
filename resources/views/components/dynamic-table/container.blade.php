@@ -14,8 +14,18 @@
         $rows
     );
     $visibilityKey = $columnVisibilityKey ?? $vm->columnVisibilityKey;
-    $pinnedColumns = ['actions'];
-    $allKeys = collect($vm->columnKeys)->map(fn ($key, $i) => $key ?? 'col-' . $i)->values()->all();
+    $allKeys = collect($vm->columnKeys)
+        ->map(fn ($key, $i) => $key ?? 'col-' . $i)
+        ->values()
+        ->all();
+
+    $pinnedFromHeaders = collect($vm->headers)
+        ->filter(fn ($h) => !empty($h['pinned']) && $h['pinned'])
+        ->map(fn ($h, $i) => $h['key'] ?? $vm->columnKeyForIndex($i))
+        ->values()
+        ->all();
+
+    $pinnedColumns = $pinnedFromHeaders !== [] ? $pinnedFromHeaders : ['actions'];
     $storeKey = $visibilityKey ? 'vtd_' . preg_replace('/[^a-zA-Z0-9_]/', '_', $visibilityKey) : null;
     $columnVisibility = $visibilityKey ? ['enabled' => true, 'storeKey' => $storeKey] : null;
     $columnVisibilityConfig = $visibilityKey ? [
@@ -73,7 +83,10 @@
     <div class="v-hidden lg:v-block v-overflow-x-auto">
         <div class="v-min-w-full">
             @include('verdant::components.dynamic-table.header', ['columnVisibility' => $columnVisibility])
-            @include('verdant::components.dynamic-table.body-table', ['columnVisibility' => $columnVisibility])
+            @include('verdant::components.dynamic-table.body-table', [
+                'columnVisibility' => $columnVisibility,
+                'emptyText' => $emptyText,
+            ])
         </div>
     </div>
 

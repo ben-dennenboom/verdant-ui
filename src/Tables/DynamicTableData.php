@@ -54,6 +54,13 @@ class DynamicTableData implements DynamicTableDataProvider
     protected ?array $filters = null;
 
     /**
+     * Normalized column definitions (key => definition) when built via fromCollection. Used for default visible and export.
+     *
+     * @var array<string, string|array<string, mixed>>|null
+     */
+    protected ?array $columnDefinitions = null;
+
+    /**
      * @param array<int, string|array<string, mixed>> $headers
      * @param array<int, array<string, mixed>|array<int, mixed>> $rows
      */
@@ -77,16 +84,29 @@ class DynamicTableData implements DynamicTableDataProvider
         return $instance;
     }
 
+    /**
+     * @param  iterable<mixed>  $items
+     * @param  array<int|string, Column|string|array<string, mixed>>  $columns
+     * @param  mixed  $context  Optional context for visible_when (e.g. first model or auth); columns with visible_when returning false are excluded
+     */
     public static function fromCollection(
         iterable $items,
         array $columns,
-        ?callable $actions = null
+        ?callable $actions = null,
+        mixed $context = null
     ): self {
         if (empty($columns)) {
             return new self([], []);
         }
 
+        $columns = self::normalizeColumns($columns);
+
+        if ($context !== null) {
+            $columns = self::filterColumnsByVisibleWhen($columns, $context);
+        }
+
         $instance = new self([], []);
+        $instance->columnDefinitions = $columns;
 
         if ($items instanceof AbstractPaginator) {
             $instance->paginator = $items;
@@ -95,6 +115,7 @@ class DynamicTableData implements DynamicTableDataProvider
             $collection = collect($items);
         }
 
+        $headerKeys = ['sortable' => true, 'class' => true, 'sort_key' => true, 'pinned' => true, 'width' => true, 'align' => true, 'tooltip' => true];
         $headers = [];
         foreach ($columns as $key => $definition) {
             $headers[] = is_array($definition) ?
@@ -103,10 +124,7 @@ class DynamicTableData implements DynamicTableDataProvider
                         'key'   => $key,
                         'label' => $definition['label'],
                     ],
-                    array_intersect_key(
-                        $definition,
-                        ['sortable' => true]
-                    )
+                    array_intersect_key($definition, $headerKeys)
                 ) : [
                     'key'   => $key,
                     'label' => $definition,
@@ -117,7 +135,9 @@ class DynamicTableData implements DynamicTableDataProvider
             $row = [];
 
             foreach ($columns as $key => $definition) {
-                $value = data_get($model, $key);
+                $value = isset($definition['value']) && is_callable($definition['value'])
+                    ? ($definition['value'])($model)
+                    : data_get($model, $key);
 
                 if (is_array($definition)) {
                     if (isset($definition['format'])) {
@@ -130,6 +150,17 @@ class DynamicTableData implements DynamicTableDataProvider
                 }
 
                 $row[$key] = $value;
+
+                if (is_array($definition)) {
+                    $sortKey = '_sort_' . $key;
+                    if (isset($definition['sort_value']) && is_callable($definition['sort_value'])) {
+                        $row[$sortKey] = ($definition['sort_value'])($model);
+                    } elseif (isset($definition['sort_key']) && is_string($definition['sort_key'])) {
+                        $row[$sortKey] = data_get($model, $definition['sort_key']);
+                    } else {
+                        $row[$sortKey] = $row[$key];
+                    }
+                }
             }
 
             if ($actions) {
@@ -234,11 +265,21 @@ class DynamicTableData implements DynamicTableDataProvider
     }
 
     /**
-     * @param  array<string>|null  $defaultVisible
+     * @param  array<string>|null  $defaultVisible  When null and table was built from Column objects, defaults are derived from columns marked ->default()
      */
     public function withColumnVisibility(string $key, ?array $defaultVisible = null): self
     {
         $this->columnVisibilityKey = $key;
+
+        if ($defaultVisible === null && $this->columnDefinitions !== null) {
+            $defaultVisible = [];
+            foreach ($this->columnDefinitions as $colKey => $def) {
+                if (is_array($def) && ($def['default'] ?? false)) {
+                    $defaultVisible[] = $colKey;
+                }
+            }
+        }
+
         $this->defaultVisibleColumns = $defaultVisible;
 
         return $this;
@@ -272,8 +313,9 @@ class DynamicTableData implements DynamicTableDataProvider
         if (count($sort->columns)) {
             usort($this->rows, function ($a, $b) use ($sort) {
                 foreach ($sort->columns as $col) {
-                    $av = data_get($a, $col['key']);
-                    $bv = data_get($b, $col['key']);
+                    $sortKey = '_sort_' . $col['key'];
+                    $av = array_key_exists($sortKey, $a) ? $a[$sortKey] : data_get($a, $col['key']);
+                    $bv = array_key_exists($sortKey, $b) ? $b[$sortKey] : data_get($b, $col['key']);
 
                     if ($av === $bv) {
                         continue;
@@ -294,6 +336,110 @@ class DynamicTableData implements DynamicTableDataProvider
         }
 
         return $this;
+    }
+
+    /**
+     * Build export-ready rows from a collection using the same column definitions (value + format, no render).
+     *
+     * @param  iterable<mixed>  $items
+     * @param  array<int|string, Column|string|array<string, mixed>>  $columns
+     * @param  bool  $withHeaderRow  When true, the first row is column_key => label for use as CSV/Excel header
+     * @return array<int, array<string, mixed>>  List of associative rows; if $withHeaderRow, first element is the header row
+     */
+    public static function exportFromCollection(iterable $items, array $columns, bool $withHeaderRow = false): array
+    {
+        if (empty($columns)) {
+            return $withHeaderRow ? [[]] : [];
+        }
+
+        $columns = self::normalizeColumns($columns);
+        $rows = [];
+
+        if ($withHeaderRow) {
+            $headerRow = [];
+            foreach ($columns as $key => $definition) {
+                $headerRow[$key] = is_array($definition) ? ($definition['label'] ?? $key) : (string) $definition;
+            }
+            $rows[] = $headerRow;
+        }
+
+        foreach ($items as $model) {
+            $row = [];
+            foreach ($columns as $key => $definition) {
+                $value = isset($definition['value']) && is_callable($definition['value'])
+                    ? ($definition['value'])($model)
+                    : data_get($model, $key);
+
+                if (is_array($definition) && isset($definition['format']) && is_callable($definition['format'])) {
+                    $value = ($definition['format'])($value, $model);
+                }
+
+                if (is_array($value) && isset($value['value'])) {
+                    $value = $value['html'] ?? false ? strip_tags((string) $value['value']) : $value['value'];
+                }
+
+                $row[$key] = $value;
+            }
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Normalize column definitions. Converts list of Column objects to associative array format.
+     *
+     * @param  array<int|string, Column|string|array<string, mixed>>  $columns
+     * @return array<string, string|array<string, mixed>>
+     */
+    private static function normalizeColumns(array $columns): array
+    {
+        if (self::isColumnObjectArray($columns)) {
+            $normalized = [];
+            foreach ($columns as $column) {
+                if ($column instanceof Column) {
+                    $normalized[$column->getKey()] = $column->toDefinition();
+                }
+            }
+
+            return $normalized;
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $columns
+     */
+    private static function isColumnObjectArray(array $columns): bool
+    {
+        $values = array_values($columns);
+        $first = $values[0] ?? null;
+
+        return $first instanceof Column;
+    }
+
+    /**
+     * Filter out columns whose visible_when callback returns false for the given context.
+     *
+     * @param  array<string, string|array<string, mixed>>  $columns
+     * @return array<string, string|array<string, mixed>>
+     */
+    private static function filterColumnsByVisibleWhen(array $columns, mixed $context): array
+    {
+        $filtered = [];
+
+        foreach ($columns as $key => $definition) {
+            if (! is_array($definition) || ! isset($definition['visible_when']) || ! is_callable($definition['visible_when'])) {
+                $filtered[$key] = $definition;
+                continue;
+            }
+            if (($definition['visible_when'])($context)) {
+                $filtered[$key] = $definition;
+            }
+        }
+
+        return $filtered;
     }
 
     /**

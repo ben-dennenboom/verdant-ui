@@ -43,7 +43,7 @@
 @endif
 
 <template x-teleport="body">
-    <x-v-modal :id="$modalId" maxWidth="lg">
+    <x-v-modal :id="$modalId" maxWidth="2xl">
         <form
             id="{{ $formId }}"
             method="GET"

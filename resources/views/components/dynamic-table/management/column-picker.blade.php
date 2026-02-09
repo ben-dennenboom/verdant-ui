@@ -10,8 +10,11 @@
     $columns = collect($vm->headers)->map(function ($header, $key) use ($vm, $pinned) {
         $label = is_array($header) ? ($header['label'] ?? $key) : $header;
         $columnKey = $vm->columnKeyForIndex($key);
+        $isPinned = is_array($header) && array_key_exists('pinned', $header)
+            ? (bool) $header['pinned']
+            : in_array($columnKey, $pinned, true);
 
-        return ['key' => $columnKey, 'label' => $label, 'pinned' => in_array($columnKey, $pinned, true)];
+        return ['key' => $columnKey, 'label' => $label, 'pinned' => $isPinned];
     })->values()->all();
 @endphp
 

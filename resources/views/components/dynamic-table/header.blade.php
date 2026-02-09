@@ -11,8 +11,15 @@
     @foreach ($vm->headers as $header)
         @php
             $columnKey = $vm->columnKeyForIndex($loop->index);
+            $alignClass = match ($header['align'] ?? '') {
+                'center' => 'v-text-center',
+                'right' => 'v-text-right',
+                default => 'v-text-left',
+            };
         @endphp
-        <div class="v-px-6 v-py-3 v-text-md v-font-semibold {{ $header['class'] ?? '' }}"
+        <div class="v-px-6 v-py-3 v-text-md v-font-semibold {{ $alignClass }} {{ $header['class'] ?? '' }}"
+            @if(!empty($header['width'])) style="min-width: {{ $header['width'] }}; max-width: {{ $header['width'] }};" @endif
+            @if(!empty($header['tooltip'])) title="{{ e($header['tooltip']) }}" @endif
             @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
                 x-show="Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}')"
             @endif
@@ -20,7 +27,7 @@
             @if (!empty($header['sortable']) && !empty($header['key']))
                 <button
                     type="button"
-                    title="Click to sort"
+                    title="{{ !empty($header['tooltip']) ? e($header['tooltip']) : 'Click to sort' }}"
                     class="v-inline-flex v-items-center v-gap-1 hover:v-underline"
                     @click="toggle('{{ $header['key'] }}')"
                 >

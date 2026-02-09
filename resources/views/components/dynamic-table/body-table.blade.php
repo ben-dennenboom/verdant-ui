@@ -10,8 +10,15 @@
         @foreach ($row->cells as $cell)
             @php
                 $columnKey = $vm->columnKeyForIndex($loop->index);
+                $header = $vm->headers[$loop->index] ?? [];
+                $alignClass = match ($header['align'] ?? '') {
+                    'center' => 'v-text-center',
+                    'right' => 'v-text-right',
+                    default => 'v-text-left',
+                };
             @endphp
-            <div class="v-px-6 v-py-4 v-text-sm {{ $cell->class }}"
+            <div class="v-px-6 v-py-4 v-text-sm {{ $alignClass }} {{ $cell->class }}"
+                @if(!empty($header['width'])) style="min-width: {{ $header['width'] }}; max-width: {{ $header['width'] }};" @endif
                 @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
                     x-show="isVisible('{{ $columnKey }}')"
                 @endif

@@ -49,6 +49,11 @@ class DynamicTableData implements DynamicTableDataProvider
     protected ?string $searchApiUrl = null;
 
     /**
+     * @var array<int, array<string, mixed>>|null
+     */
+    protected ?array $filters = null;
+
+    /**
      * @param array<int, string|array<string, mixed>> $headers
      * @param array<int, array<string, mixed>|array<int, mixed>> $rows
      */
@@ -208,6 +213,24 @@ class DynamicTableData implements DynamicTableDataProvider
     public function searchApiUrl(): ?string
     {
         return $this->searchApiUrl;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>|null
+     */
+    public function filterColumns(): ?array
+    {
+        return $this->filters;
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $filters
+     */
+    public function withFilters(array $filters): self
+    {
+        $this->filters = $filters;
+
+        return $this;
     }
 
     /**

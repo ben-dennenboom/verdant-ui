@@ -20,6 +20,10 @@ final class DynamicTableViewModel
     public ?array $searchableColumns = null;
     public string $searchTerm = '';
     public ?string $searchApiUrl = null;
+    /** @var array<int, array<string, mixed>>|null */
+    public ?array $filterColumns = null;
+    /** @var array<string, mixed>|null */
+    public ?array $filterValues = null;
 
     private const ACTIONS_KEY = 'actions';
 
@@ -70,6 +74,11 @@ final class DynamicTableViewModel
             if (!is_null($apiUrl)) {
                 $vm->searchApiUrl = $apiUrl;
             }
+
+            $filterCols = $data->filterColumns();
+            if (!is_null($filterCols) && $filterCols !== []) {
+                $vm->filterColumns = self::normalizeFilterColumns($filterCols);
+            }
         }
 
         if (is_array($data)) {
@@ -85,7 +94,14 @@ final class DynamicTableViewModel
             if (isset($data['search_api_url'])) {
                 $vm->searchApiUrl = $data['search_api_url'];
             }
+            if (isset($data['filters']) && is_array($data['filters']) && $data['filters'] !== []) {
+                $vm->filterColumns = self::normalizeFilterColumns($data['filters']);
+            }
         }
+
+        $vm->filterValues = $vm->filterColumns !== null
+            ? self::resolveFilterValues($vm->filterColumns)
+            : null;
 
         $vm->searchTerm = (string) (is_array($data) && isset($data['search_term'])
             ? $data['search_term']
@@ -155,6 +171,79 @@ final class DynamicTableViewModel
         return array_map(function ($row) use ($vm) {
             return new DynamicTableRow($row, $vm);
         }, $rows);
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $filters
+     * @return array<int, array<string, mixed>>
+     */
+    private static function normalizeFilterColumns(array $filters): array
+    {
+        $normalized = [];
+        foreach ($filters as $filter) {
+            if (!is_array($filter) || empty($filter['key']) || empty($filter['label']) || empty($filter['type'])) {
+                continue;
+            }
+            $item = [
+                'key' => (string) $filter['key'],
+                'label' => (string) $filter['label'],
+                'type' => (string) $filter['type'],
+                'placeholder' => $filter['placeholder'] ?? null,
+                'default' => $filter['default'] ?? null,
+                'multiple' => !empty($filter['multiple']),
+            ];
+            if (($filter['type'] ?? '') === 'select' && isset($filter['options']) && is_array($filter['options'])) {
+                $item['options'] = self::normalizeSelectOptions($filter['options']);
+            } else {
+                $item['options'] = null;
+            }
+            $normalized[] = $item;
+        }
+
+        return $normalized;
+    }
+
+    /**
+     * @param array<int|string, mixed> $options
+     * @return array<int, array{value: string|int|float, label: string}>
+     */
+    private static function normalizeSelectOptions(array $options): array
+    {
+        $out = [];
+        foreach ($options as $value => $label) {
+            if (is_array($label) && isset($label['value'], $label['label'])) {
+                $out[] = ['value' => $label['value'], 'label' => (string) $label['label']];
+            } elseif (is_int($value)) {
+                $out[] = ['value' => $label, 'label' => (string) $label];
+            } else {
+                $out[] = ['value' => $value, 'label' => (string) $label];
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $filterColumns
+     * @return array<string, mixed>
+     */
+    private static function resolveFilterValues(array $filterColumns): array
+    {
+        $values = [];
+        foreach ($filterColumns as $col) {
+            $key = $col['key'] ?? null;
+            if ($key === null) {
+                continue;
+            }
+            $default = $col['default'] ?? null;
+            if (!empty($col['multiple'])) {
+                $values[$key] = request()->has($key) ? (array) request($key) : (is_array($default) ? $default : []);
+            } else {
+                $values[$key] = request($key, $default);
+            }
+        }
+
+        return $values;
     }
 
     /**

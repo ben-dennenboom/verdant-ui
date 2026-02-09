@@ -26,7 +26,8 @@
         'defaultVisible' => $vm->defaultVisibleColumns,
     ] : null;
     $showSearch = !empty($vm->searchableColumns);
-    $showToolbar = $showSearch || $visibilityKey;
+    $showFilter = !empty($vm->filterColumns);
+    $showToolbar = $showSearch || $visibilityKey || $showFilter;
 @endphp
 
 <div
@@ -45,7 +46,7 @@
     @if($showToolbar)
         <div class="v-flex v-items-center v-justify-between v-gap-4 v-px-4 v-py-3 v-border-b v-border-gray-200 dark:v-border-gray-700">
             @if($showSearch)
-                @include('verdant::components.dynamic-table.search-bar', [
+                @include('verdant::components.dynamic-table.management.search-bar', [
                     'searchTerm' => $vm->searchTerm,
                     'paramName' => 'search',
                     'placeholder' => 'Search…',
@@ -53,8 +54,15 @@
                 ])
             @endif
 
+            @if($showFilter)
+                @include('verdant::components.dynamic-table.management.filter-modal', [
+                    'vm' => $vm,
+                    'modalId' => 'v-dynamic-table-filter-' . ($storeKey ?? 'default'),
+                ])
+            @endif
+
             @if($visibilityKey)
-                @include('verdant::components.dynamic-table.column-picker', [
+                @include('verdant::components.dynamic-table.management.column-picker', [
                     'vm' => $vm,
                     'columnVisibilityConfig' => $columnVisibilityConfig,
                 ])

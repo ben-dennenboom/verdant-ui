@@ -22,7 +22,7 @@
     aria-haspopup="dialog"
     aria-controls="{{ $modalId }}"
     @click="$dispatch('open-modal', '{{ $modalId }}')"
-    class="v-text-sm"
+    class="v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
 >
     Filter
     @if($activeCount > 0)
@@ -110,12 +110,13 @@
             </div>
 
             <div class="v-mt-5 sm:v-mt-4 v-flex v-justify-between">
-                <x-v-button.secondary
+                <x-v-button.light
                     type="button"
                     @click="$dispatch('close-modal')"
+                    class="v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
                 >
                     Cancel
-                </x-v-button.secondary>
+                </x-v-button.light>
                 <div class="v-flex v-gap-2">
                     @if($clearUrl)
                         <x-v-button.danger

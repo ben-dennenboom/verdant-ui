@@ -2,8 +2,6 @@
 
 namespace Dennenboom\VerdantUI\Tables;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-
 /**
  * Abstract base table for defining table columns and actions in a dedicated class.
  *
@@ -16,11 +14,12 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 abstract class BaseTable
 {
     /**
-     * Build table data from a paginated result.
+     * Build table data from a paginator, collection, or any iterable.
      *
+     * @param  iterable<mixed>  $items  Paginator, Collection, array, or other iterable of models
      * @param  mixed  $context  Optional context for Column::visibleWhen() (e.g. auth user)
      */
-    final public static function make(LengthAwarePaginator $items, mixed $context = null): DynamicTableData
+    final public static function make(iterable $items, mixed $context = null): DynamicTableData
     {
         return DynamicTableData::fromCollection(
             $items,

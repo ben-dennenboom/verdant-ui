@@ -36,7 +36,7 @@
             x-bind:aria-expanded="'open'"
             aria-controls="{{ $columnsPanelId }}"
             @click="open = !open"
-            class="v-text-sm"
+            class="v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
         >
             Columns
         </x-v-button.light>
@@ -64,7 +64,7 @@
                         <label class="v-flex v-items-center v-gap-2 v-text-sm v-cursor-pointer">
                             <input
                                 type="checkbox"
-                                class="v-rounded v-border-gray-300 dark:v-border-gray-600 v-text-primary-600 focus:v-ring-primary-500 focus:v-border-primary-500 v-shadow-sm sm:v-text-sm v-border-secondary-300 v-bg-white dark:v-bg-gray-800 dark:v-border-gray-600"
+                                class="v-rounded v-border-gray-300 dark:v-border-gray-600 v-text-primary-600 focus:v-ring-primary-500 focus:v-border-primary-500 v-shadow-sm sm:v-text-sm v-bg-white dark:v-bg-gray-800"
                                 :checked="isColumnVisible(col.key)"
                                 @change="setColumnVisible(col.key, $event.target.checked)"
                                 :disabled="col.pinned"
@@ -78,7 +78,7 @@
                     <x-v-button.light
                         type="button"
                         outline
-                        class="v-flex-1 v-text-sm"
+                        class="v-flex-1 v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
                         @click="showAll()"
                     >
                         Show all
@@ -87,7 +87,7 @@
                     <x-v-button.light
                         type="button"
                         outline
-                        class="v-flex-1 v-text-sm"
+                        class="v-flex-1 v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
                         @click="hideAll()"
                     >
                         Hide all

@@ -255,11 +255,19 @@ class DynamicTableData implements DynamicTableDataProvider
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $filters
+     * @param array<Filter> $filters
      */
     public function withFilters(array $filters): self
     {
-        $this->filters = $filters;
+        $this->filters = [];
+        foreach ($filters as $filter) {
+            if (! $filter instanceof Filter) {
+                throw new \InvalidArgumentException(
+                    'Each filter must be a ' . Filter::class . ' instance. Got: ' . (is_object($filter) ? $filter::class : gettype($filter))
+                );
+            }
+            $this->filters[] = $filter->toDefinition();
+        }
 
         return $this;
     }

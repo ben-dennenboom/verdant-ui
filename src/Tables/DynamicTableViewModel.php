@@ -174,13 +174,16 @@ final class DynamicTableViewModel
     }
 
     /**
-     * @param array<int, array<string, mixed>> $filters
+     * @param array<Filter> $filters
      * @return array<int, array<string, mixed>>
      */
     private static function normalizeFilterColumns(array $filters): array
     {
         $normalized = [];
         foreach ($filters as $filter) {
+            if ($filter instanceof Filter) {
+                $filter = $filter->toDefinition();
+            }
             if (!is_array($filter) || empty($filter['key']) || empty($filter['label']) || empty($filter['type'])) {
                 continue;
             }

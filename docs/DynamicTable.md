@@ -177,17 +177,19 @@ Server-side: apply sort in the controller with `Column::applySort()` so `sort_ke
 
 ### 5. Filters
 
-Add filter definitions and apply request params in the controller:
+Add filter definitions (Filter DTO only) and apply request params in the controller:
 
 ```php
+use Dennenboom\VerdantUI\Tables\Filter;
+
 $table->withFilters([
-    ['key' => 'status', 'label' => 'Status', 'type' => 'select', 'multiple' => true, 'options' => $statusOptions],
-    ['key' => 'verified', 'label' => 'Verified only', 'type' => 'checkbox'],
-    ['key' => 'q', 'label' => 'Keyword', 'type' => 'text', 'placeholder' => 'Search…'],
+    Filter::make('status', 'Status', 'select')->multiple()->options($statusOptions),
+    Filter::make('verified', 'Verified only', 'checkbox'),
+    Filter::make('q', 'Keyword', 'text')->placeholder('Search…'),
 ]);
 ```
 
-Controller: read the same keys from the request and apply to the query (e.g. `request('status')`, `request('verified')`, `request('q')`). Array-based table data can include a `filters` key instead of using a provider.
+Controller: read the same keys from the request and apply to the query (e.g. `request('status')`, `request('verified')`, `request('q')`). Array-based table data can include a `filters` key with Filter DTO instances instead of using a provider.
 
 ### 6. Search
 
@@ -260,49 +262,35 @@ The Dynamic Table can show a **Filter** button (before the Columns dropdown) tha
 ### Providing filters
 
 - **Via data provider**: Implement `filterColumns(): ?array` on your `DynamicTableDataProvider`. Return `null` or an empty array to hide the filter UI. Existing implementors must add this method (e.g. `return null;` if they do not use filters).
-- **Via array config**: When passing an array as table data, include a `filters` key with the filter definitions.
+- **Via array config**: When passing an array as table data, include a `filters` key with an array of **Filter DTO** instances.
 
-### Filter definition
+### Filter DTO
 
-Each filter is an array with:
-
-| Key | Required | Description |
-|-----|----------|-------------|
-| `key` | yes | Request parameter name (e.g. `status`, `role`) |
-| `label` | yes | Label shown next to the control |
-| `type` | yes | `text`, `number`, `date`, `checkbox`, `select` |
-| `options` | for select | Array of `['value' => x, 'label' => y]` or `value => label` |
-| `placeholder` | no | Placeholder for text/number |
-| `default` | no | Default value when no request value |
-| `multiple` | no | For `select`: when true, allows multiple values (request sends key as array) |
-
-### Example
+Filters are defined using the fluent `Filter` DTO only (same pattern as the Column DTO). Pass Filter instances to `withFilters([...])` or to the array `filters` key:
 
 ```php
-'filters' => [
-    [
-        'key'   => 'status',
-        'label' => 'Status',
-        'type'  => 'select',
-        'options' => [
-            ['value' => '', 'label' => 'Any'],
-            ['value' => 'active', 'label' => 'Active'],
-            ['value' => 'archived', 'label' => 'Archived'],
-        ],
-    ],
-    [
-        'key'   => 'verified',
-        'label' => 'Verified only',
-        'type'  => 'checkbox',
-    ],
-    [
-        'key'         => 'q',
-        'label'       => 'Keyword',
-        'type'        => 'text',
-        'placeholder' => 'Search…',
-    ],
-],
+use Dennenboom\VerdantUI\Tables\Filter;
+use Dennenboom\VerdantUI\Tables\DynamicTableData;
+
+$table = DynamicTableData::fromCollection($users, $columns, $actions)
+    ->withFilters([
+        Filter::make('status', 'Status', 'select')
+            ->options([['value' => 'active', 'label' => 'Active'], ['value' => 'archived', 'label' => 'Archived']])
+            ->multiple(),
+        Filter::make('verified', 'Verified only', 'checkbox')->default(false),
+        Filter::make('q', 'Keyword', 'text')->placeholder('Search…'),
+    ]);
 ```
+
+**Filter methods:**
+
+| Method | Description |
+|--------|-------------|
+| `Filter::make(string $key, string $label, string $type)` | Create a filter; `$type` is one of `text`, `number`, `date`, `checkbox`, `select` |
+| `->options(array\|callable)` | For select: array of `['value' => x, 'label' => y]` or `value => label`; callable is invoked at build time |
+| `->placeholder(string)` | Placeholder for text/number inputs |
+| `->default(mixed)` | Default value when no request value |
+| `->multiple(bool)` | For select: allow multiple values (default `true` when called) |
 
 The form submits via GET to the current URL. Your controller or data provider should read the same parameter names from the request and apply them when building the table data.
 
@@ -314,6 +302,7 @@ The form submits via GET to the current URL. Your controller or data provider sh
 use Dennenboom\VerdantUI\Tables\Column;
 use Dennenboom\VerdantUI\Tables\DynamicTableData;
 use Dennenboom\VerdantUI\Tables\DynamicTableSort;
+use Dennenboom\VerdantUI\Tables\Filter;
 
 class UserTableController extends Controller
 {
@@ -346,28 +335,16 @@ class UserTableController extends Controller
         $table = DynamicTableData::fromCollection($users, $columns, fn ($user) => [/* actions */])
             ->withColumnVisibility('users-table')
             ->withFilters([
-                [
-                    'key'      => 'status',
-                    'label'    => 'Status',
-                    'type'     => 'select',
-                    'multiple' => true,
-                    'options'  => [
+                Filter::make('status', 'Status', 'select')
+                    ->multiple()
+                    ->options([
                         ['value' => '', 'label' => 'Any'],
                         ['value' => 'active', 'label' => 'Active'],
                         ['value' => 'inactive', 'label' => 'Inactive'],
-                    ],
-                ],
-                [
-                    'key'   => 'verified',
-                    'label' => 'Verified only',
-                    'type'  => 'checkbox',
-                ],
-                [
-                    'key'         => 'q',
-                    'label'       => 'Keyword',
-                    'type'        => 'text',
-                    'placeholder' => 'Search name or email…',
-                ],
+                    ]),
+                Filter::make('verified', 'Verified only', 'checkbox'),
+                Filter::make('q', 'Keyword', 'text')
+                    ->placeholder('Search name or email…'),
             ])
             ->withSorting(DynamicTableSort::fromRequest());
 
@@ -382,16 +359,18 @@ class UserTableController extends Controller
 <x-v-dynamic-table.container :data="$table" emptyText="No users found." />
 ```
 
-**Array-based alternative** (no provider): pass `headers`, `rows`, and `filters` in the view or controller:
+**Array-based alternative** (no provider): pass `headers`, `rows`, and `filters` (Filter DTO instances) in the view or controller:
 
 ```php
+use Dennenboom\VerdantUI\Tables\Filter;
+
 return view('users.index', [
     'tableData' => [
         'headers' => [['key' => 'name', 'label' => 'Name'], ['key' => 'email', 'label' => 'Email']],
         'rows'    => $rows,
         'filters' => [
-            ['key' => 'status', 'label' => 'Status', 'type' => 'select', 'options' => $statusOptions],
-            ['key' => 'q', 'label' => 'Keyword', 'type' => 'text', 'placeholder' => 'Search…'],
+            Filter::make('status', 'Status', 'select')->options($statusOptions),
+            Filter::make('q', 'Keyword', 'text')->placeholder('Search…'),
         ],
     ],
 ]);

@@ -32,7 +32,10 @@ final class Column
 
     private ?string $width = null;
 
+    /** @var 'left'|'center'|'right'|null */
     private ?string $align = null;
+
+    private const ALIGN_VALUES = ['left', 'center', 'right'];
 
     private ?string $tooltip = null;
 
@@ -179,9 +182,17 @@ final class Column
 
     /**
      * Set text alignment for header and cells ('left', 'center', 'right').
+     *
+     * @param  'left'|'center'|'right'  $align
      */
     public function align(string $align): self
     {
+        $align = strtolower($align);
+        if (! in_array($align, self::ALIGN_VALUES, true)) {
+            throw new \InvalidArgumentException(
+                'Column align must be one of: ' . implode(', ', self::ALIGN_VALUES) . ', got: ' . $align
+            );
+        }
         $this->align = $align;
 
         return $this;

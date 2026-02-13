@@ -23,7 +23,7 @@
         aria-haspopup="dialog"
         aria-controls="{{ $modalId }}"
         @click="$dispatch('open-modal', '{{ $modalId }}')"
-        class="v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 v-text-nowrap dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
+        class="v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 v-whitespace-nowrap dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
     >
         Filter
         @if($activeCount > 0)

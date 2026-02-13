@@ -1,4 +1,4 @@
-@props(['vm', 'columnVisibilityConfig'])
+@props(['vm', 'columnVisibilityConfig', 'hasFilter' => true])
 
 @php
     $storageKey = $columnVisibilityConfig['storageKey'] ?? 'verdant.table.columns.default';
@@ -16,6 +16,7 @@
 
         return ['key' => $columnKey, 'label' => $label, 'pinned' => $isPinned];
     })->values()->all();
+    $popupPosition = $hasFilter ? 'v-left-1/2 -v-translate-x-1/2' : '';
 @endphp
 
 <div class="v-shrink-0 v-flex v-items-center v-justify-end">
@@ -46,7 +47,7 @@
                 :id="panelId"
                 role="region"
                 aria-label="Visible columns"
-                class="v-absolute v-left-1/2 -v-translate-x-1/2 md:v-left-auto md:v-right-0 md:v-translate-x-0 v-z-20 v-mt-2 v-w-72 v-rounded-md v-border v-border-gray-200 dark:v-border-gray-600 v-bg-white dark:v-bg-gray-800 v-p-3 v-shadow-lg"
+                class="v-absolute {{ $popupPosition }} md:v-left-auto md:v-right-0 md:v-translate-x-0 v-z-20 v-mt-2 v-w-60 v-rounded-md v-border v-border-gray-200 dark:v-border-gray-600 v-bg-white dark:v-bg-gray-800 v-p-3 v-shadow-lg"
             >
                 <div class="v-flex v-items-center v-justify-between v-pb-2">
                     <div class="v-text-sm v-font-semibold v-text-gray-900 dark:v-text-gray-100">Visible columns</div>

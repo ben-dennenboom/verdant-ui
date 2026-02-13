@@ -79,6 +79,7 @@
                         @include('verdant::components.dynamic-table.management.column-picker', [
                             'vm' => $vm,
                             'columnVisibilityConfig' => $columnVisibilityConfig,
+                            'hasFilter' => $showFilter,
                         ])
                     @endif
                 </div>

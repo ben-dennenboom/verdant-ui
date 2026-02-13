@@ -18,7 +18,7 @@
     })->values()->all();
 @endphp
 
-<div class="v-flex v-items-center v-justify-end">
+<div class="v-shrink-0 v-flex v-items-center v-justify-end">
     <div
         class="v-relative"
         x-data="verdantColumnPicker({

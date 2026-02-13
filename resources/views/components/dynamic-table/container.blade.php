@@ -54,28 +54,34 @@
     @endif
 >
     @if($showToolbar)
-        <div class="v-flex v-items-center v-justify-between v-gap-4 v-px-4 v-py-3 v-border-b v-border-gray-200 dark:v-border-gray-700">
+        <div class="v-flex v-flex-col md:v-flex-row v-items-stretch md:v-items-center v-justify-between v-gap-3 v-px-4 v-py-3 v-border-b v-border-gray-200 dark:v-border-gray-700">
             @if($showSearch)
-                @include('verdant::components.dynamic-table.management.search-bar', [
-                    'searchTerm' => $vm->searchTerm,
-                    'paramName' => 'search',
-                    'placeholder' => 'Search…',
-                    'searchApiUrl' => $vm->searchApiUrl,
-                ])
+                <div class="v-w-full md:v-flex-1 md:v-min-w-0">
+                    @include('verdant::components.dynamic-table.management.search-bar', [
+                        'searchTerm' => $vm->searchTerm,
+                        'paramName' => 'search',
+                        'placeholder' => 'Search…',
+                        'searchApiUrl' => $vm->searchApiUrl,
+                    ])
+                </div>
             @endif
 
-            @if($showFilter)
-                @include('verdant::components.dynamic-table.management.filter-modal', [
-                    'vm' => $vm,
-                    'modalId' => 'v-dynamic-table-filter-' . ($storeKey ?? 'default'),
-                ])
-            @endif
+            @if($showFilter || $visibilityKey)
+                <div class="v-flex v-items-center v-gap-2 v-shrink-0">
+                    @if($showFilter)
+                        @include('verdant::components.dynamic-table.management.filter-modal', [
+                            'vm' => $vm,
+                            'modalId' => 'v-dynamic-table-filter-' . ($storeKey ?? 'default'),
+                        ])
+                    @endif
 
-            @if($visibilityKey)
-                @include('verdant::components.dynamic-table.management.column-picker', [
-                    'vm' => $vm,
-                    'columnVisibilityConfig' => $columnVisibilityConfig,
-                ])
+                    @if($visibilityKey)
+                        @include('verdant::components.dynamic-table.management.column-picker', [
+                            'vm' => $vm,
+                            'columnVisibilityConfig' => $columnVisibilityConfig,
+                        ])
+                    @endif
+                </div>
             @endif
         </div>
     @endif

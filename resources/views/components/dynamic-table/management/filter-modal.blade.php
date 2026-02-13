@@ -15,32 +15,34 @@
     $formId = $modalId . '-form';
 @endphp
 
-<x-v-button.light
-    type="button"
-    icon="filter"
-    aria-label="Filter table"
-    aria-haspopup="dialog"
-    aria-controls="{{ $modalId }}"
-    @click="$dispatch('open-modal', '{{ $modalId }}')"
-    class="v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
->
-    Filter
-    @if($activeCount > 0)
-        <span class="v-ml-1 v-inline-flex v-items-center v-justify-center v-min-w-5 v-h-5 v-rounded-full v-bg-primary-100 dark:v-bg-primary-900 v-text-primary-800 dark:v-text-primary-200 v-text-xs">
-            {{ $activeCount }}
-        </span>
-    @endif
-</x-v-button.light>
-
-@if($clearUrl)
+<div class="v-shrink-0 v-flex v-items-center v-gap-2">
     <x-v-button.light
-        :href="$clearUrl"
-        outline
-        class="v-text-sm"
+        type="button"
+        icon="filter"
+        aria-label="Filter table"
+        aria-haspopup="dialog"
+        aria-controls="{{ $modalId }}"
+        @click="$dispatch('open-modal', '{{ $modalId }}')"
+        class="v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 v-text-nowrap dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
     >
-        Clear
+        Filter
+        @if($activeCount > 0)
+            <span class="v-ml-1 v-inline-flex v-items-center v-justify-center v-min-w-5 v-h-5 v-rounded-full v-bg-primary-100 dark:v-bg-primary-900 v-text-primary-800 dark:v-text-primary-200 v-text-xs">
+                {{ $activeCount }}
+            </span>
+        @endif
     </x-v-button.light>
-@endif
+
+    @if($clearUrl)
+        <x-v-button.light
+            :href="$clearUrl"
+            outline
+            class="v-text-sm"
+        >
+            Clear
+        </x-v-button.light>
+    @endif
+</div>
 
 <template x-teleport="body">
     <x-v-modal :id="$modalId" maxWidth="2xl">

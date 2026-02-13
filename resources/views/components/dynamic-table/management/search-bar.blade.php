@@ -19,7 +19,7 @@
 @endphp
 
 <div
-    class="v-flex v-items-center v-gap-2 v-w-full {{ $searchApiUrl ? 'v-relative' : '' }}"
+    class="v-flex v-items-center v-gap-2 v-flex-1 v-min-w-0 {{ $searchApiUrl ? 'v-relative' : '' }}"
     @if($searchApiUrl)
         x-data="verdantTableSearch({
             apiUrl: @js($searchApiUrl),

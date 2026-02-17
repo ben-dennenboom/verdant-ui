@@ -47,6 +47,21 @@ fs.copyFileSync(
     path.join(jsDir, 'verdant-ui.js')
 );
 
+fs.copyFileSync(
+    path.join(__dirname, 'resources', 'js', 'dynamic-table-sort.js'),
+    path.join(jsDir, 'dynamic-table-sort.js')
+);
+
+fs.copyFileSync(
+    path.join(__dirname, 'resources', 'js', 'dynamic-table-columns.js'),
+    path.join(jsDir, 'dynamic-table-columns.js')
+);
+
+fs.copyFileSync(
+    path.join(__dirname, 'resources', 'js', 'dynamic-table-search.js'),
+    path.join(jsDir, 'dynamic-table-search.js')
+);
+
 const downloads = [
   {
     url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css',

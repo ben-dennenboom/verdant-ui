@@ -4,7 +4,9 @@
     draggingElement: null,
     items: @js($items)
 }" class="v-max-w-4xl v-mx-auto">
-    <form action="{{ $action }}" method="POST">
+    <form action="{{ $action }}" method="POST"
+          @submit="$el.querySelectorAll('div[draggable]').forEach((el, i) => { el.querySelector('input[type=hidden]').name = 'items[' + i + '][id]' })"
+    >
         @csrf
 
         <div class="v-bg-white dark:v-bg-gray-800 v-border v-border-gray-200 dark:v-border-gray-700 v-p-6">

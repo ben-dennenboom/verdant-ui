@@ -87,7 +87,7 @@
         </div>
     @endif
 
-    <div class="v-hidden lg:v-block v-overflow-x-auto">
+    <div class="v-hidden lg:v-block">
         <div class="v-min-w-full">
             @include('verdant::components.dynamic-table.header', ['columnVisibility' => $columnVisibility])
             @include('verdant::components.dynamic-table.body-table', [

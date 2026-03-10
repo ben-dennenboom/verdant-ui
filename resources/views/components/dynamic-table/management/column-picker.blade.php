@@ -79,7 +79,7 @@
                     <x-v-button.light
                         type="button"
                         outline
-                        class="v-flex-1 v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
+                        class="v-flex-1 v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
                         @click="showAll()"
                     >
                         Show all
@@ -88,7 +88,7 @@
                     <x-v-button.light
                         type="button"
                         outline
-                        class="v-flex-1 v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
+                        class="v-flex-1 v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
                         @click="hideAll()"
                     >
                         Hide all

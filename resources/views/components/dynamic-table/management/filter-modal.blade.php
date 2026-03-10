@@ -25,7 +25,6 @@
         @click="$dispatch('open-modal', '{{ $modalId }}')"
         class="v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 v-whitespace-nowrap dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
     >
-        Filter
         @if($activeCount > 0)
             <span class="v-ml-1 v-inline-flex v-items-center v-justify-center v-min-w-5 v-h-5 v-rounded-full v-bg-primary-100 dark:v-bg-primary-900 v-text-primary-800 dark:v-text-primary-200 v-text-xs">
                 {{ $activeCount }}

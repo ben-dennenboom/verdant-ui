@@ -39,7 +39,7 @@
             @click="open = !open"
             class="v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
         >
-            Columns
+            <i class="fas fa-gear v-mr-1"></i>
         </x-v-button.light>
 
         <template x-if="open">

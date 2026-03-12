@@ -21,12 +21,14 @@ abstract class BaseTable
      */
     final public static function make(iterable $items, mixed $context = null): DynamicTableData
     {
-        return DynamicTableData::fromCollection(
+        $data = DynamicTableData::fromCollection(
             $items,
             static::columns(),
             static::actions(),
             $context
         );
+
+        return $data->withActionsMaxVisible(static::actionsMaxVisible());
     }
 
     /**
@@ -44,5 +46,13 @@ abstract class BaseTable
     protected static function actions(): ?callable
     {
         return null;
+    }
+
+    /**
+     * Number of actions to show inline before overflow dropdown. Override to customize.
+     */
+    protected static function actionsMaxVisible(): int
+    {
+        return 2;
     }
 }

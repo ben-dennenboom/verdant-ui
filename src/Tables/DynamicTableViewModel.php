@@ -25,6 +25,9 @@ final class DynamicTableViewModel
     /** @var array<string, mixed>|null */
     public ?array $filterValues = null;
 
+    /** Number of actions to show inline before overflow dropdown. Null = use default (2). */
+    public ?int $actionsMaxVisible = null;
+
     private const ACTIONS_KEY = 'actions';
 
     private function __construct() {}
@@ -79,6 +82,11 @@ final class DynamicTableViewModel
             if (!is_null($filterCols) && $filterCols !== []) {
                 $vm->filterColumns = self::normalizeFilterColumns($filterCols);
             }
+
+            $maxVisible = $data->actionsMaxVisible();
+            if (!is_null($maxVisible)) {
+                $vm->actionsMaxVisible = $maxVisible;
+            }
         }
 
         if (is_array($data)) {
@@ -96,6 +104,9 @@ final class DynamicTableViewModel
             }
             if (isset($data['filters']) && is_array($data['filters']) && $data['filters'] !== []) {
                 $vm->filterColumns = self::normalizeFilterColumns($data['filters']);
+            }
+            if (isset($data['actions_max_visible']) && is_int($data['actions_max_visible'])) {
+                $vm->actionsMaxVisible = $data['actions_max_visible'];
             }
         }
 

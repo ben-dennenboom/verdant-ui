@@ -47,21 +47,13 @@
         @endphp
 
         @if ($actionsCell)
-            <div class="v-mt-3 v-flex v-justify-end v-gap-2">
+            <div class="v-mt-3 v-flex v-justify-end">
                 {{-- Custom render --}}
                 @if ($actionsCell->value instanceof \Illuminate\Contracts\Support\Htmlable)
                     {!! $actionsCell->value->toHtml() !!}
+                @elseif (is_array($actionsCell->actions) && count($actionsCell->actions))
+                    <x-v-dynamic-table.management.actions :actions="$actionsCell->actions" :maxVisible="$vm->actionsMaxVisible ?? 2" />
                 @endif
-
-                {{-- Verdant-UI buttons --}}
-                @foreach ($actionsCell->actions ?? [] as $action)
-                    <x-dynamic-component
-                        :component="$action['component']"
-                        :href="$action['href']"
-                    >
-                        {{ $action['label'] }}
-                    </x-dynamic-component>
-                @endforeach
             </div>
         @endif
     </div>

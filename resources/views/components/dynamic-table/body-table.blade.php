@@ -24,25 +24,13 @@
                 @endif
             >
                 @if ($cell->isActions)
-                    <div class="v-grid v-justify-items-center v-gap-2">
+                    <div class="v-flex v-justify-center">
                         {{-- Custom render (Htmlable) --}}
                         @if ($cell->value instanceof \Illuminate\Contracts\Support\Htmlable)
                             {!! $cell->value->toHtml() !!}
+                        @elseif (is_array($cell->actions) && count($cell->actions))
+                            <x-v-dynamic-table.management.actions :actions="$cell->actions" :maxVisible="$vm->actionsMaxVisible ?? 2" />
                         @endif
-
-                        {{-- Verdant-UI buttons --}}
-                        @if (is_array($cell->actions) && count($cell->actions))
-                            @foreach ($cell->actions as $action)
-                                <x-dynamic-component
-                                    :component="$action['component']"
-                                    :href="$action['href']"
-                                    :new-window="!empty($action['target'])"
-                                    class="v-w-fit"
-                                >
-                                    {{ $action['label'] }}
-                                </x-dynamic-component>
-                            @endforeach
-                       @endif
                     </div>
                 @elseif ($cell->html)
                     {!! $cell->value !!}

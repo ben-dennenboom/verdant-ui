@@ -79,13 +79,16 @@ final class DynamicTableCell
             $routeExists = $action['route_exists'] ?? Route::has($action['route'] ?? '');
             $routeName = $action['route'] ?? '';
 
+            $url = $routeExists && $routeName
+                ? route($routeName, $params)
+                : '#';
+
             return [
                 'label' => $action['label'] ?? '',
-                'component' => 'v-button.' . ($action['button'] ?? 'secondary'),
-                'href' => $routeExists && $routeName
-                    ? route($routeName, $params)
-                    : '#',
-                'target' => $action['target'] ?? null,
+                'route' => $url,
+                'form' => $action['form'] ?? false,
+                'method' => $action['method'] ?? null,
+                'disabled' => $action['disabled'] ?? false,
             ];
         }, $items);
     }

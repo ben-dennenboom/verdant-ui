@@ -69,4 +69,11 @@ interface DynamicTableDataProvider
      * @return array<int, array<string, mixed>>|null
      */
     public function filterColumns(): ?array;
+
+    /**
+     * Number of actions to show inline before overflow dropdown. Return null to use default (2).
+     *
+     * @return int|null
+     */
+    public function actionsMaxVisible(): ?int;
 }

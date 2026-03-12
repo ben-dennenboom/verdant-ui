@@ -61,6 +61,13 @@ class DynamicTableData implements DynamicTableDataProvider
     protected ?array $columnDefinitions = null;
 
     /**
+     * Number of actions to show inline before overflow dropdown. Null = use default (2).
+     *
+     * @var int|null
+     */
+    protected ?int $actionsMaxVisible = null;
+
+    /**
      * @param array<int, string|array<string, mixed>> $headers
      * @param array<int, array<string, mixed>|array<int, mixed>> $rows
      */
@@ -133,6 +140,13 @@ class DynamicTableData implements DynamicTableDataProvider
 
         $rows = $collection->map(function ($model) use ($columns, $actions) {
             $row = [];
+
+            // Add model key for action params (e.g. ['user' => 'id'])
+            if (is_object($model) && method_exists($model, 'getKey')) {
+                $row[$model->getKeyName()] = $model->getKey();
+            } elseif (is_array($model) && isset($model['id'])) {
+                $row['id'] = $model['id'];
+            }
 
             foreach ($columns as $key => $definition) {
                 $value = isset($definition['value']) && is_callable($definition['value'])
@@ -252,6 +266,21 @@ class DynamicTableData implements DynamicTableDataProvider
     public function filterColumns(): ?array
     {
         return $this->filters;
+    }
+
+    public function actionsMaxVisible(): ?int
+    {
+        return $this->actionsMaxVisible;
+    }
+
+    /**
+     * Set how many actions to show inline before overflow dropdown.
+     */
+    public function withActionsMaxVisible(int $n): self
+    {
+        $this->actionsMaxVisible = $n;
+
+        return $this;
     }
 
     /**

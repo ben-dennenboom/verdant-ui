@@ -41,7 +41,7 @@
 @endphp
 
 <div
-    class="v-rounded v-bg-white dark:v-bg-gray-800 v-border {{ $class }}"
+    class="v-rounded v-bg-white dark:v-bg-gray-800 v-border dark:v-border-gray-700 {{ $class }}"
     @if($visibilityKey)
         data-columns-store="{{ $storeKey }}"
         x-data="verdantTableColumns({

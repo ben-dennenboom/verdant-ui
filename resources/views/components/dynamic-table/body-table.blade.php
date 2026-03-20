@@ -17,7 +17,7 @@
                     default => 'v-text-left',
                 };
             @endphp
-            <div class="v-px-6 v-py-4 v-text-sm {{ $alignClass }} {{ $cell->class }}"
+            <div class="v-px-6 v-py-4 v-text-sm v-text-gray-900 dark:v-text-gray-300 {{ $alignClass }} {{ $cell->class }}"
                 @if(!empty($header['width'])) style="min-width: {{ $header['width'] }}; max-width: {{ $header['width'] }};" @endif
                 @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
                     x-show="isVisible('{{ $columnKey }}')"

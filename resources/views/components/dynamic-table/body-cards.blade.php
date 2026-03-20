@@ -30,7 +30,7 @@
                         {{ $vm->headerLabel($loop->index) }}
                     </span>
 
-                    <span class="v-text-right">
+                    <span class="v-text-right v-text-gray-900 dark:v-text-gray-300">
                         @if ($cell->html)
                             {!! $cell->value !!}
                         @else

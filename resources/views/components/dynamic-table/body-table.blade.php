@@ -1,6 +1,6 @@
 @forelse ($vm->rows as $row)
     <div
-        class="v-grid hover:v-bg-gray-50 v-items-center"
+        class="v-grid hover:v-bg-gray-50 dark:hover:v-bg-gray-700 v-items-center"
         @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
             :style="'grid-template-columns: repeat(' + Alpine.store('{{ $columnVisibility['storeKey'] }}').visibleCount + ', minmax(0,1fr))'"
         @else
@@ -41,7 +41,7 @@
         @endforeach
     </div>
 @empty
-    <div class="v-px-6 v-py-4 v-text-sm text-gray-500">
+    <div class="v-px-6 v-py-4 v-text-sm text-gray-500 dark:text-gray-400">
         {{ $emptyText }}
     </div>
 @endforelse

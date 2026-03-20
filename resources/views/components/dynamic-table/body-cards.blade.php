@@ -1,8 +1,8 @@
 @forelse ($vm->rows as $row)
-    <div class="v-mb-4 v-rounded-lg v-border v-bg-white v-p-4 v-shadow-sm">
+    <div class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 v-bg-white dark:v-bg-gray-800 v-p-4 v-shadow-sm">
 
         {{-- Primary title (first two non-action columns) --}}
-        <div class="v-font-semibold v-text-gray-900">
+        <div class="v-font-semibold v-text-gray-900 dark:v-text-gray-100">
             @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
                 @if(isset($row->cells[0]))<span x-show="isVisible('{{ $vm->columnKeyForIndex(0) }}')">{{ $row->cells[0]->value ?? '' }}</span>@endif
                 @if(isset($row->cells[1]))<span x-show="isVisible('{{ $vm->columnKeyForIndex(1) }}')">{{ $row->cells[1]->value ?? '' }}</span>@endif
@@ -26,7 +26,7 @@
                         x-show="isVisible('{{ $columnKey }}')"
                     @endif
                 >
-                    <span class="v-text-gray-500">
+                    <span class="v-text-gray-500 dark:v-text-gray-400">
                         {{ $vm->headerLabel($loop->index) }}
                     </span>
 

@@ -1,7 +1,7 @@
 <div x-data="dynamicTableSort({
         columns: @js($vm->sort?->columns ?? [])
     })"
-    class="v-grid v-bg-gray-50 v-relative"
+    class="v-grid v-bg-gray-50 dark:v-bg-gray-700 v-relative"
     @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
         :style="'grid-template-columns: repeat(' + Alpine.store('{{ $columnVisibility['storeKey'] }}').visibleCount + ', minmax(0,1fr))'"
     @else
@@ -51,7 +51,7 @@
             type="button"
             class="
                 v-absolute v-right-3 v-top-1/2 -v-translate-y-1/2
-                v-text-gray-400 hover:v-text-red-500
+                v-text-gray-400 dark:v-text-gray-500 hover:v-text-red-500
             "
             title="Reset sorting"
             @click.stop="reset"

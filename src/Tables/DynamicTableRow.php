@@ -6,9 +6,21 @@ final class DynamicTableRow
 {
     public array $cells;
 
+    public ?string $openUrl = null;
+
+    public ?string $rowKey = null;
+
     public function __construct(array $rawRow, DynamicTableViewModel $vm)
     {
         $this->cells = [];
+
+        if (array_key_exists('_row_open_url', $rawRow) && $rawRow['_row_open_url'] !== null && $rawRow['_row_open_url'] !== '') {
+            $this->openUrl = (string) $rawRow['_row_open_url'];
+        }
+
+        if (array_key_exists('_row_key', $rawRow) && $rawRow['_row_key'] !== null && $rawRow['_row_key'] !== '') {
+            $this->rowKey = (string) $rawRow['_row_key'];
+        }
 
         foreach ($vm->columnKeys as $index => $key) {
             $this->cells[] = new DynamicTableCell(

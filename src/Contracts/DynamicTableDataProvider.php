@@ -76,4 +76,9 @@ interface DynamicTableDataProvider
      * @return int|null
      */
     public function actionsMaxVisible(): ?int;
+
+    /**
+     * When true, row click selects a row and double-click may navigate using row open URLs.
+     */
+    public function rowInteractionEnabled(): bool;
 }

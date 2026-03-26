@@ -175,6 +175,20 @@ $table->withSorting($sort);
 
 Server-side: apply sort in the controller with `Column::applySort()` so `sort_key` and `sort_query` are respected (see [Sort key resolution and server-side sort](#sort-key-resolution-and-server-side-sort)). When not using a paginator, `withSorting($sort)` sorts the current rows in memory.
 
+### Row open URL (row selection + double-click)
+
+Chain `withRowOpenUrl()` after `fromCollection()`, or override `protected static function rowOpenUrl(): ?callable` on a `BaseTable` subclass (`make()` applies it only when that method returns a non-null callback).
+The callback receives each row’s source model (or array row) and should return a URL string, or `null`/empty to skip navigation for that row on double-click.
+Pass `null` to `withRowOpenUrl()` to disable; reserved keys `_row_key` / `_row_open_url` are removed only if row-open had been applied earlier on the same `DynamicTableData` instance.
+
+If you use `withSorting()` **without** a paginator, call `withRowOpenUrl()` **before** `withSorting()` so row metadata stays aligned when rows are reordered in memory.
+
+```php
+$table = DynamicTableData::fromCollection($users, $columns, $actions)
+    ->withRowOpenUrl(fn (User $user) => route('users.edit', $user))
+    ->withSorting($sort);
+```
+
 ### 5. Filters
 
 Add filter definitions (Filter DTO only) and apply request params in the controller:
@@ -423,6 +437,11 @@ class UsersTable extends BaseTable
         return static fn (User $user) => [
             'render' => fn () => view('system.users.table.actions', compact('user')),
         ];
+    }
+
+    protected static function rowOpenUrl(): ?callable
+    {
+        return static fn (User $user) => route('users.edit', $user);
     }
 }
 ```

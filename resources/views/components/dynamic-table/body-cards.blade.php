@@ -1,5 +1,27 @@
+@php
+    $rowIx = $vm->rowInteractionEnabled ?? false;
+@endphp
+@if($rowIx)
+    <div
+        x-data="{
+            selectedRowKey: null,
+            selectRow(key) { this.selectedRowKey = key; },
+            isSelected(key) { return this.selectedRowKey !== null && String(this.selectedRowKey) === String(key); },
+            openRow(url) { if (url) window.location.assign(url); }
+        }"
+    >
+@endif
 @forelse ($vm->rows as $row)
-    <div class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 v-bg-white dark:v-bg-gray-800 v-p-4 v-shadow-sm">
+    <div
+        @if($rowIx && $row->rowKey !== null)
+            class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 v-bg-white dark:v-bg-gray-800 v-p-4 v-shadow-sm v-cursor-pointer"
+            @click="selectRow(@js($row->rowKey))"
+            @dblclick="openRow(@js($row->openUrl))"
+            :class="isSelected(@js($row->rowKey)) ? 'v-ring-2 v-ring-blue-400 dark:v-ring-blue-600' : ''"
+        @else
+            class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 v-bg-white dark:v-bg-gray-800 v-p-4 v-shadow-sm"
+        @endif
+    >
 
         {{-- Primary title (first two non-action columns) --}}
         <div class="v-font-semibold v-text-gray-900 dark:v-text-gray-100">
@@ -47,7 +69,7 @@
         @endphp
 
         @if ($actionsCell)
-            <div class="v-mt-3 v-flex v-justify-end">
+            <div class="v-mt-3 v-flex v-justify-end" @if($rowIx) @click.stop @dblclick.stop @endif>
                 {{-- Custom render --}}
                 @if ($actionsCell->value instanceof \Illuminate\Contracts\Support\Htmlable)
                     {!! $actionsCell->value->toHtml() !!}
@@ -62,3 +84,6 @@
         {{ $emptyText ?? 'No data available.' }}
     </div>
 @endforelse
+@if($rowIx)
+    </div>
+@endif

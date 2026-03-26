@@ -5,7 +5,7 @@ namespace Dennenboom\VerdantUI\Tables;
 /**
  * Abstract base table for defining table columns and actions in a dedicated class.
  *
- * Subclass and implement columns(); override actions() when needed. Then:
+ * Subclass and implement columns(); override actions() or rowOpenUrl() when needed. Then:
  *
  *   $tableData = MyTable::make($paginator)->withSorting($sort)->withColumnVisibility('key', null);
  *
@@ -28,6 +28,11 @@ abstract class BaseTable
             $context
         );
 
+        $rowOpenUrl = static::rowOpenUrl();
+        if ($rowOpenUrl !== null) {
+            $data->withRowOpenUrl($rowOpenUrl);
+        }
+
         return $data->withActionsMaxVisible(static::actionsMaxVisible());
     }
 
@@ -44,6 +49,17 @@ abstract class BaseTable
      * @return callable|null
      */
     protected static function actions(): ?callable
+    {
+        return null;
+    }
+
+    /**
+     * Optional URL to open when a row is double-clicked. Receives the same model instance as column value callables.
+     * Return null or an empty string to disable navigation for that row.
+     *
+     * @return (callable(mixed): ?string)|null
+     */
+    protected static function rowOpenUrl(): ?callable
     {
         return null;
     }

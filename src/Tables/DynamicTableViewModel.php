@@ -28,6 +28,8 @@ final class DynamicTableViewModel
     /** Number of actions to show inline before overflow dropdown. Null = use default (2). */
     public ?int $actionsMaxVisible = null;
 
+    public bool $rowInteractionEnabled = false;
+
     private const ACTIONS_KEY = 'actions';
 
     private function __construct() {}
@@ -87,6 +89,8 @@ final class DynamicTableViewModel
             if (!is_null($maxVisible)) {
                 $vm->actionsMaxVisible = $maxVisible;
             }
+
+            $vm->rowInteractionEnabled = $data->rowInteractionEnabled();
         }
 
         if (is_array($data)) {

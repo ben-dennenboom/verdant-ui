@@ -4,6 +4,7 @@ namespace Dennenboom\VerdantUI\Tables;
 
 use Dennenboom\VerdantUI\Contracts\DynamicTableDataProvider;
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 
 class DynamicTableData implements DynamicTableDataProvider
@@ -67,6 +68,16 @@ class DynamicTableData implements DynamicTableDataProvider
      */
     protected ?int $actionsMaxVisible = null;
 
+    protected bool $rowOpenUrlEnabled = false;
+
+    /**
+     * Non-paginator source list from {@see fromCollection()} (same instance passed to {@see Collection::map()}).
+     * {@see withRowOpenUrl()} calls {@see Collection::values()} only when needed. Paginated tables use {@see $paginator} instead.
+     *
+     * @var Collection<int, mixed>|null
+     */
+    protected ?Collection $rowOpenSourceCollection = null;
+
     /**
      * @param array<int, string|array<string, mixed>> $headers
      * @param array<int, array<string, mixed>|array<int, mixed>> $rows
@@ -120,6 +131,7 @@ class DynamicTableData implements DynamicTableDataProvider
             $collection = $items->getCollection();
         } else {
             $collection = collect($items);
+            $instance->rowOpenSourceCollection = $collection;
         }
 
         $headerKeys = ['sortable' => true, 'class' => true, 'sort_key' => true, 'pinned' => true, 'width' => true, 'align' => true, 'tooltip' => true];
@@ -271,6 +283,91 @@ class DynamicTableData implements DynamicTableDataProvider
     public function actionsMaxVisible(): ?int
     {
         return $this->actionsMaxVisible;
+    }
+
+    public function rowInteractionEnabled(): bool
+    {
+        return $this->rowOpenUrlEnabled;
+    }
+
+    /**
+     * Enable single-click row selection and double-click navigation when the callback returns a non-empty URL.
+     * Pass null to disable; reserved keys are stripped only when row-open was previously applied on this instance.
+     *
+     * Applies only to tables built with {@see fromCollection()} (source items must match row count).
+     * If you use {@see withSorting()} without a paginator, call this before {@see withSorting()} so metadata stays aligned with rows.
+     *
+     * @param  (callable(mixed): ?string)|null  $callback
+     */
+    public function withRowOpenUrl(?callable $callback): self
+    {
+        if ($callback === null) {
+            if ($this->rowOpenUrlEnabled) {
+                $this->rows = $this->stripRowOpenKeysFromRows($this->rows);
+            }
+            $this->rowOpenUrlEnabled = false;
+
+            return $this;
+        }
+
+        $items = $this->resolveRowOpenSourceItems();
+        if ($items === null || $items->count() !== count($this->rows)) {
+            $this->rowOpenUrlEnabled = false;
+
+            return $this;
+        }
+
+        foreach ($this->rows as $i => &$row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $model = $items[$i] ?? null;
+            unset($row['_row_key'], $row['_row_open_url']);
+
+            if (is_object($model) && method_exists($model, 'getKey')) {
+                $row['_row_key'] = (string) $model->getKey();
+            } elseif (is_array($model) && isset($model['id'])) {
+                $row['_row_key'] = (string) $model['id'];
+            }
+
+            $open = $callback($model);
+            $row['_row_open_url'] = ($open !== null && $open !== '')
+                ? (string) $open
+                : null;
+        }
+        unset($row);
+
+        $this->rowOpenUrlEnabled = true;
+
+        return $this;
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>|array<int, mixed>>  $rows
+     * @return array<int, array<string, mixed>|array<int, mixed>>
+     */
+    private function stripRowOpenKeysFromRows(array $rows): array
+    {
+        return array_map(static function ($row) {
+            if (! is_array($row)) {
+                return $row;
+            }
+            unset($row['_row_key'], $row['_row_open_url']);
+
+            return $row;
+        }, $rows);
+    }
+
+    /**
+     * @return Collection<int, mixed>|null
+     */
+    private function resolveRowOpenSourceItems(): ?Collection
+    {
+        if ($this->rowOpenSourceCollection instanceof Collection) {
+            return $this->rowOpenSourceCollection->values();
+        }
+
+        return $this->paginator?->getCollection()->values();
     }
 
     /**

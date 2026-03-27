@@ -48,6 +48,7 @@
             storageKey: @js($columnVisibilityConfig['storageKey']),
             storeKey: @js($columnVisibilityConfig['storeKey']),
             allKeys: @js($columnVisibilityConfig['allKeys']),
+            columnWidths: @js($vm->columnGridWidths),
             pinned: @js($columnVisibilityConfig['pinned']),
             defaultVisible: @js($columnVisibilityConfig['defaultVisible']),
         })"

@@ -30,6 +30,18 @@ final class DynamicTableViewModel
 
     public bool $rowInteractionEnabled = false;
 
+    /**
+     * grid-template-columns value derived from header width hints (fixed widths + minmax(0,1fr) for the rest).
+     */
+    public string $gridTemplateColumns = '';
+
+    /**
+     * Parallel to headers / columnKeys: CSS length for fixed tracks, null for flexible columns.
+     *
+     * @var array<int, string|null>
+     */
+    public array $columnGridWidths = [];
+
     private const ACTIONS_KEY = 'actions';
 
     private function __construct() {}
@@ -52,6 +64,8 @@ final class DynamicTableViewModel
 
         $vm->rows = self::normalizeRows($rows, $vm);
         $vm->columnCount = count($vm->headers);
+        $vm->columnGridWidths = self::extractColumnGridWidths($vm->headers);
+        $vm->gridTemplateColumns = self::buildGridTemplateColumnsFromWidths($vm->columnGridWidths);
 
         if ($data instanceof DynamicTableDataProvider && !is_null($data->sort())) {
             $vm->sort = $data->sort();
@@ -272,6 +286,41 @@ final class DynamicTableViewModel
         $key = $this->columnKeys[$index] ?? null;
 
         return !is_null($key) ? (string) $key : 'col-' . $index;
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>|string>  $headers
+     * @return array<int, string|null>
+     */
+    private static function extractColumnGridWidths(array $headers): array
+    {
+        $widths = [];
+        foreach ($headers as $header) {
+            if (is_array($header) && ! empty($header['width'])) {
+                $widths[] = (string) $header['width'];
+            } else {
+                $widths[] = null;
+            }
+        }
+
+        return $widths;
+    }
+
+    /**
+     * @param  array<int, string|null>  $widths
+     */
+    private static function buildGridTemplateColumnsFromWidths(array $widths): string
+    {
+        if ($widths === []) {
+            return '';
+        }
+
+        $parts = [];
+        foreach ($widths as $w) {
+            $parts[] = ($w !== null && $w !== '') ? $w : 'minmax(0, 1fr)';
+        }
+
+        return implode(' ', $parts);
     }
 
     /**

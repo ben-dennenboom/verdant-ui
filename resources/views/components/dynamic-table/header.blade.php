@@ -3,9 +3,13 @@
     })"
     class="v-grid v-bg-gray-50 dark:v-bg-gray-700 v-relative"
     @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
-        :style="'grid-template-columns: repeat(' + Alpine.store('{{ $columnVisibility['storeKey'] }}').visibleCount + ', minmax(0,1fr))'"
+        :style="'grid-template-columns: ' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"
     @else
-        style="grid-template-columns: repeat({{ $vm->columnCount }}, minmax(0,1fr));"
+        @if($vm->gridTemplateColumns !== '')
+            style="grid-template-columns: {{ $vm->gridTemplateColumns }};"
+        @else
+            style="grid-template-columns: repeat({{ $vm->columnCount }}, minmax(0,1fr));"
+        @endif
     @endif
 >
     @foreach ($vm->headers as $header)
@@ -18,7 +22,6 @@
             };
         @endphp
         <div class="v-px-6 v-py-3 v-text-md v-font-semibold v-text-gray-700 dark:v-text-gray-300 {{ $alignClass }} {{ $header['class'] ?? '' }}"
-            @if(!empty($header['width'])) style="min-width: {{ $header['width'] }}; max-width: {{ $header['width'] }};" @endif
             @if(!empty($header['tooltip'])) title="{{ e($header['tooltip']) }}" @endif
             @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
                 x-show="Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}')"

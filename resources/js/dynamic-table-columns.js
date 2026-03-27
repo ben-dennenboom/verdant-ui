@@ -37,9 +37,23 @@ document.addEventListener('alpine:init', () => {
         storageKey: config.storageKey ?? 'verdant.table.columns.default',
         storeKey: config.storeKey ?? 'vtd_default',
         allKeys: config.allKeys ?? [],
+        columnWidths: config.columnWidths ?? [],
         pinned: config.pinned ?? ['actions'],
         defaultVisible: config.defaultVisible ?? null,
         visible: {},
+
+        gridTemplateForVisible() {
+            const parts = [];
+            this.allKeys.forEach((key, i) => {
+                if (this.visible[key] === false) {
+                    return;
+                }
+                const w = this.columnWidths[i] ?? null;
+                parts.push(w ? w : 'minmax(0, 1fr)');
+            });
+
+            return parts.join(' ');
+        },
 
         init() {
             try {
@@ -61,6 +75,7 @@ document.addEventListener('alpine:init', () => {
 
             Alpine.store(this.storeKey, {
                 visibleCount: this.allKeys.filter((k) => this.visible[k] !== false).length,
+                gridTemplateColumns: this.gridTemplateForVisible(),
                 isVisible: (k) => this.isVisible(k),
                 setVisible: (k, v) => this.setVisible(k, v),
                 showAll: () => this.showAll(),
@@ -90,6 +105,7 @@ document.addEventListener('alpine:init', () => {
             const store = Alpine.store(this.storeKey);
             if (!store) return;
             store.visibleCount = this.allKeys.filter((k) => this.visible[k] !== false).length;
+            store.gridTemplateColumns = this.gridTemplateForVisible();
         },
 
         isVisible(key) {

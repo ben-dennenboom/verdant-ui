@@ -22,9 +22,13 @@
             class="v-grid hover:v-bg-gray-50 dark:hover:v-bg-gray-700 v-items-center"
         @endif
         @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
-            :style="'grid-template-columns: repeat(' + Alpine.store('{{ $columnVisibility['storeKey'] }}').visibleCount + ', minmax(0,1fr))'"
+            :style="'grid-template-columns: ' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"
         @else
-            style="grid-template-columns: repeat({{ $vm->columnCount }}, minmax(0,1fr));"
+            @if($vm->gridTemplateColumns !== '')
+                style="grid-template-columns: {{ $vm->gridTemplateColumns }};"
+            @else
+                style="grid-template-columns: repeat({{ $vm->columnCount }}, minmax(0,1fr));"
+            @endif
         @endif
     >
         @foreach ($row->cells as $cell)
@@ -39,7 +43,6 @@
             @endphp
             <div class="v-px-6 v-py-4 v-text-sm v-text-gray-900 dark:v-text-gray-300 {{ $alignClass }} {{ $cell->class }}"
                 @if($rowIx && $cell->isActions) @click.stop @dblclick.stop @endif
-                @if(!empty($header['width'])) style="min-width: {{ $header['width'] }}; max-width: {{ $header['width'] }};" @endif
                 @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
                     x-show="isVisible('{{ $columnKey }}')"
                 @endif

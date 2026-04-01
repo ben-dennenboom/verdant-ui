@@ -21,10 +21,14 @@ final class Filter
 
     private bool $multiple = false;
 
+    private ?string $queryKey = null;
+
+    private ?\Closure $queryCallback = null;
+
     private function __construct(string $key, string $label, string $type)
     {
         $type = strtolower($type);
-        if (! in_array($type, self::TYPES, true)) {
+        if (!in_array($type, self::TYPES, true)) {
             throw new \InvalidArgumentException(
                 'Filter type must be one of: ' . implode(', ', self::TYPES) . ', got: ' . $type
             );
@@ -43,7 +47,7 @@ final class Filter
      * Set options for select type. Array format: value => label or list of ['value' => x, 'label' => y].
      * Callable is invoked in toDefinition() so options can be resolved at build time.
      *
-     * @param  array<int|string, mixed>|callable  $options
+     * @param array<int|string, mixed>|callable $options
      */
     public function options(array|callable $options): self
     {
@@ -83,6 +87,28 @@ final class Filter
     }
 
     /**
+     * Override the DB column used for the default query application.
+     */
+    public function queryKey(string $queryKey): self
+    {
+        $this->queryKey = $queryKey;
+
+        return $this;
+    }
+
+    /**
+     * Set a callback to apply custom filtering logic.
+     *
+     * @param callable(Builder, mixed): void $callback Receives (query, value)
+     */
+    public function applyQuery(callable $callback): self
+    {
+        $this->queryCallback = \Closure::fromCallable($callback);
+
+        return $this;
+    }
+
+    /**
      * Convert to the definition array expected by DynamicTableData / DynamicTableViewModel.
      *
      * @return array<string, mixed>
@@ -107,6 +133,14 @@ final class Filter
             $definition['multiple'] = true;
         }
 
+        if ($this->queryKey !== null) {
+            $definition['query_key'] = $this->queryKey;
+        }
+
+        if ($this->queryCallback !== null) {
+            $definition['query'] = $this->queryCallback;
+        }
+
         if ($this->options !== null && $this->type === 'select') {
             $options = is_callable($this->options)
                 ? ($this->options)()
@@ -120,5 +154,51 @@ final class Filter
     public function getKey(): string
     {
         return $this->key;
+    }
+
+    /**
+     * Apply one filter to the query. Uses a custom query callback when present, otherwise applies
+     * a simple where/whereIn against the filter key or query_key.
+     *
+     * @param iterable<Filter|array<string, mixed>> $filters
+     * @param \Illuminate\Contracts\Database\Query\Builder $query
+     */
+    public static function apply(string $requestedKey, iterable $filters, $query, mixed $value): void
+    {
+        $definition = null;
+
+        foreach ($filters as $filter) {
+            $candidate = $filter instanceof self ? $filter->toDefinition() : (is_array($filter) ? $filter : null);
+
+            if (!is_array($candidate) || ($candidate['key'] ?? null) !== $requestedKey) {
+                continue;
+            }
+
+            $definition = $candidate;
+
+            break;
+        }
+
+        if ($definition === null) {
+            return;
+        }
+
+        if (isset($definition['query']) && is_callable($definition['query'])) {
+            ($definition['query'])($query, $value);
+
+            return;
+        }
+
+        $queryKey = is_string($definition['query_key'] ?? null)
+            ? $definition['query_key']
+            : $requestedKey;
+
+        if (is_array($value)) {
+            $query->whereIn($queryKey, $value);
+
+            return;
+        }
+
+        $query->where($queryKey, $value);
     }
 }

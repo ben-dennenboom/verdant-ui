@@ -310,59 +310,146 @@ The form submits via GET to the current URL. Your controller or data provider sh
 
 ### Usage example
 
-**Controller** – build table data, define filters, apply request params to the query:
+**Controller** – build a reusable query object once, then let `DynamicTableQueryApplier` handle search, filters, and sort:
 
 ```php
 use Dennenboom\VerdantUI\Tables\Column;
+use Dennenboom\VerdantUI\Tables\DynamicTableQuery;
+use Dennenboom\VerdantUI\Tables\DynamicTableQueryApplier;
 use Dennenboom\VerdantUI\Tables\DynamicTableData;
-use Dennenboom\VerdantUI\Tables\DynamicTableSort;
 use Dennenboom\VerdantUI\Tables\Filter;
 
 class UserTableController extends Controller
 {
     public function index()
     {
-        $query = User::query();
-
-        // Apply filter params from the request (same keys as filter definitions)
-        if ($status = request('status')) {
-            $query->where('status', $status);
-        }
-        if (request('verified')) {
-            $query->whereNotNull('email_verified_at');
-        }
-        if ($q = request('q')) {
-            $query->where(function ($qry) use ($q) {
-                $qry->where('name', 'like', "%{$q}%")
-                    ->orWhere('email', 'like', "%{$q}%");
-            });
-        }
-
-        $users = $query->paginate(15);
-
         $columns = [
             Column::make('name', 'Name')->sortable(),
             Column::make('email', 'Email')->sortable(),
-            Column::make('status', 'Status'),
+            Column::make('status', 'Status')->searchable(),
+            Column::make('company', 'Company')
+                ->searchableQuery(static function ($query, string $search): void {
+                    $query->orWhereHas('company', static function ($companyQuery) use ($search): void {
+                        $companyQuery->where('name', 'like', '%' . $search . '%');
+                    });
+                }),
         ];
+
+        $filters = [
+            Filter::make('status', 'Status', 'select')
+                ->multiple()
+                ->options([
+                    ['value' => 'active', 'label' => 'Active'],
+                    ['value' => 'inactive', 'label' => 'Inactive'],
+                ]),
+            Filter::make('verified', 'Verified only', 'checkbox')
+                ->applyQuery(static function ($query, bool $checked): void {
+                    if ($checked) {
+                        $query->whereNotNull('email_verified_at');
+                    }
+                }),
+            Filter::make('company_id', 'Company', 'select')
+                ->queryKey('company_id')
+                ->options(static fn () => Company::query()->pluck('name', 'id')->all()),
+        ];
+
+        $tableQuery = DynamicTableQuery::fromRequest(
+            filters: $filters,
+            allowedSortKeys: Column::sortableKeys($columns),
+            defaultPerPage: 15,
+        );
+
+        $query = User::query()->with('company');
+
+        DynamicTableQueryApplier::apply(
+            $query,
+            $tableQuery,
+            columns: $columns,
+            filters: $filters,
+        );
+
+        $users = $query->paginate($tableQuery->perPage ?? 15)->withQueryString();
 
         $table = DynamicTableData::fromCollection($users, $columns, fn ($user) => [/* actions */])
             ->withColumnVisibility('users-table')
-            ->withFilters([
-                Filter::make('status', 'Status', 'select')
-                    ->multiple()
-                    ->options([
-                        ['value' => '', 'label' => 'Any'],
-                        ['value' => 'active', 'label' => 'Active'],
-                        ['value' => 'inactive', 'label' => 'Inactive'],
-                    ]),
-                Filter::make('verified', 'Verified only', 'checkbox'),
-                Filter::make('q', 'Keyword', 'text')
-                    ->placeholder('Search name or email…'),
-            ])
-            ->withSorting(DynamicTableSort::fromRequest());
+            ->withFilters($filters)
+            ->withSearchableColumns(Column::searchableKeys($columns))
+            ->withSorting($tableQuery->sort);
 
         return view('users.index', ['table' => $table]);
+    }
+}
+```
+
+**Demo project shape** - keep query definitions reusable, but expose them from your app table class rather than from the package `BaseTable` itself:
+
+```php
+use App\Models\User;
+use App\Tables\UsersTable;
+use Dennenboom\VerdantUI\Tables\Column;
+use Dennenboom\VerdantUI\Tables\DynamicTableQuery;
+use Dennenboom\VerdantUI\Tables\DynamicTableQueryApplier;
+
+public function index()
+{
+    $columns = UsersTable::queryColumns();
+    $filters = UsersTable::queryFilters();
+
+    $tableQuery = DynamicTableQuery::fromRequest(
+        filters: $filters,
+        allowedSortKeys: Column::sortableKeys($columns),
+        defaultPerPage: 15,
+    );
+
+    $query = User::query();
+
+    DynamicTableQueryApplier::apply(
+        $query,
+        $tableQuery,
+        columns: $columns,
+        filters: $filters,
+    );
+
+    $users = $query->paginate($tableQuery->perPage ?? 15)->withQueryString();
+
+    return view('users.index', [
+        'table' => UsersTable::make($users)
+            ->withFilters($filters)
+            ->withSearchableColumns(Column::searchableKeys($columns))
+            ->withSorting($tableQuery->sort),
+    ]);
+}
+```
+
+```php
+use Dennenboom\VerdantUI\Tables\BaseTable;
+use Dennenboom\VerdantUI\Tables\Column;
+use Dennenboom\VerdantUI\Tables\Filter;
+
+class UsersTable extends BaseTable
+{
+    public static function queryColumns(): array
+    {
+        return [
+            Column::make('name', 'Name')->sortable()->searchable(),
+            Column::make('email', 'Email')->sortable()->searchable(),
+        ];
+    }
+
+    public static function queryFilters(): array
+    {
+        return [
+            Filter::make('status', 'Status', 'select')
+                ->options([
+                    ['value' => 'active', 'label' => 'Active'],
+                    ['value' => 'inactive', 'label' => 'Inactive'],
+                ]),
+        ];
+    }
+
+    protected static function columns(): array
+    {
+        return static::queryColumns();
     }
 }
 ```

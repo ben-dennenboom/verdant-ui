@@ -11,7 +11,10 @@
         }
         return $v !== null && $v !== '' && $v !== false;
     })->count();
-    $clearUrl = $activeCount > 0 ? request()->url() . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '') : null;
+    $hasExplicitFilterInQuery = collect($filterKeys)->contains(fn($key) => request()->query->has($key));
+    $clearUrl = $activeCount > 0 && $hasExplicitFilterInQuery
+        ? request()->url() . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '')
+        : null;
     $formId = $modalId . '-form';
 @endphp
 
@@ -33,13 +36,12 @@
     </x-v-button.light>
 
     @if($clearUrl)
-        <x-v-button.light
-            :href="$clearUrl"
-            outline
-            class="v-text-sm"
+        <a
+            href="{{ $clearUrl }}"
+            class="v-text-red-500 v-text-sm v-whitespace-nowrap"
         >
             Clear
-        </x-v-button.light>
+        </a>
     @endif
 </div>
 

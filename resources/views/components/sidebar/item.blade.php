@@ -13,7 +13,12 @@
             ]
           )
     }}>
-    <i class="fas fa-{{ $icon }} v-flex-none v-w-6"></i>
+    @php
+        $sidebarItemIconClass = str_starts_with($icon, 'brands:')
+            ? 'fa-brands fa-' . substr($icon, 7)
+            : 'fa-solid fa-' . $icon;
+    @endphp
+    <i class="{{ $sidebarItemIconClass }} v-flex-none v-w-6"></i>
     <span class="v-flex-1 v-ml-2">{!! $label !!}</span>
     @if($slot->isNotEmpty())
       <i class="fas fa-chevron-down v-ml-auto"></i>

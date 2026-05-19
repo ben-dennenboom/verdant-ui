@@ -12,6 +12,7 @@ class VerdantUI
         $dynamicTableColumnsJsPath = self::assetPath('js/dynamic-table-columns.js');
         $dynamicTableSearchJsPath = self::assetPath('js/dynamic-table-search.js');
         $dynamicTableActionsJsPath = self::assetPath('js/dynamic-table-actions.js');
+        $dynamicTableBulkJsPath = self::assetPath('js/dynamic-table-bulk.js');
         $fontAwesomePath = self::assetPath('vendor/fontawesome/css/all.min.css');
         $alpineJsPath = self::assetPath('vendor/alpine/alpine.min.js');
         $cropperJsPath = self::assetPath('js/cropper.min.js');
@@ -35,6 +36,7 @@ class VerdantUI
         <script src="{$dynamicTableColumnsJsPath}" defer></script>
         <script src="{$dynamicTableSearchJsPath}" defer></script>
         <script src="{$dynamicTableActionsJsPath}" defer></script>
+        <script src="{$dynamicTableBulkJsPath}" defer></script>
         {$alpine}
         <script>
             window.verdantPrefix = "v-"

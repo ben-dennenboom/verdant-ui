@@ -38,7 +38,13 @@
     $showSearch = !empty($vm->searchableColumns);
     $showFilter = !empty($vm->filterColumns);
     $showToolbar = $showSearch || $visibilityKey || $showFilter;
+    $hasBulkEdit = $vm->hasBulkEdit;
+    $bulkStoreKey = $hasBulkEdit ? ('vtbulk_' . ($storeKey ?? uniqid('tbl_'))) : null;
 @endphp
+
+@if($hasBulkEdit)
+<div x-data="verdantTableBulk({ allRowKeys: @js($vm->allRowKeys), storeKey: @js($bulkStoreKey) })">
+@endif
 
 <div
     class="v-rounded v-bg-white dark:v-bg-gray-800 v-border dark:v-border-gray-700 {{ $class }}"
@@ -90,10 +96,11 @@
 
     <div class="v-hidden lg:v-block">
         <div class="v-min-w-full">
-            @include('verdant::components.dynamic-table.header', ['columnVisibility' => $columnVisibility])
+            @include('verdant::components.dynamic-table.header', ['columnVisibility' => $columnVisibility, 'bulkStoreKey' => $bulkStoreKey])
             @include('verdant::components.dynamic-table.body-table', [
                 'columnVisibility' => $columnVisibility,
                 'emptyText' => $emptyText,
+                'bulkStoreKey' => $bulkStoreKey,
             ])
         </div>
     </div>
@@ -102,8 +109,14 @@
         @include('verdant::components.dynamic-table.body-cards', [
             'columnVisibility' => $columnVisibility,
             'emptyText' => $emptyText,
+            'bulkStoreKey' => $bulkStoreKey,
         ])
     </div>
 
     @include('verdant::components.dynamic-table.pagination')
 </div>
+
+@if($hasBulkEdit)
+    @include('verdant::components.dynamic-table.bulk-bar', ['vm' => $vm, 'bulkStoreKey' => $bulkStoreKey])
+</div>
+@endif

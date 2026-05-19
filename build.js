@@ -67,6 +67,11 @@ fs.copyFileSync(
     path.join(jsDir, 'dynamic-table-actions.js')
 );
 
+fs.copyFileSync(
+    path.join(__dirname, 'resources', 'js', 'dynamic-table-bulk.js'),
+    path.join(jsDir, 'dynamic-table-bulk.js')
+);
+
 const downloads = [
   {
     url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css',

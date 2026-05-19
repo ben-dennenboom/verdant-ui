@@ -551,3 +551,129 @@ protected static function columns(): array
 ```php
 UsersTable::make($users, context: auth()->user());
 ```
+
+**BaseTable hook methods:**
+
+| Method | Description |
+|--------|-------------|
+| `columns(): array` | **(required)** Column DTOs or legacy key => definition array |
+| `actions(): ?callable` | Row actions; receives each model, returns action array or `render` closure |
+| `rowOpenUrl(): ?callable` | URL opened on row double-click; receives the model, return `null` to skip |
+| `bulkFields(): array` | `BulkField` instances; non-empty enables the bulk-edit bar |
+| `bulkActionUrl(): ?string` | POST URL for the bulk-edit form; receives `_ids[]` + each field value |
+| `actionsMaxVisible(): int` | Inline actions before overflow dropdown (default `2`) |
+
+---
+
+## Bulk edit
+
+When `withBulkEdit()` is called (or `bulkFields()` is overridden in a `BaseTable` subclass), the table gains:
+
+- A **checkbox column** prepended to every row (always visible).
+- A **select-all checkbox** in the header that toggles all rows on the current page.
+- **Shift+click** on a row to toggle its selection without a form submission.
+- A **floating bar** pinned to the bottom of the viewport that appears as soon as at least one row is selected, containing the bulk fields and a submit button.
+
+The form POSTs to `bulkActionUrl` with `_ids[]` (the selected row primary keys) plus the value of each bulk field.
+
+### BulkField DTO
+
+```php
+use Dennenboom\VerdantUI\Tables\BulkField;
+use Dennenboom\VerdantUI\Tables\DynamicTableData;
+
+$table = DynamicTableData::fromCollection($users, $columns, $actions)
+    ->withBulkEdit(
+        fields: [
+            BulkField::make('status', 'Status', 'select')
+                ->options([
+                    ['value' => 'active',   'label' => 'Active'],
+                    ['value' => 'archived', 'label' => 'Archived'],
+                ]),
+            BulkField::make('notify', 'Send notification', 'checkbox'),
+        ],
+        actionUrl: route('users.bulk-update'),
+    );
+```
+
+**BulkField methods:**
+
+| Method | Description |
+|--------|-------------|
+| `BulkField::make(string $key, string $label, string $type)` | Create a field; `$type` is one of `text`, `number`, `date`, `checkbox`, `select` |
+| `->options(array\|callable)` | For select: array of `['value' => x, 'label' => y]` or `value => label`; callable resolved at build time |
+| `->placeholder(string)` | Placeholder for text/number inputs |
+| `->multiple(bool)` | For select: allow multiple values; field name becomes `key[]` (default `true` when called) |
+
+### `DynamicTableData::withBulkEdit()`
+
+```php
+$table->withBulkEdit(array $fields, ?string $actionUrl = null): self
+```
+
+- `$fields` — array of `BulkField` instances; passing an empty array is a no-op.
+- `$actionUrl` — URL that the form POSTs to. Falls back to `request()->url()` when `null`.
+
+### Handling the POST in your controller
+
+```php
+Route::post('/users/bulk-update', function (Request $request) {
+    $ids    = $request->input('_ids', []);   // array of selected row PKs (strings)
+    $status = $request->input('status');      // one of your field keys
+    $notify = $request->boolean('notify');
+
+    User::whereIn('id', $ids)->update(['status' => $status]);
+
+    if ($notify) {
+        // dispatch notification job…
+    }
+
+    return redirect()->back()->with('success', "Updated {$ids} users.");
+})->name('users.bulk-update');
+```
+
+### Using bulk edit with BaseTable
+
+Override `bulkFields()` and `bulkActionUrl()` in your table class. `make()` applies them automatically.
+
+```php
+use Dennenboom\VerdantUI\Tables\BaseTable;
+use Dennenboom\VerdantUI\Tables\BulkField;
+use Dennenboom\VerdantUI\Tables\Column;
+
+class UsersTable extends BaseTable
+{
+    protected static function columns(): array
+    {
+        return [
+            Column::make('last_name', 'Last Name')->default()->sortable(),
+            Column::make('email', 'Email')->sortable(),
+        ];
+    }
+
+    protected static function bulkFields(): array
+    {
+        return [
+            BulkField::make('status', 'Status', 'select')
+                ->options([
+                    ['value' => 'active',   'label' => 'Active'],
+                    ['value' => 'archived', 'label' => 'Archived'],
+                ]),
+            BulkField::make('delete', 'Delete', 'checkbox'),
+        ];
+    }
+
+    protected static function bulkActionUrl(): ?string
+    {
+        return route('users.bulk-update');
+    }
+}
+```
+
+Then in your controller, just call `UsersTable::make($users)` — no extra wiring needed:
+
+```php
+$table = UsersTable::make($users)
+    ->withSorting($tableQuery->sort)
+    ->withColumnVisibility('users-table', null);
+```

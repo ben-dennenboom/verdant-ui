@@ -1,24 +1,41 @@
+@php
+    $bulkPrefix = $vm->hasBulkEdit ? '3rem ' : '';
+@endphp
+
 <div x-data="dynamicTableSort({
         columns: @js($vm->sort?->columns ?? [])
     })"
     class="v-grid v-bg-gray-50 dark:v-bg-gray-700 v-relative"
     @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
-        :style="'grid-template-columns: ' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"
+        :style="'grid-template-columns: {{ $bulkPrefix }}' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"
     @else
         @if($vm->gridTemplateColumns !== '')
-            style="grid-template-columns: {{ $vm->gridTemplateColumns }};"
+            style="grid-template-columns: {{ $bulkPrefix }}{{ $vm->gridTemplateColumns }};"
         @else
-            style="grid-template-columns: repeat({{ $vm->columnCount }}, minmax(0,1fr));"
+            style="grid-template-columns: {{ $bulkPrefix }}repeat({{ $vm->columnCount }}, minmax(0,1fr));"
         @endif
     @endif
 >
+    @if($vm->hasBulkEdit)
+        <div class="v-px-3 v-py-3 v-flex v-items-center v-justify-center">
+            <input
+                type="checkbox"
+                x-show="$store[@js($bulkStoreKey)].selected.length > 0"
+                :checked="$store[@js($bulkStoreKey)].allRowKeys.length > 0 && $store[@js($bulkStoreKey)].allRowKeys.every(k => $store[@js($bulkStoreKey)].selected.includes(k))"
+                @change="$store[@js($bulkStoreKey)].toggleAll()"
+                title="Select all on this page"
+                class="v-rounded v-border-gray-300 dark:v-border-gray-600 v-text-primary-600 focus:v-ring-primary-500 v-bg-white dark:v-bg-gray-700 v-cursor-pointer"
+            >
+        </div>
+    @endif
+
     @foreach ($vm->headers as $header)
         @php
             $columnKey = $vm->columnKeyForIndex($loop->index);
             $alignClass = match ($header['align'] ?? '') {
                 'center' => 'v-text-center',
-                'right' => 'v-text-right',
-                default => 'v-text-left',
+                'right'  => 'v-text-right',
+                default  => 'v-text-left',
             };
         @endphp
         <div class="v-px-6 v-py-3 v-text-md v-font-semibold v-text-gray-700 dark:v-text-gray-300 {{ $alignClass }} {{ $header['class'] ?? '' }}"

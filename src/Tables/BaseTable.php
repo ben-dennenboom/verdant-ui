@@ -33,6 +33,11 @@ abstract class BaseTable
             $data->withRowOpenUrl($rowOpenUrl);
         }
 
+        $bulkFields = static::bulkFields();
+        if (!empty($bulkFields)) {
+            $data->withBulkEdit($bulkFields, static::bulkActionUrl());
+        }
+
         return $data->withActionsMaxVisible(static::actionsMaxVisible());
     }
 
@@ -60,6 +65,26 @@ abstract class BaseTable
      * @return (callable(mixed): ?string)|null
      */
     protected static function rowOpenUrl(): ?callable
+    {
+        return null;
+    }
+
+    /**
+     * Define bulk edit fields (BulkField instances).
+     * Return a non-empty array to enable the bulk-edit floating bar.
+     *
+     * @return array<int, BulkField>
+     */
+    protected static function bulkFields(): array
+    {
+        return [];
+    }
+
+    /**
+     * URL that the bulk-edit form POSTs to.
+     * Receives _ids[] (selected row keys) plus each field value.
+     */
+    protected static function bulkActionUrl(): ?string
     {
         return null;
     }

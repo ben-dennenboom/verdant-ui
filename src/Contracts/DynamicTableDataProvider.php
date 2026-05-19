@@ -81,4 +81,20 @@ interface DynamicTableDataProvider
      * When true, row click selects a row and double-click may navigate using row open URLs.
      */
     public function rowInteractionEnabled(): bool;
+
+    /**
+     * Bulk edit field definitions. Return null or empty array to disable bulk edit.
+     * Each item: key, label, type (text|number|date|checkbox|select), and for select: options.
+     *
+     * @return array<int, array<string, mixed>>|null
+     */
+    public function bulkFields(): ?array;
+
+    /**
+     * URL that the bulk-edit form POSTs to.
+     * Receives _ids[] (selected row primary keys) plus each field value.
+     *
+     * @return string|null
+     */
+    public function bulkActionUrl(): ?string;
 }

@@ -17,6 +17,9 @@
 @forelse ($vm->rows as $row)
     <div
         @if($vm->hasBulkEdit && $row->rowKey !== null)
+            x-data="{ rowHovered: false }"
+            @mouseenter="rowHovered = true"
+            @mouseleave="rowHovered = false"
             @click="if ($event.shiftKey) { $store[@js($bsk)].toggle(@js($row->rowKey)); $event.preventDefault(); }"
             @dblclick="$store[@js($bsk)].openRow(@js($row->openUrl))"
             :class="$store[@js($bsk)].isSelected(@js($row->rowKey))
@@ -33,7 +36,7 @@
     >
         {{-- Bulk checkbox for cards --}}
         @if($vm->hasBulkEdit && $row->rowKey !== null)
-            <div class="v-flex v-items-center v-justify-between v-mb-2" x-show="$store[@js($bsk)].selected.length > 0" @click.stop @dblclick.stop>
+            <div class="v-flex v-items-center v-justify-between v-mb-2" x-show="rowHovered || $store[@js($bsk)].selected.length > 0" @click.stop @dblclick.stop>
                 <label class="v-flex v-items-center v-gap-2 v-cursor-pointer v-select-none">
                     <input
                         type="checkbox"

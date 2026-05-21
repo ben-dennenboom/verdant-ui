@@ -17,7 +17,7 @@
     @endif
 >
     @if($vm->hasBulkEdit)
-        <div class="v-px-3 v-py-3 v-flex v-items-center v-justify-center">
+        <div class="v-pl-3 v-pr-1 v-py-3 v-flex v-items-center v-justify-center">
             <input
                 type="checkbox"
                 x-show="$store[@js($bulkStoreKey)].selected.length > 0"
@@ -29,7 +29,7 @@
         </div>
     @endif
 
-    @foreach ($vm->headers as $header)
+    @foreach ($vm->headers as $key => $header)
         @php
             $columnKey = $vm->columnKeyForIndex($loop->index);
             $alignClass = match ($header['align'] ?? '') {
@@ -38,7 +38,10 @@
                 default  => 'v-text-left',
             };
         @endphp
-        <div class="v-px-6 v-py-3 v-text-md v-font-semibold v-text-gray-700 dark:v-text-gray-300 {{ $alignClass }} {{ $header['class'] ?? '' }}"
+        <div class="
+            v-px-6 v-py-3 @if($key === 0 && $vm->hasBulkEdit) v-pl-3 @endif v-text-md v-font-semibold v-text-gray-700
+            dark:v-text-gray-300 {{ $alignClass }} {{ $header['class'] ?? '' }}
+        "
             @if(!empty($header['tooltip'])) title="{{ e($header['tooltip']) }}" @endif
             @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
                 x-show="Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}')"

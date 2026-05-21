@@ -58,7 +58,7 @@
 
                     <template x-if="isActive('{{ $header['key'] }}')">
                         <i
-                            class="v-text-xs fa"
+                            class="v-text-xs fa v-text-blue-500"
                             :class="directionFor('{{ $header['key'] }}') === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down'"
                         ></i>
                     </template>
@@ -72,10 +72,7 @@
     <template x-if="hasSorting()">
         <button
             type="button"
-            class="
-                v-absolute v-right-3 v-top-1/2 -v-translate-y-1/2
-                v-text-gray-400 dark:v-text-gray-500 hover:v-text-red-500
-            "
+            class="v-absolute v-right-3 v-top-1/2 -v-translate-y-1/2 v-text-red-500"
             title="Reset sorting"
             @click.stop="reset"
         >

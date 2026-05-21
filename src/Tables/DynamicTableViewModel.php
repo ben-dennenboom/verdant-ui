@@ -30,6 +30,16 @@ final class DynamicTableViewModel
 
     public bool $rowInteractionEnabled = false;
 
+    /** @var array<int, array<string, mixed>>|null */
+    public ?array $bulkFields = null;
+
+    public ?string $bulkActionUrl = null;
+
+    public bool $hasBulkEdit = false;
+
+    /** @var array<int, string> Primary keys of all visible rows, for select-all. */
+    public array $allRowKeys = [];
+
     /**
      * grid-template-columns value derived from header width hints (fixed widths + minmax(0,1fr) for the rest).
      */
@@ -64,6 +74,7 @@ final class DynamicTableViewModel
 
         $vm->rows = self::normalizeRows($rows, $vm);
         $vm->columnCount = count($vm->headers);
+        $vm->allRowKeys = array_values(array_filter(array_map(fn ($r) => $r->rowKey, $vm->rows)));
         $vm->columnGridWidths = self::extractColumnGridWidths($vm->headers);
         $vm->gridTemplateColumns = self::buildGridTemplateColumnsFromWidths($vm->columnGridWidths);
 
@@ -105,6 +116,13 @@ final class DynamicTableViewModel
             }
 
             $vm->rowInteractionEnabled = $data->rowInteractionEnabled();
+
+            $bulkFields = $data->bulkFields();
+            if (!empty($bulkFields)) {
+                $vm->bulkFields = self::normalizeBulkFields($bulkFields);
+                $vm->bulkActionUrl = $data->bulkActionUrl();
+                $vm->hasBulkEdit = true;
+            }
         }
 
         if (is_array($data)) {
@@ -125,6 +143,11 @@ final class DynamicTableViewModel
             }
             if (isset($data['actions_max_visible']) && is_int($data['actions_max_visible'])) {
                 $vm->actionsMaxVisible = $data['actions_max_visible'];
+            }
+            if (isset($data['bulk_fields']) && is_array($data['bulk_fields']) && $data['bulk_fields'] !== []) {
+                $vm->bulkFields = self::normalizeBulkFields($data['bulk_fields']);
+                $vm->bulkActionUrl = $data['bulk_action_url'] ?? null;
+                $vm->hasBulkEdit = true;
             }
         }
 
@@ -200,6 +223,35 @@ final class DynamicTableViewModel
         return array_map(function ($row) use ($vm) {
             return new DynamicTableRow($row, $vm);
         }, $rows);
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $fields
+     * @return array<int, array<string, mixed>>
+     */
+    private static function normalizeBulkFields(array $fields): array
+    {
+        $normalized = [];
+        foreach ($fields as $field) {
+            if (!is_array($field) || empty($field['key']) || empty($field['label']) || empty($field['type'])) {
+                continue;
+            }
+            $item = [
+                'key'         => (string) $field['key'],
+                'label'       => (string) $field['label'],
+                'type'        => (string) $field['type'],
+                'placeholder' => $field['placeholder'] ?? null,
+                'multiple'    => !empty($field['multiple']),
+            ];
+            if (($field['type'] ?? '') === 'select' && isset($field['options']) && is_array($field['options'])) {
+                $item['options'] = self::normalizeSelectOptions($field['options']);
+            } else {
+                $item['options'] = null;
+            }
+            $normalized[] = $item;
+        }
+
+        return $normalized;
     }
 
     /**

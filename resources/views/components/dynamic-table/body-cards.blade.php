@@ -1,6 +1,8 @@
 @php
-    $rowIx = $vm->rowInteractionEnabled ?? false;
+    $rowIx = !$vm->hasBulkEdit && ($vm->rowInteractionEnabled ?? false);
+    $bsk = $bulkStoreKey ?? null;
 @endphp
+
 @if($rowIx)
     <div
         x-data="{
@@ -11,9 +13,19 @@
         }"
     >
 @endif
+
 @forelse ($vm->rows as $row)
     <div
-        @if($rowIx && $row->rowKey !== null)
+        @if($vm->hasBulkEdit && $row->rowKey !== null)
+            x-data="{ rowHovered: false }"
+            @mouseenter="rowHovered = true"
+            @mouseleave="rowHovered = false"
+            @click="if ($event.shiftKey) { $store[@js($bsk)].toggle(@js($row->rowKey)); $event.preventDefault(); }"
+            @dblclick="$store[@js($bsk)].openRow(@js($row->openUrl))"
+            :class="$store[@js($bsk)].isSelected(@js($row->rowKey))
+                ? 'v-mb-4 v-rounded-lg v-border v-border-primary-300 dark:v-border-primary-600 v-bg-primary-50 dark:v-bg-primary-900/20 v-p-4 v-shadow-sm'
+                : 'v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 v-bg-white dark:v-bg-gray-800 v-p-4 v-shadow-sm'"
+        @elseif($rowIx && $row->rowKey !== null)
             class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 v-bg-white dark:v-bg-gray-800 v-p-4 v-shadow-sm v-cursor-pointer"
             @click="selectRow(@js($row->rowKey))"
             @dblclick="openRow(@js($row->openUrl))"
@@ -22,6 +34,20 @@
             class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 v-bg-white dark:v-bg-gray-800 v-p-4 v-shadow-sm"
         @endif
     >
+        {{-- Bulk checkbox for cards --}}
+        @if($vm->hasBulkEdit && $row->rowKey !== null)
+            <div class="v-flex v-items-center v-justify-between v-mb-2" x-show="rowHovered || $store[@js($bsk)].selected.length > 0" @click.stop @dblclick.stop>
+                <label class="v-flex v-items-center v-gap-2 v-cursor-pointer v-select-none">
+                    <input
+                        type="checkbox"
+                        :checked="$store[@js($bsk)].isSelected(@js($row->rowKey))"
+                        @change="$store[@js($bsk)].toggle(@js($row->rowKey))"
+                        class="v-rounded v-border-gray-300 dark:v-border-gray-600 v-text-primary-600 focus:v-ring-primary-500 v-bg-white dark:v-bg-gray-700"
+                    >
+                    <span class="v-text-xs v-text-gray-500 dark:v-text-gray-400" x-show="$store[@js($bsk)].isSelected(@js($row->rowKey))" x-cloak>Selected</span>
+                </label>
+            </div>
+        @endif
 
         {{-- Primary title (first two non-action columns) --}}
         <div class="v-font-semibold v-text-gray-900 dark:v-text-gray-100">
@@ -69,8 +95,7 @@
         @endphp
 
         @if ($actionsCell)
-            <div class="v-mt-3 v-flex v-justify-end" @if($rowIx) @click.stop @dblclick.stop @endif>
-                {{-- Custom render --}}
+            <div class="v-mt-3 v-flex v-justify-end" @if($rowIx || $vm->hasBulkEdit) @click.stop @dblclick.stop @endif>
                 @if ($actionsCell->value instanceof \Illuminate\Contracts\Support\Htmlable)
                     {!! $actionsCell->value->toHtml() !!}
                 @elseif (is_array($actionsCell->actions) && count($actionsCell->actions))
@@ -84,6 +109,7 @@
         {{ $emptyText ?? 'No data available.' }}
     </div>
 @endforelse
+
 @if($rowIx)
     </div>
 @endif

@@ -36,9 +36,9 @@ class VerdantUIServiceProvider extends ServiceProvider
             $componentFiles = $this->findComponentFiles($componentsPath);
 
             foreach ($componentFiles as $componentFile) {
-                $relPath = str_replace($componentsPath . '/', '', $componentFile);
+                $relPath = str_replace($componentsPath . DIRECTORY_SEPARATOR, '', $componentFile);
 
-                $name = str_replace(['/', '.blade.php'], ['.', ''], $relPath);
+                $name = str_replace([DIRECTORY_SEPARATOR, '.blade.php'], ['.', ''], $relPath);
 
                 Blade::component("verdant::components.{$name}", "v-{$name}");
             }

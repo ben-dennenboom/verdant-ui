@@ -10,6 +10,8 @@ final class DynamicTableRow
 
     public ?string $rowKey = null;
 
+    public ?RowStyle $rowStyle = null;
+
     public function __construct(array $rawRow, DynamicTableViewModel $vm)
     {
         $this->cells = [];
@@ -20,6 +22,10 @@ final class DynamicTableRow
 
         if (array_key_exists('_row_key', $rawRow) && $rawRow['_row_key'] !== null && $rawRow['_row_key'] !== '') {
             $this->rowKey = (string) $rawRow['_row_key'];
+        }
+
+        if (array_key_exists('_row_style', $rawRow) && is_array($rawRow['_row_style'])) {
+            $this->rowStyle = RowStyle::fromArray($rawRow['_row_style']);
         }
 
         foreach ($vm->columnKeys as $index => $key) {

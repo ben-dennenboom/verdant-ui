@@ -409,6 +409,40 @@ class DynamicTableData implements DynamicTableDataProvider
     }
 
     /**
+     * Apply a per-row style by iterating source items and storing a RowStyle DTO in each row.
+     * The callback receives the model and must return a RowStyle instance or null.
+     *
+     * Applies only to tables built with {@see fromCollection()}.
+     *
+     * @param  callable(mixed): ?RowStyle  $callback
+     */
+    public function withRowStyle(callable $callback): self
+    {
+        $items = $this->resolveRowOpenSourceItems();
+        if ($items === null || $items->count() !== count($this->rows)) {
+            return $this;
+        }
+
+        foreach ($this->rows as $i => &$row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            unset($row['_row_style']);
+
+            $model = $items[$i] ?? null;
+            $style = $callback($model);
+
+            if ($style instanceof RowStyle) {
+                $row['_row_style'] = $style->toArray();
+            }
+        }
+        unset($row);
+
+        return $this;
+    }
+
+    /**
      * Set how many actions to show inline before overflow dropdown.
      */
     public function withActionsMaxVisible(int $n): self

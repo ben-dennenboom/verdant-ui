@@ -16,24 +16,34 @@
 @endif
 
 @forelse ($vm->rows as $row)
+    @php
+        $rowBgClass = match($row->rowStyle?->variant ?? '') {
+            'success' => 'v-bg-green-50 dark:v-bg-green-900/20 hover:v-bg-green-100 dark:hover:v-bg-green-900/30',
+            'info'    => 'v-bg-blue-50 dark:v-bg-blue-900/20 hover:v-bg-blue-100 dark:hover:v-bg-blue-900/30',
+            'warning' => 'v-bg-yellow-50 dark:v-bg-yellow-900/20 hover:v-bg-yellow-100 dark:hover:v-bg-yellow-900/30',
+            'danger'  => 'v-bg-red-50 dark:v-bg-red-900/20 hover:v-bg-red-100 dark:hover:v-bg-red-900/30',
+            default   => 'hover:v-bg-gray-50 dark:hover:v-bg-gray-700',
+        };
+        $boldClass = $row->rowStyle?->bold ? ' v-font-semibold' : '';
+    @endphp
     <div
         @if($vm->hasBulkEdit && $row->rowKey !== null)
             x-data="{ rowHovered: false }"
             @mouseenter="rowHovered = true"
             @mouseleave="rowHovered = false"
-            class="v-grid v-items-center v-cursor-default"
+            class="v-grid v-items-center v-cursor-default{{ $boldClass }}"
             @click="if ($event.shiftKey) { $store[@js($bsk)].toggle(@js($row->rowKey)); $event.preventDefault(); }"
             @dblclick="$store[@js($bsk)].openRow(@js($row->openUrl))"
             :class="$store[@js($bsk)].isSelected(@js($row->rowKey))
                 ? 'v-bg-primary-50 dark:v-bg-primary-900/20 hover:v-bg-primary-100 dark:hover:v-bg-primary-900/30'
-                : 'hover:v-bg-gray-50 dark:hover:v-bg-gray-700'"
+                : @js($rowBgClass)"
         @elseif($rowIx && $row->rowKey !== null)
-            class="v-grid v-items-center v-cursor-pointer"
+            class="v-grid v-items-center v-cursor-pointer{{ $boldClass }}"
             @click="selectRow(@js($row->rowKey))"
             @dblclick="openRow(@js($row->openUrl))"
-            :class="isSelected(@js($row->rowKey)) ? 'v-bg-blue-50 dark:v-bg-blue-900/20 hover:v-bg-blue-100 dark:hover:v-bg-blue-900/30' : 'hover:v-bg-gray-50 dark:hover:v-bg-gray-700'"
+            :class="isSelected(@js($row->rowKey)) ? 'v-bg-blue-50 dark:v-bg-blue-900/20 hover:v-bg-blue-100 dark:hover:v-bg-blue-900/30' : @js($rowBgClass)"
         @else
-            class="v-grid hover:v-bg-gray-50 dark:hover:v-bg-gray-700 v-items-center"
+            class="v-grid v-items-center {{ $rowBgClass }}{{ $boldClass }}"
         @endif
         @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
             :style="'grid-template-columns: {{ $bulkPrefix }}' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"

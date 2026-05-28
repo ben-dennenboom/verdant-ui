@@ -15,6 +15,16 @@
 @endif
 
 @forelse ($vm->rows as $row)
+    @php
+        $rowBgClass = match($row->rowStyle?->variant ?? '') {
+            'success' => 'v-bg-green-50 dark:v-bg-green-900/20',
+            'info'    => 'v-bg-blue-50 dark:v-bg-blue-900/20',
+            'warning' => 'v-bg-yellow-50 dark:v-bg-yellow-900/20',
+            'danger'  => 'v-bg-red-50 dark:v-bg-red-900/20',
+            default   => 'v-bg-white dark:v-bg-gray-800',
+        };
+        $boldClass = $row->rowStyle?->bold ? ' v-font-semibold' : '';
+    @endphp
     <div
         @if($vm->hasBulkEdit && $row->rowKey !== null)
             x-data="{ rowHovered: false }"
@@ -23,15 +33,15 @@
             @click="if ($event.shiftKey) { $store[@js($bsk)].toggle(@js($row->rowKey)); $event.preventDefault(); }"
             @dblclick="$store[@js($bsk)].openRow(@js($row->openUrl))"
             :class="$store[@js($bsk)].isSelected(@js($row->rowKey))
-                ? 'v-mb-4 v-rounded-lg v-border v-border-primary-300 dark:v-border-primary-600 v-bg-primary-50 dark:v-bg-primary-900/20 v-p-4 v-shadow-sm'
-                : 'v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 v-bg-white dark:v-bg-gray-800 v-p-4 v-shadow-sm'"
+                ? 'v-mb-4 v-rounded-lg v-border v-border-primary-300 dark:v-border-primary-600 v-bg-primary-50 dark:v-bg-primary-900/20 v-p-4 v-shadow-sm{{ $boldClass }}'
+                : 'v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 {{ $rowBgClass }} v-p-4 v-shadow-sm{{ $boldClass }}'"
         @elseif($rowIx && $row->rowKey !== null)
-            class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 v-bg-white dark:v-bg-gray-800 v-p-4 v-shadow-sm v-cursor-pointer"
+            class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 {{ $rowBgClass }} v-p-4 v-shadow-sm v-cursor-pointer{{ $boldClass }}"
             @click="selectRow(@js($row->rowKey))"
             @dblclick="openRow(@js($row->openUrl))"
             :class="isSelected(@js($row->rowKey)) ? 'v-ring-2 v-ring-blue-400 dark:v-ring-blue-600' : ''"
         @else
-            class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 v-bg-white dark:v-bg-gray-800 v-p-4 v-shadow-sm"
+            class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 {{ $rowBgClass }} v-p-4 v-shadow-sm{{ $boldClass }}"
         @endif
     >
         {{-- Bulk checkbox for cards --}}

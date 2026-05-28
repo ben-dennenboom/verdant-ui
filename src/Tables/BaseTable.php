@@ -33,6 +33,11 @@ abstract class BaseTable
             $data->withRowOpenUrl($rowOpenUrl);
         }
 
+        $rowStyle = static::rowStyle();
+        if ($rowStyle !== null) {
+            $data->withRowStyle($rowStyle);
+        }
+
         $bulkFields = static::bulkFields();
         if (!empty($bulkFields)) {
             $data->withBulkEdit($bulkFields, static::bulkActionUrl());
@@ -65,6 +70,18 @@ abstract class BaseTable
      * @return (callable(mixed): ?string)|null
      */
     protected static function rowOpenUrl(): ?callable
+    {
+        return null;
+    }
+
+    /**
+     * Optional per-row style. Return a callable that receives the model and returns a RowStyle or null.
+     * Supported variants: 'success' (green), 'info' (blue), 'warning' (yellow), 'danger' (red).
+     * Pass bold: true to render cell text in semi-bold weight.
+     *
+     * @return (callable(mixed): ?RowStyle)|null
+     */
+    protected static function rowStyle(): ?callable
     {
         return null;
     }

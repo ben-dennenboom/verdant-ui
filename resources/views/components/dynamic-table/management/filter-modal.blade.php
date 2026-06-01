@@ -12,8 +12,9 @@
         return $v !== null && $v !== '' && $v !== false;
     })->count();
     $hasExplicitFilterInQuery = collect($filterKeys)->contains(fn($key) => request()->query->has($key));
+    $currentPath = \Illuminate\Support\Str::before(request()->getRequestUri(), '?');
     $clearUrl = $activeCount > 0 && $hasExplicitFilterInQuery
-        ? request()->url() . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '')
+        ? $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '')
         : null;
     $formId = $modalId . '-form';
 @endphp
@@ -50,7 +51,7 @@
         <form
             id="{{ $formId }}"
             method="GET"
-            action="{{ request()->url() }}"
+            action="{{ $currentPath }}"
             class="v-form v-auto-filter"
         >
             @foreach ($currentQuery as $name => $value)

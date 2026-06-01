@@ -2,7 +2,7 @@
 
 @php
     $bulkFields    = $vm->bulkFields ?? [];
-    $bulkActionUrl = $vm->bulkActionUrl ?? request()->url();
+    $bulkActionUrl = $vm->bulkActionUrl ?? \Illuminate\Support\Str::before(request()->getRequestUri(), '?');
     $bsk           = $bulkStoreKey;
 @endphp
 

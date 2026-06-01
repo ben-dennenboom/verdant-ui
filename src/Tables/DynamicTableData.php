@@ -71,6 +71,13 @@ class DynamicTableData implements DynamicTableDataProvider
     protected bool $rowOpenUrlEnabled = false;
 
     /**
+     * @var array<int, array<string, mixed>>|null
+     */
+    protected ?array $bulkFieldDefinitions = null;
+
+    protected ?string $bulkActionUrlValue = null;
+
+    /**
      * Non-paginator source list from {@see fromCollection()} (same instance passed to {@see Collection::map()}).
      * {@see withRowOpenUrl()} calls {@see Collection::values()} only when needed. Paginated tables use {@see $paginator} instead.
      *
@@ -153,10 +160,12 @@ class DynamicTableData implements DynamicTableDataProvider
         $rows = $collection->map(function ($model) use ($columns, $actions) {
             $row = [];
 
-            // Add model key for action params (e.g. ['user' => 'id'])
+            // Always store the model PK so bulk edit and row interaction can use it
             if (is_object($model) && method_exists($model, 'getKey')) {
+                $row['_row_key'] = (string) $model->getKey();
                 $row[$model->getKeyName()] = $model->getKey();
             } elseif (is_array($model) && isset($model['id'])) {
+                $row['_row_key'] = (string) $model['id'];
                 $row['id'] = $model['id'];
             }
 
@@ -291,6 +300,35 @@ class DynamicTableData implements DynamicTableDataProvider
     }
 
     /**
+     * @param array<BulkField> $fields
+     */
+    public function withBulkEdit(array $fields, ?string $actionUrl = null): self
+    {
+        $this->bulkFieldDefinitions = [];
+        foreach ($fields as $field) {
+            if (!$field instanceof BulkField) {
+                throw new \InvalidArgumentException(
+                    'Each bulk field must be a ' . BulkField::class . ' instance. Got: ' . (is_object($field) ? $field::class : gettype($field))
+                );
+            }
+            $this->bulkFieldDefinitions[] = $field->toDefinition();
+        }
+        $this->bulkActionUrlValue = $actionUrl;
+
+        return $this;
+    }
+
+    public function bulkFields(): ?array
+    {
+        return $this->bulkFieldDefinitions;
+    }
+
+    public function bulkActionUrl(): ?string
+    {
+        return $this->bulkActionUrlValue;
+    }
+
+    /**
      * Enable single-click row selection and double-click navigation when the callback returns a non-empty URL.
      * Pass null to disable; reserved keys are stripped only when row-open was previously applied on this instance.
      *
@@ -368,6 +406,40 @@ class DynamicTableData implements DynamicTableDataProvider
         }
 
         return $this->paginator?->getCollection()->values();
+    }
+
+    /**
+     * Apply a per-row style by iterating source items and storing a RowStyle DTO in each row.
+     * The callback receives the model and must return a RowStyle instance or null.
+     *
+     * Applies only to tables built with {@see fromCollection()}.
+     *
+     * @param  callable(mixed): ?RowStyle  $callback
+     */
+    public function withRowStyle(callable $callback): self
+    {
+        $items = $this->resolveRowOpenSourceItems();
+        if ($items === null || $items->count() !== count($this->rows)) {
+            return $this;
+        }
+
+        foreach ($this->rows as $i => &$row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            unset($row['_row_style']);
+
+            $model = $items[$i] ?? null;
+            $style = $callback($model);
+
+            if ($style instanceof RowStyle) {
+                $row['_row_style'] = $style->toArray();
+            }
+        }
+        unset($row);
+
+        return $this;
     }
 
     /**

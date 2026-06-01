@@ -7,7 +7,8 @@
 
 @php
     $currentQuery = request()->except($paramName);
-    $clearUrlBase = request()->url() . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '');
+    $currentPath = \Illuminate\Support\Str::before(request()->getRequestUri(), '?');
+    $clearUrlBase = $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '');
     $clearUrl = $searchTerm !== '' ? $clearUrlBase : null;
     $inputId = 'v-table-search-' . $paramName;
     $resultsId = 'v-table-search-results-' . $paramName;
@@ -31,7 +32,7 @@
 >
     <form
         method="GET"
-        action="{{ request()->url() }}"
+        action="{{ $currentPath }}"
         class="v-flex v-items-center v-gap-2 v-w-full {{ $searchApiUrl ? 'v-relative v-flex-1' : '' }}"
         role="search"
     >

@@ -85,8 +85,8 @@
                     x-cloak
                     x-transition
                     class="v-absolute v-left-0 v-right-0 v-z-30 v-mt-1 v-max-h-60 v-overflow-auto v-rounded-md
-                        v-border v-border-gray-200 dark:v-border-gray-600 v-bg-white
-                        dark:v-bg-gray-800 v-py-1 v-shadow-lg"
+                        v-border v-border-gray-200 dark:v-border-gray-600 v-bg-floating
+                        v-py-1 v-shadow-lg"
                 >
                     <template x-if="loading">
                         <div class="v-px-3 v-py-4 v-text-sm v-text-gray-500 dark:v-text-gray-400 v-text-center">

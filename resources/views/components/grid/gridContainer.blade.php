@@ -6,7 +6,7 @@
 ])
 
 <div data-grid-id="{{ $attributes->get('id', 'grid') }}"
-    {{ $attributes->merge(['class' => "v-rounded-xl v-bg-white dark:v-bg-gray-800 v-border v-border-gray-200 dark:v-border-gray-700 v-overflow-hidden $class"]) }}>
+    {{ $attributes->merge(['class' => "v-rounded-xl v-bg-surface v-border v-border-gray-200 dark:v-border-gray-700 v-overflow-hidden $class"]) }}>
 
     <div x-ref="gridWrapper" :class="tileView ? 'v-p-4' : ''" class="v-relative v-overflow-x-auto v-overflow-y-visible"
         @scroll.passive="updateScrollState($refs.gridWrapper)">

@@ -56,10 +56,11 @@ export default {
           800: 'rgb(var(--color-secondary-800) / <alpha-value>)',
           900: 'rgb(var(--color-secondary-900) / <alpha-value>)',
         },
-        'v-bg': {
-          primary: 'rgb(var(--v-bg-primary) / <alpha-value>)',
-          secondary: 'rgb(var(--v-bg-secondary) / <alpha-value>)',
+        surface: {
+          DEFAULT: 'rgb(var(--v-bg-primary) / <alpha-value>)',
+          muted: 'rgb(var(--v-bg-secondary) / <alpha-value>)',
         },
+        floating: 'rgb(var(--v-bg-floating) / <alpha-value>)',
         'v-text': {
           primary: 'rgb(var(--v-text-primary) / <alpha-value>)',
           secondary: 'rgb(var(--v-text-secondary) / <alpha-value>)',
@@ -100,6 +101,7 @@ export default {
 
           '--v-bg-primary': '255 255 255',
           '--v-bg-secondary': '249 250 251',
+          '--v-bg-floating': '255 255 255',
           '--v-text-primary': '17 24 39',
           '--v-text-secondary': '107 114 128',
           '--v-border-primary': '229 231 235',
@@ -132,6 +134,7 @@ export default {
 
           '--v-bg-primary': '31 41 55',
           '--v-bg-secondary': '17 24 39',
+          '--v-bg-floating': '31 41 55',
           '--v-text-primary': '249 250 251',
           '--v-text-secondary': '156 163 175',
           '--v-border-primary': '75 85 99',

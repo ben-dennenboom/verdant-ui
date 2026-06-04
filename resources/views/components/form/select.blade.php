@@ -121,7 +121,7 @@
         </button>
 
         <div x-show="isOpen" @click.away="isOpen = false"
-             class="v-absolute v-z-10 v-mt-1 v-w-full v-bg-white dark:v-bg-gray-800 v-border v-border-secondary-300 dark:v-border-gray-600 v-shadow-sm">
+             class="v-absolute v-z-10 v-mt-1 v-w-full v-bg-floating v-border v-border-secondary-300 dark:v-border-gray-600 v-shadow-sm">
             <div class="v-p-2">
                 <input type="text" x-model="search" x-ref="searchInput"
                        x-init="$watch('isOpen', value => { if (value) $nextTick(() => $refs.searchInput.focus()); })"

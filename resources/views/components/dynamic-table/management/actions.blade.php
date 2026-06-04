@@ -51,7 +51,7 @@
         <div x-show="open"
              @click.away="open = false"
              x-transition
-             class="v-absolute v-right-0 v-top-full v-mt-1 v-bg-white v-rounded-lg v-border v-z-50 v-shadow-lg v-min-w-[180px] v-py-1"
+             class="v-absolute v-right-0 v-top-full v-mt-1 v-bg-floating v-rounded-lg v-border v-z-50 v-shadow-lg v-min-w-[180px] v-py-1"
         >
             @foreach($actions as $i => $action)
                 @php $disabled = !empty($action['disabled']); @endphp

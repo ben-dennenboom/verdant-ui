@@ -99,7 +99,7 @@
          x-transition:leave-start="v-opacity-100"
          x-transition:leave-end="v-opacity-0">
 
-      <div class="v-bg-white v-rounded-lg v-shadow-xl v-w-full v-max-w-4xl v-mx-auto v-overflow-hidden"
+      <div class="v-bg-floating v-rounded-lg v-shadow-xl v-w-full v-max-w-4xl v-mx-auto v-overflow-hidden"
            @click.outside="cancelCrop"
            x-transition:enter="v-transition v-ease-out v-duration-300"
            x-transition:enter-start="v-opacity-0 v-transform v-scale-95"

@@ -21,7 +21,7 @@
             'info'    => 'v-bg-blue-50 dark:v-bg-blue-900/20',
             'warning' => 'v-bg-yellow-50 dark:v-bg-yellow-900/20',
             'danger'  => 'v-bg-red-50 dark:v-bg-red-900/20',
-            default   => 'v-bg-white dark:v-bg-gray-800',
+            default   => 'v-bg-surface',
         };
         $boldClass = $row->rowStyle?->bold ? ' v-font-semibold' : '';
     @endphp

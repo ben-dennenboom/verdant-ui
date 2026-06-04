@@ -1,6 +1,6 @@
 @props(['title', 'index' => 0])
 
-<div class="v-bg-white dark:v-bg-gray-800">
+<div class="v-bg-surface">
     <button type="button"
             @click="toggle({{ $index }})"
             class="v-flex v-w-full v-items-center v-justify-between v-px-4 v-py-4 v-text-left v-font-medium v-text-gray-900 dark:v-text-white hover:v-bg-gray-50 dark:hover:v-bg-gray-700 v-transition-colors"

@@ -25,7 +25,7 @@
             <input type="hidden" name="_ids[]" :value="id">
         </template>
 
-        <div class="v-flex v-items-center v-bg-white dark:v-bg-gray-800 v-rounded-full v-shadow-xl v-border v-border-gray-200 dark:v-border-gray-700 v-px-5 v-py-2.5 v-gap-0 v-whitespace-nowrap">
+        <div class="v-flex v-items-center v-bg-floating v-rounded-full v-shadow-xl v-border v-border-gray-200 dark:v-border-gray-700 v-px-5 v-py-2.5 v-gap-0 v-whitespace-nowrap">
             {{-- Count --}}
             <span class="v-text-sm v-font-semibold v-text-gray-800 dark:v-text-gray-100 v-pr-4">
                 <span x-text="$store[@js($bsk)].selected.length"></span> selected
@@ -79,7 +79,7 @@
                                 x-transition:leave="v-transition v-ease-in v-duration-75"
                                 x-transition:leave-start="v-opacity-100 v-scale-100"
                                 x-transition:leave-end="v-opacity-0 v-scale-95"
-                                class="v-absolute v-bottom-full v-left-1/2 -v-translate-x-1/2 v-mb-3 v-min-w-40 v-bg-white dark:v-bg-gray-800 v-rounded-lg v-shadow-lg v-border v-border-gray-200 dark:v-border-gray-700 v-py-1 v-z-50 v-max-h-56 v-overflow-y-auto"
+                                class="v-absolute v-bottom-full v-left-1/2 -v-translate-x-1/2 v-mb-3 v-min-w-40 v-bg-floating v-rounded-lg v-shadow-lg v-border v-border-gray-200 dark:v-border-gray-700 v-py-1 v-z-50 v-max-h-56 v-overflow-y-auto"
                             >
                                 @foreach ($options as $opt)
                                     <label class="v-flex v-items-center v-gap-2 v-px-3 v-py-1.5 v-text-sm v-text-gray-700 dark:v-text-gray-200 hover:v-bg-gray-50 dark:hover:v-bg-gray-700 v-cursor-pointer v-select-none">

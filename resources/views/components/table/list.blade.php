@@ -8,7 +8,7 @@
     }
 }"
      x-init="$nextTick(() => checkScroll()); window.addEventListener('resize', () => checkScroll())"
-     class="v-rounded v-bg-white dark:v-bg-gray-800 v-border v-border-gray-200 dark:v-border-gray-700 {{ $class }}">
+     class="v-rounded v-bg-surface v-border v-border-gray-200 dark:v-border-gray-700 {{ $class }}">
 
     <div x-show="hasScroll"
          x-transition:enter="v-transition v-ease-out v-duration-300"
@@ -26,10 +26,10 @@
              @scroll.throttle.50ms="$el.scrollLeft > 0 ? $el.classList.add('is-scrolled') : $el.classList.remove('is-scrolled')"
              class="v-overflow-x-auto">
             <table class="v-min-w-full v-divide-y v-divide-gray-200 dark:v-divide-gray-700">
-                <thead class="v-bg-gray-50 dark:v-bg-gray-700">
+                <thead class="v-bg-surface-muted">
                 {{ $header }}
                 </thead>
-                <tbody class="v-bg-white dark:v-bg-gray-800 v-divide-y v-divide-gray-200 dark:v-divide-gray-700">
+                <tbody class="v-bg-surface v-divide-y v-divide-gray-200 dark:v-divide-gray-700">
                 {{ $slot }}
                 </tbody>
             </table>

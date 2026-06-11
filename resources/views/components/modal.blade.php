@@ -43,9 +43,9 @@
                 x-transition:leave="v-ease-in v-duration-200"
                 x-transition:leave-start="v-opacity-100 v-translate-y-0 sm:v-scale-100"
                 x-transition:leave-end="v-opacity-0 v-translate-y-4 sm:v-translate-y-0 sm:v-scale-95"
-                class="v-relative v-transform v-overflow-visible v-bg-white dark:v-bg-gray-800 v-text-left v-shadow-xl v-transition-all sm:v-my-8 v-w-full {{ $maxWidth }} sm:v-w-full v-rounded"
+                class="v-relative v-transform v-overflow-visible v-bg-floating v-text-left v-shadow-xl v-transition-all sm:v-my-8 v-w-full {{ $maxWidth }} sm:v-w-full v-rounded"
             >
-                <div class="v-bg-white dark:v-bg-gray-800 v-p-4 sm:v-p-6 v-text-wrap v-rounded">
+                <div class="v-bg-floating v-p-4 sm:v-p-6 v-text-wrap v-rounded">
                     {{ $slot }}
                 </div>
             </div>

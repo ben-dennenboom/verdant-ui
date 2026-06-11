@@ -49,7 +49,7 @@
 }">
 
   <div :class="selectedDay ? 'v-grid v-grid-cols-1 lg:v-grid-cols-3 v-gap-6' : 'v-block'">
-    <div class="lg:v-col-span-2 v-shadow-sm v-border v-border-gray-200 v-bg-white v-rounded-lg v-overflow-hidden">
+    <div class="lg:v-col-span-2 v-shadow-sm v-border v-border-gray-200 v-bg-surface v-rounded-lg v-overflow-hidden">
       <div class="v-flex v-items-center v-justify-between v-p-5 v-border-b v-border-gray-100">
         <h2 class="v-text-2xl v-font-medium v-text-gray-900">
           {{ $monthName }} {{ $year }}
@@ -99,8 +99,8 @@
             <div
                     class="v-min-h-[80px] v-relative v-p-2 v-cursor-pointer v-transition-colors v-duration-200"
                     :class="{
-                              'v-bg-white': '{{ $isCurrentMonth }}' && selectedDay !== '{{ $dayDate }}',
-                              'v-bg-gray-50': !('{{ $isCurrentMonth }}') && selectedDay !== '{{ $dayDate }}',
+                              'v-bg-surface': '{{ $isCurrentMonth }}' && selectedDay !== '{{ $dayDate }}',
+                              'v-bg-surface-muted': !('{{ $isCurrentMonth }}') && selectedDay !== '{{ $dayDate }}',
                               'v-bg-gray-100': selectedDay === '{{ $dayDate }}',
                               'hover:v-bg-gray-50': selectedDay !== '{{ $dayDate }}'
                            }"
@@ -153,7 +153,7 @@
     <div x-show="selectedDay" x-transition:enter="v-transition v-ease-out v-duration-300"
          x-transition:enter-start="v-opacity-0 v-transform v-translate-x-4"
          x-transition:enter-end="v-opacity-100 v-transform v-translate-x-0"
-         class="v-bg-white v-rounded-lg v-border v-border-gray-200 v-shadow-sm v-overflow-hidden v-h-fit v-sticky v-top-4">
+         class="v-bg-surface v-rounded-lg v-border v-border-gray-200 v-shadow-sm v-overflow-hidden v-h-fit v-sticky v-top-4">
       <div class="v-p-5 v-border-b v-border-gray-100 v-flex v-justify-between v-items-center">
         <span class="v-text-lg v-font-semibold v-text-gray-900" x-text="formatDate(selectedDay)"></span>
         <button @click="selectedDay = null" class="v-text-gray-400 hover:v-text-gray-600" title="Close panel">

@@ -20,6 +20,16 @@ return [
             'secondary' => [
                 'default' => '#2d3441',
             ],
+
+            'v-bg-primary'   => '#ffffff',
+            'v-bg-secondary' => '#f9fafb',
+            'v-bg-floating'  => '#ffffff',
+        ],
+
+        'dark_colors' => [
+            'v-bg-primary'   => '#1f2937',
+            'v-bg-secondary' => '#111827',
+            'v-bg-floating'  => '#1f2937',
         ],
     ],
 

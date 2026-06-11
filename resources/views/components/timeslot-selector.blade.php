@@ -107,7 +107,7 @@
   <input type="hidden" name="{{ $name }}"/>
 
   <div class="v-grid v-grid-cols-1 md:v-grid-cols-2 v-gap-6">
-    <div class="v-order-2 md:v-order-1 v-shadow-sm v-border v-border-gray-200 v-bg-white v-rounded-lg v-overflow-hidden">
+    <div class="v-order-2 md:v-order-1 v-shadow-sm v-border v-border-gray-200 v-bg-surface v-rounded-lg v-overflow-hidden">
       <div class="v-flex v-items-center v-justify-between v-p-5 v-border-b v-border-gray-100">
         <h2 class="v-text-2xl v-font-medium v-text-gray-900">
           <span x-text="getMonthName()"></span> <span x-text="getYear()"></span>
@@ -142,8 +142,8 @@
             <div
                     class="v-min-h-[80px] v-relative v-p-2 v-transition-colors v-duration-200"
                     :class="{
-                              'v-bg-white v-cursor-pointer hover:v-bg-gray-50': calendarDay.isCurrentMonth && hasAvailableSlots(calendarDay.date) && selectedDay !== calendarDay.date,
-                              'v-bg-gray-50': !calendarDay.isCurrentMonth || !hasAvailableSlots(calendarDay.date),
+                              'v-bg-surface v-cursor-pointer hover:v-bg-gray-50': calendarDay.isCurrentMonth && hasAvailableSlots(calendarDay.date) && selectedDay !== calendarDay.date,
+                              'v-bg-surface-muted': !calendarDay.isCurrentMonth || !hasAvailableSlots(calendarDay.date),
                               'v-bg-blue-50 v-border-2 v-border-blue-200': selectedDay === calendarDay.date,
                               'v-cursor-not-allowed': !hasAvailableSlots(calendarDay.date)
                            }"
@@ -190,13 +190,13 @@
     </div>
 
     <div class="v-order-1 md:v-order-2 v-space-y-4">
-      <div class="v-p-3 v-bg-gray-50 v-rounded-lg v-border">
+      <div class="v-p-3 v-bg-surface-muted v-rounded-lg v-border">
         <div class="v-text-sm v-font-medium v-text-gray-700 v-mb-1">Selected Timeslot:</div>
         <div class="v-text-lg v-font-semibold v-text-gray-900" x-text="getSelectedSlotDisplay()"></div>
       </div>
 
       <div x-show="selectedDay"
-           class="v-bg-white v-rounded-lg v-border v-border-gray-200 v-shadow-sm v-overflow-hidden">
+           class="v-bg-surface v-rounded-lg v-border v-border-gray-200 v-shadow-sm v-overflow-hidden">
         <div class="v-p-5 v-border-b v-border-gray-100 v-flex v-justify-between v-items-center">
           <span class="v-text-lg v-font-semibold v-text-gray-900" x-text="formatDate(selectedDay)"></span>
           <button type="button" @click="selectedDay = null; selectedSlot = null" class="v-text-gray-400 hover:v-text-gray-600">
@@ -221,7 +221,7 @@
                       class="v-w-full v-p-3 v-text-left v-rounded-lg v-border v-transition-all v-duration-200"
                       :class="{
                   'v-border-blue-500 v-bg-blue-50 v-text-blue-900': selectedSlot && selectedSlot.id === slot.id,
-                  'v-border-gray-200 v-bg-white hover:v-border-gray-300 hover:v-bg-gray-50 v-text-gray-900': !selectedSlot || selectedSlot.id !== slot.id
+                  'v-border-gray-200 v-bg-surface hover:v-border-gray-300 hover:v-bg-gray-50 v-text-gray-900': !selectedSlot || selectedSlot.id !== slot.id
                 }">
                 <div class="v-flex v-items-center v-justify-between">
                   <div class="v-flex v-items-center v-space-x-3">

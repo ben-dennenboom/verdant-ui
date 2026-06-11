@@ -9,7 +9,7 @@
     >
         @csrf
 
-        <div class="v-bg-white dark:v-bg-gray-800 v-border v-border-gray-200 dark:v-border-gray-700 v-p-6">
+        <div class="v-bg-surface v-border v-border-gray-200 dark:v-border-gray-700 v-p-6">
             <div class="v-text-sm v-text-gray-500 dark:v-text-gray-400 v-mb-4">
                 Drag and drop items to reorder them. Click save to apply the changes.
             </div>

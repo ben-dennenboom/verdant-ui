@@ -1,4 +1,4 @@
-@props(['name', 'label', 'options', 'valueKey' => 'value', 'labelKey' => 'label', 'selected' => null, 'multiple' => false, 'required' => false, 'first_empty' => true])
+@props(['name', 'label', 'options', 'valueKey' => 'value', 'labelKey' => 'label', 'selected' => null, 'multiple' => false, 'required' => false, 'first_empty' => true, 'disabled' => false])
 
 @php
     $cleanName = str_replace(['[]', '[', ']'], ['', '.', ''], $name);
@@ -33,6 +33,7 @@
         labels: @js($labels),
         multiple: @js($multiple),
         required: @js($required),
+        disabled: @js($disabled),
         name: @js($name),
         getLabel(option) {
             @if($labelKey instanceof \Closure)
@@ -55,6 +56,7 @@
                 : this.selected === this.getValue(option);
         },
         toggleOption(option) {
+            if (this.disabled) return;
             if (this.multiple) {
                 if (!Array.isArray(this.selected)) this.selected = [];
                 const value = this.getValue(option);
@@ -94,12 +96,14 @@
 >
     <div class="v-flex v-items-center v-justify-between">
         <label for="{{ $id }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{{ $label }}</label>
-        <button type="button" @click="reset" class="v-text-red-500 v-text-sm">reset</button>
+        <button type="button" @click="reset" :disabled="disabled" :class="disabled ? 'v-opacity-40 v-cursor-not-allowed' : ''" class="v-text-red-500 v-text-sm">reset</button>
     </div>
 
     <div class="v-relative v-mt-1">
         <button type="button"
-                @click="isOpen = !isOpen"
+                @click="if (!disabled) isOpen = !isOpen"
+                :disabled="disabled"
+                :class="disabled ? 'v-opacity-50 v-cursor-not-allowed v-bg-gray-100 dark:v-bg-gray-700' : ''"
                 class="v-bg-white dark:v-bg-gray-800 v-relative v-w-full v-border v-border-secondary-300 dark:v-border-gray-600 v-shadow-sm v-px-4 v-py-2 v-text-left focus:v-ring-secondary-500 focus:v-border-secondary-500 v-text-gray-900 dark:v-text-gray-100"
                 tabindex="0">
             <div x-show="!selectedLabels().length" class="v-text-gray-500 dark:v-text-gray-400">

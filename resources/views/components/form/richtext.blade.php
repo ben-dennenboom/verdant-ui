@@ -11,10 +11,7 @@
   @if($label)
     <div class="v-flex v-items-center v-justify-between">
       <label :for="name" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">
-        {{ $label }}
-        @if($required)
-          <span class="v-text-red-500">*</span>
-        @endif
+        {{ $label }}@if($required)<span class="required_asterisk">*</span>@endif
       </label>
       {{ $actions ?? '' }}
     </div>

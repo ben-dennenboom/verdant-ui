@@ -5,7 +5,7 @@
 @endphp
 
 <div class="v-mb-4 v-flex v-align-middle v-gap-4 v-items-center">
-    <label for="{{ $inputId }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{!! $label !!}</label>
+    <label for="{{ $inputId }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{!! $label !!}@if($required)<span class="required_asterisk">*</span>@endif</label>
     <input type="checkbox" name="{{ $name }}" id="{{ $inputId }}"
            value="{{ old($name, $value) }}"
         {{ $checked ? 'checked' : '' }}

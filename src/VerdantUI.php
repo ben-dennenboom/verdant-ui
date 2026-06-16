@@ -10,6 +10,7 @@ class VerdantUI
         $verdantJsPath = self::assetPath('js/verdant-ui.js');
         $dynamicTableSortJsPath = self::assetPath('js/dynamic-table-sort.js');
         $dynamicTableColumnsJsPath = self::assetPath('js/dynamic-table-columns.js');
+        $dynamicTableStateJsPath = self::assetPath('js/dynamic-table-state.js');
         $dynamicTableSearchJsPath = self::assetPath('js/dynamic-table-search.js');
         $dynamicTableActionsJsPath = self::assetPath('js/dynamic-table-actions.js');
         $dynamicTableBulkJsPath = self::assetPath('js/dynamic-table-bulk.js');
@@ -34,6 +35,7 @@ class VerdantUI
         <script src="{$verdantJsPath}" defer></script>
         <script src="{$dynamicTableSortJsPath}" defer></script>
         <script src="{$dynamicTableColumnsJsPath}" defer></script>
+        <script src="{$dynamicTableStateJsPath}" defer></script>
         <script src="{$dynamicTableSearchJsPath}" defer></script>
         <script src="{$dynamicTableActionsJsPath}" defer></script>
         <script src="{$dynamicTableBulkJsPath}" defer></script>

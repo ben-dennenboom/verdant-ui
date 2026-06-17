@@ -22,11 +22,12 @@
     ])->class([$baseClasses]);
 
     $hasText = trim($slot) !== '';
+    $isSubmitButton = $tag === 'button' && $attributes->get('type') === 'submit';
 @endphp
 
 @if($tooltip)
     <x-v-tooltip :text="$tooltip" :position="$tooltipPosition">
-        <{{ $tag }} {{ $attributes }}>
+        <{{ $tag }} {{ $attributes }} @if($isSubmitButton) x-init="$el.closest('form')?.addEventListener('submit', () => { $el.disabled = true }, { once: true })" @endif>
         @if($icon)
             <i class="fas fa-{{ $icon }} {{ $hasText ? 'v-mr-2' : '' }}"></i>
         @endif
@@ -37,7 +38,7 @@
     </{{ $tag }}>
     </x-v-tooltip>
 @else
-    <{{ $tag }} {{ $attributes }}>
+    <{{ $tag }} {{ $attributes }} @if($isSubmitButton) x-init="$el.closest('form')?.addEventListener('submit', () => { $el.disabled = true }, { once: true })" @endif>
     @if($icon)
         <i class="fas fa-{{ $icon }} {{ $hasText ? 'v-mr-2' : '' }}"></i>
     @endif

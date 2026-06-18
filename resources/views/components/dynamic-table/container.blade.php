@@ -40,7 +40,22 @@
     $showToolbar = $showSearch || $visibilityKey || $showFilter;
     $hasBulkEdit = $vm->hasBulkEdit;
     $bulkStoreKey = $hasBulkEdit ? ('vtbulk_' . ($storeKey ?? uniqid('tbl_'))) : null;
+
+    $stateKey = $visibilityKey ?? (trim(request()->path(), '/') ?: 'root');
+    $stateConfig = [
+        'storageKey' => 'verdant.table.state.' . $stateKey,
+        'filters' => collect($vm->filterColumns ?? [])
+            ->map(fn ($f) => ['key' => $f['key'], 'multiple' => !empty($f['multiple'])])
+            ->values()
+            ->all(),
+    ];
 @endphp
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.verdantTableState) window.verdantTableState(@js($stateConfig));
+    });
+</script>
 
 @if($hasBulkEdit)
 <div x-data="verdantTableBulk({ allRowKeys: @js($vm->allRowKeys), storeKey: @js($bulkStoreKey) })">

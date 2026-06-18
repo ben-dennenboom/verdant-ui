@@ -58,6 +58,11 @@ fs.copyFileSync(
 );
 
 fs.copyFileSync(
+    path.join(__dirname, 'resources', 'js', 'dynamic-table-state.js'),
+    path.join(jsDir, 'dynamic-table-state.js')
+);
+
+fs.copyFileSync(
     path.join(__dirname, 'resources', 'js', 'dynamic-table-search.js'),
     path.join(jsDir, 'dynamic-table-search.js')
 );

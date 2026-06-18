@@ -8,7 +8,7 @@
     <input type="hidden" name="{{ $name }}" value="{{ $value }}">
 @else
     <div class="v-mb-5 v-w-full">
-        <label for="{{ $inputId }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{{ $label }}</label>
+        <label for="{{ $inputId }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{{ $label }}@if($required)<span class="required_asterisk">*</span>@endif</label>
         <input type="{{ $type }}" name="{{ $name }}" id="{{ $inputId }}"
             value="{{ old($name, $value) }}"
             {{ $required ? 'required' : '' }}

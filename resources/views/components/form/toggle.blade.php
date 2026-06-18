@@ -37,7 +37,7 @@
 
         <label for="{{ $inputId }}"
                class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300 v-cursor-pointer v-select-none">
-            {!! $label !!}
+            {!! $label !!}@if($required)<span class="required_asterisk">*</span>@endif
         </label>
     </div>
 

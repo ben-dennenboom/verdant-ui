@@ -31,10 +31,7 @@
 
   @if($label)
     <label for="{{ $name }}_input" class="v-block v-font-medium v-text-gray-700 v-mb-1 dark:v-text-gray-300">
-      {{ $label }}
-      @if($required)
-        <span class="v-text-red-500">*</span>
-      @endif
+      {{ $label }}@if($required)<span class="required_asterisk">*</span>@endif
       <small class="v-ml-1 v-text-gray-500">
         @if($minWidth || $minHeight || $aspectRatio)
           (

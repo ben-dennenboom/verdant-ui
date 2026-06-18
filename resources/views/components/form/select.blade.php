@@ -95,7 +95,7 @@
      x-init="$watch('isOpen', value => { if (!value) search = ''; })"
 >
     <div class="v-flex v-items-center v-justify-between">
-        <label for="{{ $id }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{{ $label }}</label>
+        <label for="{{ $id }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{{ $label }}@if($required)<span class="required_asterisk">*</span>@endif</label>
         <button type="button" @click="reset" :disabled="disabled" :class="disabled ? 'v-opacity-40 v-cursor-not-allowed' : ''" class="v-text-red-500 v-text-sm">reset</button>
     </div>
 

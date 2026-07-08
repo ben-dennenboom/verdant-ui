@@ -2,6 +2,8 @@
 
 namespace Dennenboom\VerdantUI\Tables;
 
+use Dennenboom\VerdantUI\Contracts\DynamicTablePreferencesStore;
+
 final class DynamicTableQuery
 {
     /**
@@ -12,6 +14,7 @@ final class DynamicTableQuery
         public readonly array $filters,
         public readonly DynamicTableSort $sort,
         public readonly ?int $perPage = null,
+        public readonly bool $hasExplicitState = false,
     ) {
     }
 
@@ -31,7 +34,82 @@ final class DynamicTableQuery
             filters: self::resolveFilterValues($filterDefinitions),
             sort: DynamicTableSort::fromRequest($allowedSortKeys),
             perPage: self::resolvePerPage($defaultPerPage),
+            hasExplicitState: self::hasExplicitRequestState($filterDefinitions),
         );
+    }
+
+    /**
+     * @param iterable<Filter|array<string, mixed>> $filters
+     */
+    public static function restoreFromStore(DynamicTablePreferencesStore $store, string $key, iterable $filters = []): void
+    {
+        $filterDefinitions = self::normalizeFilters($filters);
+
+        if (self::hasExplicitRequestState($filterDefinitions)) {
+            return;
+        }
+
+        $stored = $store->get($key);
+
+        if (!is_array($stored) || $stored === []) {
+            return;
+        }
+
+        $merge = [];
+
+        if (!empty($stored['search']) && is_string($stored['search'])) {
+            $merge['search'] = $stored['search'];
+        }
+
+        if (!empty($stored['sort']) && is_array($stored['sort'])) {
+            $merge['sort'] = implode(',', array_column($stored['sort'], 'key'));
+            $merge['direction'] = implode(',', array_column($stored['sort'], 'direction'));
+        }
+
+        if (!empty($stored['filters']) && is_array($stored['filters'])) {
+            foreach ($stored['filters'] as $filterKey => $value) {
+                $merge[$filterKey] = $value;
+            }
+        }
+
+        if ($merge !== []) {
+            request()->merge($merge);
+        }
+    }
+
+    public function saveTo(DynamicTablePreferencesStore $store, string $key): void
+    {
+        if (!$this->hasExplicitState) {
+            return;
+        }
+
+        $existing = $store->get($key) ?? [];
+
+        $store->put($key, array_merge($existing, [
+            'search' => $this->search,
+            'filters' => $this->filters,
+            'sort' => $this->sort->columns,
+        ]));
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $filterDefinitions
+     */
+    private static function hasExplicitRequestState(array $filterDefinitions): bool
+    {
+        if (request()->has('search') || request()->has('sort')) {
+            return true;
+        }
+
+        foreach ($filterDefinitions as $filter) {
+            $key = $filter['key'] ?? null;
+
+            if (is_string($key) && request()->has($key)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function hasSearch(): bool

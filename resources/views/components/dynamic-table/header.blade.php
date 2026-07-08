@@ -46,9 +46,10 @@
         "
             @if(!empty($header['tooltip'])) title="{{ e($header['tooltip']) }}" @endif
             @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
-                x-show="Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}')"
                 @if(!empty($columnVisibility['orderEnabled']))
-                    :style="'order: ' + Alpine.store('{{ $columnVisibility['storeKey'] }}').orderIndex('{{ $columnKey }}')"
+                    :style="(Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}') ? '' : 'display:none;') + 'order:' + Alpine.store('{{ $columnVisibility['storeKey'] }}').orderIndex('{{ $columnKey }}')"
+                @else
+                    x-show="Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}')"
                 @endif
             @endif
         >

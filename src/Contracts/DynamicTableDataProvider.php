@@ -103,4 +103,21 @@ interface DynamicTableDataProvider
      * in the columns dropdown). Only takes effect when column visibility is also enabled.
      */
     public function columnOrderEnabled(): bool;
+
+    /**
+     * URL the column picker POSTs visible-column changes to. Return null for client-only (localStorage).
+     *
+     * @return string|null
+     */
+    public function preferencesSaveUrl(): ?string;
+
+    /**
+     * @return array<string>|null
+     */
+    public function defaultColumnOrder(): ?array;
+
+    /**
+     * @return array<string>|null
+     */
+    public function storedVisibleColumns(): ?array;
 }

@@ -39,6 +39,14 @@ final class DynamicTableViewModel
 
     public bool $columnOrderEnabled = false;
 
+    public ?string $preferencesSaveUrl = null;
+
+    /** @var array<string>|null */
+    public ?array $defaultColumnOrder = null;
+
+    /** @var array<string>|null */
+    public ?array $storedVisibleColumns = null;
+
     /** @var array<int, string> Primary keys of all visible rows, for select-all. */
     public array $allRowKeys = [];
 
@@ -127,6 +135,9 @@ final class DynamicTableViewModel
             }
 
             $vm->columnOrderEnabled = $data->columnOrderEnabled();
+            $vm->preferencesSaveUrl = $data->preferencesSaveUrl();
+            $vm->defaultColumnOrder = $data->defaultColumnOrder();
+            $vm->storedVisibleColumns = $data->storedVisibleColumns();
         }
 
         if (is_array($data)) {
@@ -155,6 +166,15 @@ final class DynamicTableViewModel
             }
             if (isset($data['column_order_enabled'])) {
                 $vm->columnOrderEnabled = (bool) $data['column_order_enabled'];
+            }
+            if (isset($data['preferences_save_url'])) {
+                $vm->preferencesSaveUrl = $data['preferences_save_url'];
+            }
+            if (isset($data['default_column_order'])) {
+                $vm->defaultColumnOrder = $data['default_column_order'];
+            }
+            if (isset($data['stored_visible_columns'])) {
+                $vm->storedVisibleColumns = $data['stored_visible_columns'];
             }
         }
 

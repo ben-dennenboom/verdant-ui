@@ -45,8 +45,11 @@
         'allKeys' => $allKeys,
         'pinned' => $pinnedColumns,
         'defaultVisible' => $vm->defaultVisibleColumns,
+        'storedVisible' => $vm->storedVisibleColumns,
         'columns' => $columnMeta,
         'orderEnabled' => $columnOrderEnabled,
+        'defaultOrder' => $vm->defaultColumnOrder,
+        'saveUrl' => $vm->preferencesSaveUrl,
     ] : null;
     $showSearch = !empty($vm->searchableColumns);
     $showFilter = !empty($vm->filterColumns);
@@ -86,8 +89,12 @@
             columnWidths: @js($vm->columnGridWidths),
             pinned: @js($columnVisibilityConfig['pinned']),
             defaultVisible: @js($columnVisibilityConfig['defaultVisible']),
+            storedVisible: @js($columnVisibilityConfig['storedVisible']),
             columns: @js($columnVisibilityConfig['columns']),
             orderEnabled: @js($columnVisibilityConfig['orderEnabled']),
+            defaultOrder: @js($columnVisibilityConfig['defaultOrder']),
+            saveUrl: @js($columnVisibilityConfig['saveUrl']),
+            csrfToken: @js(csrf_token()),
         })"
     @endif
 >

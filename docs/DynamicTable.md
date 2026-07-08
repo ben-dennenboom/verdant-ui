@@ -689,3 +689,108 @@ $table = UsersTable::make($users)
     ->withSorting($tableQuery->sort)
     ->withColumnVisibility('users-table', null);
 ```
+
+---
+
+## Persisting table preferences server-side
+
+By default, a user's visible columns, column order, active filters, search term, and sort are remembered via `localStorage` only — they're per-browser and lost if storage is cleared or the user switches devices. To make preferences follow the user instead, implement `DynamicTablePreferencesStore` and bind it in your app; verdant-ui reads from it to seed defaults and writes to it when the user changes something.
+
+### The contract
+
+```php
+namespace Dennenboom\VerdantUI\Contracts;
+
+interface DynamicTablePreferencesStore
+{
+    /** @return array<string, mixed>|null */
+    public function get(string $key): ?array;
+
+    /** @param array<string, mixed> $preferences */
+    public function put(string $key, array $preferences): void;
+}
+```
+
+`$key` only identifies the *table* (the same string passed to `withColumnVisibility()`) — your implementation is responsible for scoping storage to the current user (e.g. `Auth::id()`), the same way you'd scope a cache or session store. `put()` receives the full preferences array to store each time (already merged with whatever existed); treat it as a replace, not a patch.
+
+A minimal database-backed implementation, mirroring a `user_table_preferences` table keyed by user + table:
+
+```php
+use Dennenboom\VerdantUI\Contracts\DynamicTablePreferencesStore;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+class DatabaseTablePreferencesStore implements DynamicTablePreferencesStore
+{
+    public function get(string $key): ?array
+    {
+        $row = DB::table('user_table_preferences')
+            ->where('user_id', Auth::id())
+            ->where('table_key', $key)
+            ->first();
+
+        return $row ? json_decode($row->preferences, true) : null;
+    }
+
+    public function put(string $key, array $preferences): void
+    {
+        DB::table('user_table_preferences')->updateOrInsert(
+            ['user_id' => Auth::id(), 'table_key' => $key],
+            ['preferences' => json_encode($preferences), 'updated_at' => now()],
+        );
+    }
+}
+```
+
+Bind it in a service provider:
+
+```php
+$this->app->bind(DynamicTablePreferencesStore::class, DatabaseTablePreferencesStore::class);
+```
+
+### Filters, search, and sort
+
+These already round-trip through the server on every request, so no AJAX is needed. `DynamicTableQuery` gained two helpers:
+
+```php
+use Dennenboom\VerdantUI\Tables\DynamicTableQuery;
+
+$store = app(DynamicTablePreferencesStore::class);
+
+// Before building the query: if the request has no explicit search/sort/filter
+// params of its own, merge in whatever was last saved for this table + user.
+DynamicTableQuery::restoreFromStore($store, 'users-table', $filters);
+
+$tableQuery = DynamicTableQuery::fromRequest($filters, $allowedSortKeys, $defaultPerPage);
+
+// After: persist the resolved state, but only if the request actually carried
+// explicit params — plain/default page loads don't re-save defaults.
+$tableQuery->saveTo($store, 'users-table');
+```
+
+`restoreFromStore()` is a no-op once the request already has `search`, `sort`, or any of the given filter keys — explicit params always win over stored ones.
+
+### Column visibility and order
+
+Column visibility and order changes happen entirely client-side (no server round-trip otherwise), so persisting them needs an endpoint. verdant-ui ships the controller; you register the route:
+
+```php
+use Dennenboom\VerdantUI\Http\Controllers\TablePreferencesController;
+
+Route::post('/table-preferences/{key}', [TablePreferencesController::class, 'store'])
+    ->middleware(['web', 'auth']);
+```
+
+Then enable it on the table — call `withPersistentPreferences()` after `withColumnVisibility()` (and `withColumnOrder()`, if used) so it can reuse the same key, passing the store and the URL you just registered:
+
+```php
+$table = UsersTable::make($users)
+    ->withColumnVisibility('users-table', null)
+    ->withColumnOrder()
+    ->withPersistentPreferences(
+        store: app(DynamicTablePreferencesStore::class),
+        saveUrl: route('table-preferences.store', ['key' => 'users-table']),
+    );
+```
+
+This reads any previously stored `visible_columns`/`column_order` and uses them as the defaults (taking priority over `localStorage`, which becomes a write-through cache instead of the source of truth), and wires the column picker to `POST` `{ visible_columns: [...], column_order: [...] }` to `saveUrl` whenever the user toggles a column, shows/hides all, resets, or drags columns into a new order.

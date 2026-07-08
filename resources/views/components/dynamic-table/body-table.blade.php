@@ -91,9 +91,10 @@
             "
                 @if(($rowIx || $vm->hasBulkEdit) && $cell->isActions) @click.stop @dblclick.stop @endif
                 @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
-                    x-show="isVisible('{{ $columnKey }}')"
                     @if(!empty($columnVisibility['orderEnabled']))
-                        :style="'order: ' + orderIndex('{{ $columnKey }}')"
+                        :style="(isVisible('{{ $columnKey }}') ? '' : 'display:none;') + 'order:' + orderIndex('{{ $columnKey }}')"
+                    @else
+                        x-show="isVisible('{{ $columnKey }}')"
                     @endif
                 @endif
             >

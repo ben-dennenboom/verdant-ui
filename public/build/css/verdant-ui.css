@@ -426,6 +426,9 @@
 .v-max-h-72{
     max-height: 18rem;
 }
+.v-max-h-96{
+    max-height: 24rem;
+}
 .v-min-h-\[100px\]{
     min-height: 100px;
 }
@@ -673,11 +676,6 @@
     --tw-space-x-reverse: 0;
     margin-right: calc(0.75rem * var(--tw-space-x-reverse));
     margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
-}
-.v-space-y-1 > :not([hidden]) ~ :not([hidden]){
-    --tw-space-y-reverse: 0;
-    margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
 }
 .v-space-y-2 > :not([hidden]) ~ :not([hidden]){
     --tw-space-y-reverse: 0;
@@ -72574,6 +72572,10 @@
 
 .focus\:v-ring-offset-2:focus{
     --tw-ring-offset-width: 2px;
+}
+
+.disabled\:v-opacity-30:disabled{
+    opacity: 0.3;
 }
 
 .v-group:hover .group-hover\:v-border-blue-100{

@@ -183,7 +183,7 @@
                   <p class="v-text-xs v-text-gray-600 v-mt-1" x-text="event.time"></p>
                 </template>
                 <template x-if="event.description">
-                  <p class="v-text-sm v-text-gray-700 v-mt-1" x-text="event.description"></p>
+                  <p class="v-text-sm v-text-gray-700 v-mt-1" x-html="event.description"></p>
                 </template>
               </div>
             </a>

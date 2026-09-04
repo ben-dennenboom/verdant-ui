@@ -1,19 +1,30 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('vatNumberChecker', (config = {}) => ({
-
+        /**
+         * One of: idle, loading, valid, invalid, error.
+         * A single source of truth so exactly one indicator can ever be visible.
+         */
         state: 'idle',
+
+        /** Screen-reader announcement mirroring the current state. */
         message: '',
+
+        /** Incremented per lookup so a slow earlier response cannot overwrite a newer one. */
         sequence: 0,
+
         controller: null,
 
+        /**
+         * Returns the in-flight lookup so callers can await it; Alpine ignores it.
+         */
         async check(value) {
-            const MIN_COUNTRY_CODE_LENGTH = 3;
-
             const vatNumber = String(value ?? '').trim();
 
             this.clearFields();
 
-            if (this.strip(vatNumber).length < MIN_COUNTRY_CODE_LENGTH) {
+            // Too short to be a country code plus a number, so skip the round trip
+            // and leave the field neutral rather than calling it invalid.
+            if (this.strip(vatNumber).length < 3) {
                 this.abort();
                 this.setState('idle');
 
@@ -41,6 +52,7 @@ document.addEventListener('alpine:init', () => {
                     signal: controller.signal,
                 });
             } catch (error) {
+                // An abort means a newer lookup has taken over and owns the state now.
                 if (error.name !== 'AbortError' && sequence === this.sequence) {
                     this.setState('error');
                 }

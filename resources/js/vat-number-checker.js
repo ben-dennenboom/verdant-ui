@@ -7,14 +7,12 @@ document.addEventListener('alpine:init', () => {
         controller: null,
 
         async check(value) {
-            const MIN_COUNTRY_CODE_LENGTH = 3;
+            const MIN_VAT_CODE_LENGTH = 3;
 
             const vatNumber = String(value ?? '').trim();
 
-            this.clearFields();
-
-            if (this.strip(vatNumber).length < MIN_COUNTRY_CODE_LENGTH) {
-                this.abort();
+            if (this.strip(vatNumber).length < MIN_VAT_CODE_LENGTH) {
+                this.abortCurrentRequest();
                 this.setState('idle');
 
                 return;
@@ -24,7 +22,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         async lookup(vatNumber) {
-            this.abort();
+            this.abortCurrentRequest();
 
             const sequence = ++this.sequence;
             const controller = new AbortController();
@@ -83,6 +81,8 @@ document.addEventListener('alpine:init', () => {
         },
 
         fill(data) {
+            this.clearFields();
+
             [
                 [config.nameId, data.name],
                 [config.addressId, data.address],
@@ -113,7 +113,7 @@ document.addEventListener('alpine:init', () => {
             });
         },
 
-        abort() {
+        abortCurrentRequest() {
             if (this.controller !== null) {
                 this.controller.abort();
                 this.controller = null;

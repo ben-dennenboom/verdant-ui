@@ -23,10 +23,26 @@
             />
 
             <span class="v-absolute v-inset-y-0 v-right-0 v-mt-1 v-flex v-items-center v-pr-3 v-pointer-events-none">
-                <i style="display: none" x-show="state === 'loading'" class="fa fa-circle-notch fa-spin fa-lg v-text-gray-400" aria-hidden="true"></i>
-                <i style="display: none" x-show="state === 'valid'" class="fa fa-circle-check fa-lg v-text-green-500" aria-hidden="true"></i>
-                <i style="display: none" x-show="state === 'invalid'" class="fa fa-circle-xmark fa-lg v-text-red-500" aria-hidden="true"></i>
-                <i style="display: none" x-show="state === 'error'" class="fa fa-triangle-exclamation fa-lg v-text-yellow-500" aria-hidden="true"></i>
+                <span style="display: none" x-show="state === 'loading'" class="v-inline-flex v-pointer-events-auto">
+                    <x-v-tooltip text="Checking VAT number" position="top">
+                        <i class="fa fa-circle-notch fa-spin fa-lg v-text-gray-400" aria-hidden="true"></i>
+                    </x-v-tooltip>
+                </span>
+                <span style="display: none" x-show="state === 'valid'" class="v-inline-flex v-pointer-events-auto">
+                    <x-v-tooltip text="VAT number verified" position="top">
+                        <i class="fa fa-circle-check fa-lg v-text-green-500" aria-hidden="true"></i>
+                    </x-v-tooltip>
+                </span>
+                <span style="display: none" x-show="state === 'invalid'" class="v-inline-flex v-pointer-events-auto">
+                    <x-v-tooltip text="VAT number not found" position="top">
+                        <i class="fa fa-circle-xmark fa-lg v-text-red-500" aria-hidden="true"></i>
+                    </x-v-tooltip>
+                </span>
+                <span style="display: none" x-show="state === 'error'" class="v-inline-flex v-pointer-events-auto">
+                    <x-v-tooltip text="Could not verify the VAT number right now" position="top">
+                        <i class="fa fa-triangle-exclamation fa-lg v-text-yellow-500" aria-hidden="true"></i>
+                    </x-v-tooltip>
+                </span>
             </span>
         </div>
 

@@ -25,7 +25,7 @@
             <span class="v-absolute v-inset-y-0 v-right-0 v-mt-1 v-flex v-items-center v-pr-3 v-pointer-events-none">
                 <span style="display: none" x-show="state === 'loading'" class="v-inline-flex v-pointer-events-auto">
                     <x-v-tooltip text="Checking VAT number" position="top">
-                        <i class="fa fa-circle-notch fa-spin fa-lg v-text-gray-400" aria-hidden="true"></i>
+                        <span class="v-inline-block v-w-4 v-h-4 v-rounded-full v-border-2 v-border-gray-400 v-border-t-transparent v-animate-spin" role="status" aria-label="Checking VAT number"></span>
                     </x-v-tooltip>
                 </span>
                 <span style="display: none" x-show="state === 'valid'" class="v-inline-flex v-pointer-events-auto">

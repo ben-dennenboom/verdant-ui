@@ -76,11 +76,11 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
 
-            this.fill(payload?.data ?? {});
+            this.fillFields(payload?.data ?? {});
             this.setState('valid');
         },
 
-        fill(data) {
+        fillFields(data) {
             this.clearFields();
 
             [

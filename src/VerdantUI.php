@@ -16,6 +16,7 @@ class VerdantUI
         $dynamicTableBulkJsPath = self::assetPath('js/dynamic-table-bulk.js');
         $vatNumberCheckerJsPath = self::assetPath('js/vat-number-checker.js');
         $fontAwesomePath = self::assetPath('vendor/fontawesome/css/all.min.css');
+        $fontAwesomeSolidPath = self::assetPath('vendor/fontawesome/webfonts/fa-solid-900.woff2');
         $alpineJsPath = self::assetPath('vendor/alpine/alpine.min.js');
         $cropperJsPath = self::assetPath('js/cropper.min.js');
         $cropperCssPath = self::assetPath('css/cropper.min.css');
@@ -24,7 +25,10 @@ class VerdantUI
         $includeFontawesome = config('verdant.assets.include_fontawesome', true);
 
         $alpine = $includeAlpine ? "<script src=\"{$alpineJsPath}\" defer></script>" : "";
-        $fontawesome = $includeFontawesome ? "<link rel=\"stylesheet\" href=\"{$fontAwesomePath}\">" : "";
+        $fontawesome = $includeFontawesome
+            ? "<link rel=\"preload\" href=\"{$fontAwesomeSolidPath}\" as=\"font\" type=\"font/woff2\" crossorigin>"
+              . "<link rel=\"stylesheet\" href=\"{$fontAwesomePath}\">"
+            : "";
         $customColors = self::getCustomColorsCSS();
 
         return <<<HTML

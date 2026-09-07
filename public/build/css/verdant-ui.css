@@ -580,6 +580,14 @@
 .v-transform{
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+@keyframes v-spin{
+    to{
+        transform: rotate(360deg);
+    }
+}
+.v-animate-spin{
+    animation: v-spin 1s linear infinite;
+}
 .v-cursor-default{
     cursor: default;
 }
@@ -7321,6 +7329,9 @@
     --tw-border-opacity: 1;
     border-top-color: rgb(31 41 55 / var(--tw-border-opacity, 1));
 }
+.v-border-t-transparent{
+    border-top-color: transparent;
+}
 .v-bg-blue-100{
     --tw-bg-opacity: 1;
     background-color: rgb(230 242 255 / var(--tw-bg-opacity, 1));
@@ -13946,6 +13957,9 @@
 }
 .v-pr-1{
     padding-right: 0.25rem;
+}
+.v-pr-10{
+    padding-right: 2.5rem;
 }
 .v-pr-2{
     padding-right: 0.5rem;

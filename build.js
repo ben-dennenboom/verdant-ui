@@ -77,6 +77,11 @@ fs.copyFileSync(
     path.join(jsDir, 'dynamic-table-bulk.js')
 );
 
+fs.copyFileSync(
+    path.join(__dirname, 'resources', 'js', 'vat-number-checker.js'),
+    path.join(jsDir, 'vat-number-checker.js')
+);
+
 const downloads = [
   {
     url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css',

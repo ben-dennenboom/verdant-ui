@@ -97,4 +97,10 @@ interface DynamicTableDataProvider
      * @return string|null
      */
     public function bulkActionUrl(): ?string;
+
+    /**
+     * Whether the user may reorder columns via drag & drop (the "Change order" button
+     * in the columns dropdown). Only takes effect when column visibility is also enabled.
+     */
+    public function columnOrderEnabled(): bool;
 }

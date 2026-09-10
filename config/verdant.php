@@ -27,6 +27,9 @@ return [
         ],
 
         'dark_colors' => [
+            'primary'   => '#E9500E',
+            'secondary' => '#2d3441',
+
             'v-bg-primary'   => '#1f2937',
             'v-bg-secondary' => '#111827',
             'v-bg-floating'  => '#1f2937',

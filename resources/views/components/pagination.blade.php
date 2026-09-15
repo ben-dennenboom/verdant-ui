@@ -8,7 +8,6 @@
     $linkClass = "v-px-3 v-py-2 v-w-full v-h-full v-flex v-items-center v-justify-center";
     $previousUrl = $paginator->previousPageUrl() ?? null;
     $nextUrl = $paginator->nextPageUrl() ?? null;
-    $links = $paginator->linkCollection();
 @endphp
 
 @if ($paginator->hasPages())
@@ -22,7 +21,10 @@
             </x-v-button.primary>
         </div>
 
-        @if($type == 'extended')
+        @if($type == 'extended' && method_exists($paginator, 'linkCollection'))
+            @php
+                $links = $paginator->linkCollection();
+            @endphp
             <div class="v-hidden lg:v-block">
                 <p class="v-py-1 v-text-gray-700 dark:v-text-gray-300">
                     {{ __('pagination.showing', [

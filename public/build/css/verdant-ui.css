@@ -414,6 +414,9 @@
     height: -moz-fit-content;
     height: fit-content;
 }
+.v-h-full{
+    height: 100%;
+}
 .v-max-h-56{
     max-height: 14rem;
 }
@@ -20690,6 +20693,11 @@
 .odd\:v-bg-gray-50:nth-child(odd){
     --tw-bg-opacity: 1;
     background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
+}
+
+.checked\:v-bg-secondary-400:checked{
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--color-secondary-400) / var(--tw-bg-opacity, 1));
 }
 
 .focus-within\:v-border-gray-500:focus-within{

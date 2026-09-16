@@ -65,7 +65,7 @@
                         <label class="v-flex v-items-center v-gap-2 v-text-sm v-cursor-pointer">
                             <input
                                 type="checkbox"
-                                class="v-rounded v-border-gray-300 dark:v-border-gray-600 v-text-primary-600 focus:v-ring-primary-500 focus:v-border-primary-500 v-shadow-sm sm:v-text-sm v-bg-white dark:v-bg-gray-800"
+                                class="v-rounded v-border-secondary-300 dark:v-border-gray-600 v-text-primary-600 focus:v-ring-primary-500 focus:v-border-primary-500 v-shadow-sm sm:v-text-sm not-checked:v-bg-white not-checked:dark:v-bg-gray-800"
                                 :checked="isColumnVisible(col.key)"
                                 @change="setColumnVisible(col.key, $event.target.checked)"
                                 :disabled="col.pinned"

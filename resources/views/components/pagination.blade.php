@@ -12,7 +12,7 @@
 
 @if ($paginator->hasPages())
     <nav role="navigation" aria-label="Pagination" class="v-flex v-items-center v-justify-between v-font-medium v-text-sm">
-        <div class="v-grid grid-cols-2 v-gap-6 v-w-fit v-mx-auto {{ $type == 'default' ? 'lg:v-hidden' : '' }}">
+        <div class="v-grid grid-cols-2 v-gap-6 v-w-fit v-mx-auto {{ $type == 'extended' ? 'lg:v-hidden' : '' }}">
             <x-v-button.primary :href="$previousUrl" :disabled="!$previousUrl" class="v-text-sm">
                 {!! __('pagination.previous') !!}
             </x-v-button.primary>

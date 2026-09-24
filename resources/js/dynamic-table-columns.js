@@ -97,8 +97,12 @@ document.addEventListener('alpine:init', () => {
         columnWidths: config.columnWidths ?? [],
         pinned: config.pinned ?? ['actions'],
         defaultVisible: config.defaultVisible ?? null,
+        storedVisible: config.storedVisible ?? null,
         columns: config.columns ?? [],
         orderEnabled: config.orderEnabled ?? false,
+        defaultOrder: config.defaultOrder ?? null,
+        saveUrl: config.saveUrl ?? null,
+        csrfToken: config.csrfToken ?? null,
         visible: {},
         order: [],
         widthsByKey: {},
@@ -122,21 +126,25 @@ document.addEventListener('alpine:init', () => {
                 this.widthsByKey[key] = this.columnWidths[i] ?? null;
             });
 
-            try {
-                const stored = localStorage.getItem(this.storageKey);
-                if (stored) {
-                    const parsed = JSON.parse(stored);
-                    this.visible = { ...parsed };
-                    this.allKeys.forEach((key) => {
-                        if (!(key in this.visible)) {
-                            this.visible[key] = this.visibilityDefaultFor(key);
-                        }
-                    });
-                } else {
+            if (this.saveUrl) {
+                this.applyStoredOrDefaults();
+            } else {
+                try {
+                    const stored = localStorage.getItem(this.storageKey);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        this.visible = { ...parsed };
+                        this.allKeys.forEach((key) => {
+                            if (!(key in this.visible)) {
+                                this.visible[key] = this.visibilityDefaultFor(key);
+                            }
+                        });
+                    } else {
+                        this.applyDefaults();
+                    }
+                } catch (e) {
                     this.applyDefaults();
                 }
-            } catch (e) {
-                this.applyDefaults();
             }
 
             if (this.orderEnabled) {
@@ -163,18 +171,27 @@ document.addEventListener('alpine:init', () => {
             return this.allKeys.filter((k) => !this.pinned.includes(k));
         },
 
+        reconcileOrder(candidate, fallback) {
+            const valid = candidate.filter((k) => fallback.includes(k));
+            const missing = fallback.filter((k) => !valid.includes(k));
+
+            return [...valid, ...missing];
+        },
+
         loadOrder() {
             const defaultOrder = this.nonPinnedKeys();
+
+            if (this.saveUrl) {
+                this.order = this.defaultOrder
+                    ? this.reconcileOrder(this.defaultOrder, defaultOrder)
+                    : defaultOrder;
+
+                return;
+            }
+
             try {
                 const stored = this.orderStorageKey ? localStorage.getItem(this.orderStorageKey) : null;
-                if (stored) {
-                    const parsed = JSON.parse(stored);
-                    const valid = parsed.filter((k) => defaultOrder.includes(k));
-                    const missing = defaultOrder.filter((k) => !valid.includes(k));
-                    this.order = [...valid, ...missing];
-                } else {
-                    this.order = defaultOrder;
-                }
+                this.order = stored ? this.reconcileOrder(JSON.parse(stored), defaultOrder) : defaultOrder;
             } catch (e) {
                 this.order = defaultOrder;
             }
@@ -195,6 +212,15 @@ document.addEventListener('alpine:init', () => {
             return idx === -1 ? 0 : idx;
         },
 
+        persistOrder() {
+            try {
+                if (this.orderStorageKey) localStorage.setItem(this.orderStorageKey, JSON.stringify(this.order));
+            } catch (e) {}
+
+            this.syncVisibleCount();
+            this.persistToServer();
+        },
+
         setOrder(newOrderKeys) {
             const defaultOrder = this.nonPinnedKeys();
             this.order = newOrderKeys.filter((k) => defaultOrder.includes(k));
@@ -202,21 +228,12 @@ document.addEventListener('alpine:init', () => {
                 if (!this.order.includes(k)) this.order.push(k);
             });
 
-            try {
-                if (this.orderStorageKey) localStorage.setItem(this.orderStorageKey, JSON.stringify(this.order));
-            } catch (e) {}
-
-            this.syncVisibleCount();
+            this.persistOrder();
         },
 
         resetOrder() {
             this.order = this.nonPinnedKeys();
-
-            try {
-                if (this.orderStorageKey) localStorage.setItem(this.orderStorageKey, JSON.stringify(this.order));
-            } catch (e) {}
-
-            this.syncVisibleCount();
+            this.persistOrder();
         },
 
         columnsForModal() {
@@ -244,6 +261,19 @@ document.addEventListener('alpine:init', () => {
             });
         },
 
+        applyStoredOrDefaults() {
+            if (!this.storedVisible) {
+                this.applyDefaults();
+
+                return;
+            }
+
+            this.visible = {};
+            this.allKeys.forEach((key) => {
+                this.visible[key] = this.pinned.includes(key) || this.storedVisible.includes(key);
+            });
+        },
+
         syncVisibleCount() {
             if (!Alpine.store || !this.storeKey) return;
             const store = Alpine.store(this.storeKey);
@@ -256,44 +286,57 @@ document.addEventListener('alpine:init', () => {
             return this.visible[key] !== false;
         },
 
-        setVisible(key, bool) {
-            this.visible[key] = bool;
+        persist() {
             try {
                 localStorage.setItem(this.storageKey, JSON.stringify(this.visible));
             } catch (e) {}
 
             this.syncVisibleCount();
+            this.persistToServer();
+        },
+
+        persistToServer() {
+            if (!this.saveUrl) return;
+
+            const payload = {
+                visible_columns: this.allKeys.filter((k) => this.visible[k] !== false),
+            };
+
+            if (this.orderEnabled) {
+                payload.column_order = this.order;
+            }
+
+            fetch(this.saveUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': this.csrfToken ?? '',
+                },
+                body: JSON.stringify(payload),
+            }).catch(() => {});
+        },
+
+        setVisible(key, bool) {
+            this.visible[key] = bool;
+            this.persist();
         },
 
         showAll() {
             this.allKeys.forEach((k) => { this.visible[k] = true; });
-            try {
-                localStorage.setItem(this.storageKey, JSON.stringify(this.visible));
-            } catch (e) {}
-
-            this.syncVisibleCount();
+            this.persist();
         },
 
         hideAll() {
             this.allKeys.forEach((k) => {
                 if (!this.pinned.includes(k)) this.visible[k] = false;
             });
-
-            try {
-                localStorage.setItem(this.storageKey, JSON.stringify(this.visible));
-            } catch (e) {}
-
-            this.syncVisibleCount();
+            this.persist();
         },
 
         reset() {
             this.applyDefaults();
-
-            try {
-                localStorage.setItem(this.storageKey, JSON.stringify(this.visible));
-            } catch (e) {}
-
-            this.syncVisibleCount();
+            this.persist();
         },
     }));
 });

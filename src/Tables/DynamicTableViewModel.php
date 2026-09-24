@@ -37,6 +37,8 @@ final class DynamicTableViewModel
 
     public bool $hasBulkEdit = false;
 
+    public bool $columnOrderEnabled = false;
+
     /** @var array<int, string> Primary keys of all visible rows, for select-all. */
     public array $allRowKeys = [];
 
@@ -123,6 +125,8 @@ final class DynamicTableViewModel
                 $vm->bulkActionUrl = $data->bulkActionUrl();
                 $vm->hasBulkEdit = true;
             }
+
+            $vm->columnOrderEnabled = $data->columnOrderEnabled();
         }
 
         if (is_array($data)) {
@@ -148,6 +152,9 @@ final class DynamicTableViewModel
                 $vm->bulkFields = self::normalizeBulkFields($data['bulk_fields']);
                 $vm->bulkActionUrl = $data['bulk_action_url'] ?? null;
                 $vm->hasBulkEdit = true;
+            }
+            if (isset($data['column_order_enabled'])) {
+                $vm->columnOrderEnabled = (bool) $data['column_order_enabled'];
             }
         }
 

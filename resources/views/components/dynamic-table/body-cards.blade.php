@@ -34,14 +34,14 @@
             @dblclick="$store[@js($bsk)].openRow(@js($row->openUrl))"
             :class="$store[@js($bsk)].isSelected(@js($row->rowKey))
                 ? 'v-mb-4 v-rounded-lg v-border v-border-primary-300 dark:v-border-primary-600 v-bg-primary-50 dark:v-bg-primary-900/20 v-p-4 v-shadow-sm{{ $boldClass }}'
-                : 'v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 {{ $rowBgClass }} v-p-4 v-shadow-sm{{ $boldClass }}'"
+                : 'v-mb-4 v-rounded-lg v-border v-border-gray-200 dark:v-border-gray-700 {{ $rowBgClass }} v-p-4 v-shadow-sm{{ $boldClass }}'"
         @elseif($rowIx && $row->rowKey !== null)
-            class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 {{ $rowBgClass }} v-p-4 v-shadow-sm v-cursor-pointer{{ $boldClass }}"
+            class="v-mb-4 v-rounded-lg v-border v-border-gray-200 dark:v-border-gray-700 {{ $rowBgClass }} v-p-4 v-shadow-sm v-cursor-pointer{{ $boldClass }}"
             @click="selectRow(@js($row->rowKey))"
             @dblclick="openRow(@js($row->openUrl))"
             :class="isSelected(@js($row->rowKey)) ? 'v-ring-2 v-ring-blue-400 dark:v-ring-blue-600' : ''"
         @else
-            class="v-mb-4 v-rounded-lg v-border dark:v-border-gray-700 {{ $rowBgClass }} v-p-4 v-shadow-sm{{ $boldClass }}"
+            class="v-mb-4 v-rounded-lg v-border v-border-gray-200 dark:v-border-gray-700 {{ $rowBgClass }} v-p-4 v-shadow-sm{{ $boldClass }}"
         @endif
     >
         {{-- Bulk checkbox for cards --}}
@@ -71,7 +71,7 @@
         </div>
 
         {{-- Remaining fields --}}
-        <div class="v-mt-2 v-space-y-1 v-text-sm">
+        <div class="v-mt-2 v-flex v-flex-col v-gap-1 v-text-sm">
             @foreach ($row->cells as $cell)
                 @continue($cell->isActions)
                 @continue($loop->index < 2)
@@ -82,6 +82,9 @@
                 <div class="v-flex v-justify-between v-gap-4"
                     @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
                         x-show="isVisible('{{ $columnKey }}')"
+                        @if(!empty($columnVisibility['orderEnabled']))
+                            :style="'order: ' + orderIndex('{{ $columnKey }}')"
+                        @endif
                     @endif
                 >
                     <span class="v-text-gray-500 dark:v-text-gray-400">

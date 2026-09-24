@@ -77,6 +77,8 @@ class DynamicTableData implements DynamicTableDataProvider
 
     protected ?string $bulkActionUrlValue = null;
 
+    protected bool $columnOrderEnabled = false;
+
     /**
      * Non-paginator source list from {@see fromCollection()} (same instance passed to {@see Collection::map()}).
      * {@see withRowOpenUrl()} calls {@see Collection::values()} only when needed. Paginated tables use {@see $paginator} instead.
@@ -326,6 +328,22 @@ class DynamicTableData implements DynamicTableDataProvider
     public function bulkActionUrl(): ?string
     {
         return $this->bulkActionUrlValue;
+    }
+
+    public function columnOrderEnabled(): bool
+    {
+        return $this->columnOrderEnabled;
+    }
+
+    /**
+     * Allow the user to drag & drop reorder columns via a "Change order" button in the
+     * columns dropdown. Only takes effect when {@see withColumnVisibility()} is also set.
+     */
+    public function withColumnOrder(bool $enabled = true): self
+    {
+        $this->columnOrderEnabled = $enabled;
+
+        return $this;
     }
 
     /**

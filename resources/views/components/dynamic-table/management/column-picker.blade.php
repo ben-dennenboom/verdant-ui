@@ -4,18 +4,11 @@
     $storageKey = $columnVisibilityConfig['storageKey'] ?? 'verdant.table.columns.default';
     $storeKey = $columnVisibilityConfig['storeKey'] ?? 'vtd_default';
     $allKeys = $columnVisibilityConfig['allKeys'] ?? [];
-    $pinned = $columnVisibilityConfig['pinned'] ?? ['actions'];
     $defaultVisible = $columnVisibilityConfig['defaultVisible'] ?? null;
     $columnsPanelId = 'columns-panel-' . $storeKey;
-    $columns = collect($vm->headers)->map(function ($header, $key) use ($vm, $pinned) {
-        $label = is_array($header) ? ($header['label'] ?? $key) : $header;
-        $columnKey = $vm->columnKeyForIndex($key);
-        $isPinned = is_array($header) && array_key_exists('pinned', $header)
-            ? (bool) $header['pinned']
-            : in_array($columnKey, $pinned, true);
-
-        return ['key' => $columnKey, 'label' => $label, 'pinned' => $isPinned];
-    })->values()->all();
+    $columns = $columnVisibilityConfig['columns'] ?? [];
+    $orderEnabled = $columnVisibilityConfig['orderEnabled'] ?? false;
+    $reorderModalId = 'column-order-' . $storeKey;
     $popupPosition = $hasFilter ? 'v-left-1/2 -v-translate-x-1/2' : '';
 @endphp
 
@@ -94,7 +87,28 @@
                         Hide all
                     </x-v-button.light>
                 </div>
+
+                @if($orderEnabled)
+                    <x-v-button.light
+                        type="button"
+                        outline
+                        class="v-mt-2 v-w-full v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
+                        aria-haspopup="dialog"
+                        aria-controls="{{ $reorderModalId }}"
+                        @click="open = false; $dispatch('open-modal', '{{ $reorderModalId }}')"
+                    >
+                        <i class="fas fa-arrows-up-down-left-right v-mr-1"></i>
+                        Change order
+                    </x-v-button.light>
+                @endif
             </div>
         </template>
     </div>
 </div>
+
+@if($orderEnabled)
+    @include('verdant::components.dynamic-table.management.column-order-modal', [
+        'storeKey' => $storeKey,
+        'modalId' => $reorderModalId,
+    ])
+@endif

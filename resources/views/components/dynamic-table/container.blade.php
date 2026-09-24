@@ -27,13 +27,26 @@
 
     $pinnedColumns = $pinnedFromHeaders !== [] ? $pinnedFromHeaders : ['actions'];
     $storeKey = $visibilityKey ? 'vtd_' . preg_replace('/[^a-zA-Z0-9_]/', '_', $visibilityKey) : null;
-    $columnVisibility = $visibilityKey ? ['enabled' => true, 'storeKey' => $storeKey] : null;
+    $columnOrderEnabled = $vm->columnOrderEnabled && $visibilityKey !== null;
+    $columnVisibility = $visibilityKey ? ['enabled' => true, 'storeKey' => $storeKey, 'orderEnabled' => $columnOrderEnabled] : null;
+    $columnMeta = collect($vm->headers)->map(function ($header, $key) use ($vm, $pinnedColumns) {
+        $label = is_array($header) ? ($header['label'] ?? $key) : $header;
+        $columnKey = $vm->columnKeyForIndex($key);
+        $isPinned = is_array($header) && array_key_exists('pinned', $header)
+            ? (bool) $header['pinned']
+            : in_array($columnKey, $pinnedColumns, true);
+
+        return ['key' => $columnKey, 'label' => $label, 'pinned' => $isPinned];
+    })->values()->all();
     $columnVisibilityConfig = $visibilityKey ? [
         'storageKey' => 'verdant.table.columns.' . $visibilityKey,
+        'orderStorageKey' => 'verdant.table.order.' . $visibilityKey,
         'storeKey' => $storeKey,
         'allKeys' => $allKeys,
         'pinned' => $pinnedColumns,
         'defaultVisible' => $vm->defaultVisibleColumns,
+        'columns' => $columnMeta,
+        'orderEnabled' => $columnOrderEnabled,
     ] : null;
     $showSearch = !empty($vm->searchableColumns);
     $showFilter = !empty($vm->filterColumns);
@@ -62,16 +75,19 @@
 @endif
 
 <div
-    class="v-rounded v-bg-surface v-border dark:v-border-gray-700 {{ $class }}"
+    class="v-rounded v-bg-surface v-border v-border-gray-200 dark:v-border-gray-700 {{ $class }}"
     @if($visibilityKey)
         data-columns-store="{{ $storeKey }}"
         x-data="verdantTableColumns({
             storageKey: @js($columnVisibilityConfig['storageKey']),
+            orderStorageKey: @js($columnVisibilityConfig['orderStorageKey']),
             storeKey: @js($columnVisibilityConfig['storeKey']),
             allKeys: @js($columnVisibilityConfig['allKeys']),
             columnWidths: @js($vm->columnGridWidths),
             pinned: @js($columnVisibilityConfig['pinned']),
             defaultVisible: @js($columnVisibilityConfig['defaultVisible']),
+            columns: @js($columnVisibilityConfig['columns']),
+            orderEnabled: @js($columnVisibilityConfig['orderEnabled']),
         })"
     @endif
 >

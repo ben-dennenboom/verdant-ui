@@ -1,5 +1,5 @@
 @if ($vm->paginator && $vm->paginator->hasPages())
-    <div class="v-flex v-items-center v-justify-between v-border-t dark:v-border-gray-700 v-px-4 v-py-3 v-text-sm">
+    <div class="v-flex v-items-center v-justify-between v-border-t v-border-gray-200 dark:v-border-gray-700 v-px-4 v-py-3 v-text-sm">
         {{-- Prev --}}
         @if ($vm->paginator->onFirstPage())
             <span class="v-text-gray-400 dark:v-text-gray-500">Previous</span>

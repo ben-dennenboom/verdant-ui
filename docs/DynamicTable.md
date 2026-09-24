@@ -164,6 +164,18 @@ Defaults from columns marked `->default()` (pass `null` as second argument):
 $table->withColumnVisibility('users-table', null);
 ```
 
+### Column ordering
+
+Let the user drag & drop reorder columns via a "Change order" button at the bottom of the columns dropdown. Requires `withColumnVisibility()` to also be set—the button lives in that dropdown. Off by default.
+
+```php
+$table
+    ->withColumnVisibility('users-table', null)
+    ->withColumnOrder();
+```
+
+The chosen order is saved to `localStorage` per `columnVisibilityKey`, the same way column visibility is. Pinned columns (see `->pinned()` / `Column::make()->pinned()`) are excluded from the reorder modal and always stay in their original position.
+
 ### 4. Sorting
 
 Attach sort state from the request and (optionally) restrict allowed keys:

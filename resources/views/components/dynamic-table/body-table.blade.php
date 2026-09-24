@@ -59,6 +59,7 @@
         @if($vm->hasBulkEdit)
             <div
                 class="v-pl-3 v-pr-1 v-py-4 v-flex v-items-center v-justify-center"
+                @if(!empty($columnVisibility['orderEnabled'])) style="order: -1;" @endif
                 @click.stop
                 @dblclick.stop
             >
@@ -91,6 +92,9 @@
                 @if(($rowIx || $vm->hasBulkEdit) && $cell->isActions) @click.stop @dblclick.stop @endif
                 @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
                     x-show="isVisible('{{ $columnKey }}')"
+                    @if(!empty($columnVisibility['orderEnabled']))
+                        :style="'order: ' + orderIndex('{{ $columnKey }}')"
+                    @endif
                 @endif
             >
                 @if ($cell->isActions)

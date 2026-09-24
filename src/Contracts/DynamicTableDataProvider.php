@@ -97,4 +97,27 @@ interface DynamicTableDataProvider
      * @return string|null
      */
     public function bulkActionUrl(): ?string;
+
+    /**
+     * Whether the user may reorder columns via drag & drop (the "Change order" button
+     * in the columns dropdown). Only takes effect when column visibility is also enabled.
+     */
+    public function columnOrderEnabled(): bool;
+
+    /**
+     * URL the column picker POSTs visible-column changes to. Return null for client-only (localStorage).
+     *
+     * @return string|null
+     */
+    public function preferencesSaveUrl(): ?string;
+
+    /**
+     * @return array<string>|null
+     */
+    public function defaultColumnOrder(): ?array;
+
+    /**
+     * @return array<string>|null
+     */
+    public function storedVisibleColumns(): ?array;
 }

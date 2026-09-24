@@ -17,7 +17,9 @@
     @endif
 >
     @if($vm->hasBulkEdit)
-        <div class="v-pl-3 v-pr-1 v-py-3 v-flex v-items-center v-justify-center">
+        <div class="v-pl-3 v-pr-1 v-py-3 v-flex v-items-center v-justify-center"
+            @if(!empty($columnVisibility['orderEnabled'])) style="order: -1;" @endif
+        >
             <input
                 type="checkbox"
                 x-show="$store[@js($bulkStoreKey)].selected.length > 0"
@@ -44,7 +46,11 @@
         "
             @if(!empty($header['tooltip'])) title="{{ e($header['tooltip']) }}" @endif
             @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
-                x-show="Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}')"
+                @if(!empty($columnVisibility['orderEnabled']))
+                    :style="(Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}') ? '' : 'display:none;') + 'order:' + Alpine.store('{{ $columnVisibility['storeKey'] }}').orderIndex('{{ $columnKey }}')"
+                @else
+                    x-show="Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}')"
+                @endif
             @endif
         >
             @if (!empty($header['sortable']) && !empty($header['key']))

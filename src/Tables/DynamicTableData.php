@@ -3,6 +3,7 @@
 namespace Dennenboom\VerdantUI\Tables;
 
 use Dennenboom\VerdantUI\Contracts\DynamicTableDataProvider;
+use Dennenboom\VerdantUI\Contracts\DynamicTablePreferencesStore;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
@@ -76,6 +77,14 @@ class DynamicTableData implements DynamicTableDataProvider
     protected ?array $bulkFieldDefinitions = null;
 
     protected ?string $bulkActionUrlValue = null;
+
+    protected bool $columnOrderEnabled = false;
+
+    protected ?string $preferencesSaveUrl = null;
+
+    protected ?array $defaultColumnOrder = null;
+
+    protected ?array $storedVisibleColumns = null;
 
     /**
      * Non-paginator source list from {@see fromCollection()} (same instance passed to {@see Collection::map()}).
@@ -326,6 +335,59 @@ class DynamicTableData implements DynamicTableDataProvider
     public function bulkActionUrl(): ?string
     {
         return $this->bulkActionUrlValue;
+    }
+
+    public function columnOrderEnabled(): bool
+    {
+        return $this->columnOrderEnabled;
+    }
+
+    public function withColumnOrder(bool $enabled = true): self
+    {
+        $this->columnOrderEnabled = $enabled;
+
+        return $this;
+    }
+
+    public function preferencesSaveUrl(): ?string
+    {
+        return $this->preferencesSaveUrl;
+    }
+
+    public function defaultColumnOrder(): ?array
+    {
+        return $this->defaultColumnOrder;
+    }
+
+    public function storedVisibleColumns(): ?array
+    {
+        return $this->storedVisibleColumns;
+    }
+
+    public function withPersistentPreferences(DynamicTablePreferencesStore $store, string $saveUrl, ?string $key = null): self
+    {
+        $key ??= $this->columnVisibilityKey;
+
+        if ($key === null) {
+            throw new \InvalidArgumentException(
+                'withPersistentPreferences() needs a key: call withColumnVisibility() first, or pass $key explicitly.'
+            );
+        }
+
+        $this->columnVisibilityKey = $key;
+        $this->preferencesSaveUrl = $saveUrl;
+
+        $stored = $store->get($key);
+
+        if (is_array($stored) && isset($stored['visible_columns']) && is_array($stored['visible_columns'])) {
+            $this->storedVisibleColumns = $stored['visible_columns'];
+        }
+
+        if (is_array($stored) && isset($stored['column_order']) && is_array($stored['column_order'])) {
+            $this->defaultColumnOrder = $stored['column_order'];
+        }
+
+        return $this;
     }
 
     /**

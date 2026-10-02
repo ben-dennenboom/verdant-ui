@@ -44,6 +44,14 @@ return [
         'layout'  => true,
     ],
 
+    'sidebar' => [
+        'brand' => 'Verdant',
+        'profile_routes' => ['profile.show', 'profile.edit', 'profile.index', 'profile'],
+        'settings_routes' => ['settings.index', 'settings.edit', 'settings.show', 'settings'],
+        'logout_routes' => ['logout'],
+        'user_image_attributes' => ['profile_photo_url', 'avatar_url', 'avatar'],
+    ],
+
     'advanced' => [
         'use_scoped_wrapper' => true,
         'views_path' => null,

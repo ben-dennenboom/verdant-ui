@@ -12,3 +12,11 @@
 .required_asterisk {
     color: red;
 }
+
+.v-sidebar[data-collapsed="true"] .v-sidebar-label,
+.v-sidebar[data-collapsed="true"] .v-sidebar-chevron,
+.v-sidebar[data-collapsed="true"] .v-sidebar-children,
+.v-sidebar[data-collapsed="true"] .v-sidebar-expanded-only,
+.v-sidebar:not([data-collapsed="true"]) .v-sidebar-collapsed-only {
+    display: none;
+}

@@ -1,8 +1,8 @@
-@props(['icon', 'route' => null, 'routeParams' => [], 'label', 'active' => null, 'collapsed' => false,])
+@props(['icon', 'route' => null, 'routeParams' => [], 'href' => null, 'label', 'active' => null, 'collapsed' => false,])
 
 @php
     $active = $active ?? ($route && request()->routeIs($route));
-    $route = $route ? route($route, $routeParams) : '#';
+    $route = $route ? route($route, $routeParams) : ($href ?? '#');
 @endphp
 
 <li class="v-list-none">
@@ -21,13 +21,13 @@
         <i class="{{ $sidebarItemIconClass }} v-flex-none v-w-6"></i>
         <span @class(
         [
-            "v-flex-1 v-ml-2",
+            "v-sidebar-label v-flex-1 v-ml-2",
             "hidden" => $collapsed
         ])>
             {!! $label !!}
         </span>
         @if($slot->isNotEmpty())
-            <i class="fas fa-chevron-down v-ml-auto"></i>
+            <i class="v-sidebar-chevron fas fa-chevron-down v-ml-auto"></i>
         @endif
     </a>
 </li>

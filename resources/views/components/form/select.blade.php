@@ -1,4 +1,4 @@
-@props(['name', 'label', 'options', 'valueKey' => 'value', 'labelKey' => 'label', 'selected' => null, 'multiple' => false, 'required' => false, 'first_empty' => true, 'disabled' => false])
+@props(['name', 'label', 'options' => [], 'valueKey' => 'value', 'labelKey' => 'label', 'selected' => null, 'multiple' => false, 'required' => false, 'first_empty' => true, 'disabled' => false, 'placeholder' => null, 'searchUrl' => null, 'selectedLabel' => null, 'selectedLabelExpression' => null])
 
 @php
     $cleanName = str_replace(['[]', '[', ']'], ['', '.', ''], $name);
@@ -13,6 +13,10 @@
     }
 
     $xModelVar = $attributes->get('x-model');
+
+    if ($searchUrl && $options === [] && filled($fallbackSelected) && ! $multiple) {
+        $options = [[$valueKey => $fallbackSelected, $labelKey => $selectedLabel ?? $fallbackSelected]];
+    }
 @endphp
 
 <div class="v-mb-4"
@@ -30,6 +34,36 @@
         selected: @js($multiple ? (is_array($fallbackSelected) ? $fallbackSelected : []) : $fallbackSelected),
         @endif
         options: @js($options),
+        searchUrl: @js($searchUrl),
+        loading: false,
+        selectedOptionCache: null,
+        @if($selectedLabelExpression)
+        get fallbackLabel() {
+            return {{ $selectedLabelExpression }};
+        },
+        @else
+        fallbackLabel: null,
+        @endif
+        searchTimer: null,
+        init() {
+            if (! this.searchUrl) return;
+            this.$watch('search', () => {
+                clearTimeout(this.searchTimer);
+                this.searchTimer = setTimeout(() => this.fetchOptions(), 250);
+            });
+            this.$watch('isOpen', value => { if (value) this.fetchOptions(); });
+        },
+        async fetchOptions() {
+            this.loading = true;
+            try {
+                const url = new URL(this.searchUrl, window.location.origin);
+                url.searchParams.set('q', this.search);
+                const response = await fetch(url, { headers: { Accept: 'application/json' }, credentials: 'same-origin' });
+                if (response.ok) this.options = await response.json();
+            } finally {
+                this.loading = false;
+            }
+        },
         labels: @js($labels),
         multiple: @js($multiple),
         required: @js($required),
@@ -46,6 +80,7 @@
             return option.{{ $valueKey }};
         },
         filteredOptions() {
+            if (this.searchUrl) return this.options;
             return this.options.filter(option =>
                 String(this.getLabel(option)).toLowerCase().includes(this.search.toLowerCase())
             );
@@ -53,7 +88,7 @@
         isSelected(option) {
             return this.multiple
                 ? (Array.isArray(this.selected) && this.selected.includes(this.getValue(option)))
-                : this.selected === this.getValue(option);
+                : this.selected !== null && this.selected !== undefined && String(this.selected) === String(this.getValue(option));
         },
         toggleOption(option) {
             if (this.disabled) return;
@@ -68,35 +103,41 @@
                 }
             } else {
                 this.selected = this.getValue(option);
+                this.selectedOptionCache = option;
                 this.isOpen = false;
             }
+            this.$dispatch('select-change', { name: this.name, value: this.selected, option });
         },
         reset() {
             this.selected = this.multiple ? [] : null;
             this.search = '';
         },
         selectedLabels() {
-            if (!this.selected) return [];
+            if (this.selected === null || this.selected === undefined) return [];
             if (!this.multiple) {
-                const option = this.options.find(o => this.getValue(o) === this.selected);
-                return option ? [this.getLabel(option)] : [];
+                const option = this.options.find(o => String(this.getValue(o)) === String(this.selected))
+                    ?? (this.selectedOptionCache && String(this.getValue(this.selectedOptionCache)) === String(this.selected) ? this.selectedOptionCache : null);
+                if (option) return [this.getLabel(option)];
+                return this.fallbackLabel ? [this.fallbackLabel] : [];
             }
             return this.selected.map(value => {
-                const option = this.options.find(o => this.getValue(o) === value);
+                const option = this.options.find(o => String(this.getValue(o)) === String(value));
                 return option ? this.getLabel(option) : '';
             }).filter(label => label);
         },
         displayedLabels() {
             const labels = this.selectedLabels();
             if (labels.length <= 5) return labels;
-            return [...labels.slice(0, 5), `+${labels.length - 5} more`];
+            return [...labels.slice(0, 5), @js(__('verdant::form.more', ['count' => '__COUNT__'])).replace('__COUNT__', labels.length - 5)];
         }
     }"
      x-init="$watch('isOpen', value => { if (!value) search = ''; })"
 >
     <div class="v-flex v-items-center v-justify-between">
         <label for="{{ $id }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{{ $label }}@if($required)<span class="required_asterisk">*</span>@endif</label>
-        <button type="button" @click="reset" :disabled="disabled" :class="disabled ? 'v-opacity-40 v-cursor-not-allowed' : ''" class="v-text-red-500 v-text-sm">reset</button>
+        @unless($required)
+            <button type="button" @click="reset" :disabled="disabled" :class="disabled ? 'v-opacity-40 v-cursor-not-allowed' : ''" class="v-text-red-500 v-text-sm">{{ __('verdant::form.reset') }}</button>
+        @endunless
     </div>
 
     <div class="v-relative v-mt-1">
@@ -107,7 +148,7 @@
                 class="v-bg-white dark:v-bg-gray-800 v-relative v-w-full v-border v-border-secondary-300 dark:v-border-gray-600 v-shadow-sm v-px-4 v-py-2 v-text-left focus:v-ring-secondary-500 focus:v-border-secondary-500 v-text-gray-900 dark:v-text-gray-100"
                 tabindex="0">
             <div x-show="!selectedLabels().length" class="v-text-gray-500 dark:v-text-gray-400">
-                Nothing selected
+                {{ $placeholder ?? __('verdant::form.nothing_selected') }}
             </div>
             <div x-show="selectedLabels().length" class="v-flex v-flex-wrap v-gap-1">
                 <template x-for="(label, index) in displayedLabels()" :key="index">
@@ -130,10 +171,11 @@
                 <input type="text" x-model="search" x-ref="searchInput"
                        x-init="$watch('isOpen', value => { if (value) $nextTick(() => $refs.searchInput.focus()); })"
                        class="v-w-full v-border v-border-secondary-300 dark:v-border-gray-600 v-shadow-sm v-px-3 v-py-2 focus:v-ring-secondary-500 focus:v-border-secondary-500 v-bg-white dark:v-bg-gray-700 v-text-gray-900 dark:v-text-gray-100 dark:v-placeholder-gray-400"
-                       placeholder="Search...">
+                       placeholder="{{ __('verdant::form.search_placeholder') }}">
             </div>
 
             <ul class="v-max-h-60 v-overflow-auto v-py-1 v-list-none">
+                <li x-show="! loading && filteredOptions().length === 0" class="v-px-4 v-py-2 v-text-sm v-text-gray-500 dark:v-text-gray-400">{{ __('verdant::form.no_results') }}</li>
                 <template x-for="(option, index) in filteredOptions()" :key="index">
                     <li @click="toggleOption(option)"
                         :class="{'v-bg-primary-100 dark:v-bg-primary-500': isSelected(option) }"

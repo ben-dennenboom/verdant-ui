@@ -1,8 +1,8 @@
-@props(['name', 'label', 'value' => '1', 'required' => false, 'checked' => false, 'id' => null])
+@props(['name', 'label', 'value' => '1', 'required' => false, 'checked' => false, 'id' => null, 'description' => null])
 
 @php
-    $inputId = $id ?? $name;
-    $isChecked = (bool) old($name, $checked);
+    $inputId = $id ?? str_replace(['[]', '[', ']'], ['', '_', ''], $name);
+    $isChecked = (bool) old(str_replace(['[]', '[', ']'], ['', '.', ''], $name), $checked);
     $xModelVar = $attributes->get('x-model');
 @endphp
 
@@ -35,10 +35,15 @@
             ></span>
         </button>
 
-        <label for="{{ $inputId }}"
-               class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300 v-cursor-pointer v-select-none">
-            {!! $label !!}@if($required)<span class="required_asterisk">*</span>@endif
-        </label>
+        <div>
+            <label for="{{ $inputId }}"
+                   class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300 v-cursor-pointer v-select-none">
+                {!! $label !!}@if($required)<span class="required_asterisk">*</span>@endif
+            </label>
+            @if($description)
+                <p class="v-text-sm v-text-gray-500 dark:v-text-gray-400">{{ $description }}</p>
+            @endif
+        </div>
     </div>
 
     <input type="hidden" name="{{ $name }}" :value="on ? '{{ $value }}' : '0'" {{ $required ? 'required' : '' }}>

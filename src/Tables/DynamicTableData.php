@@ -71,6 +71,8 @@ class DynamicTableData implements DynamicTableDataProvider
 
     protected bool $rowOpenUrlEnabled = false;
 
+    protected bool $openRowOnClick = false;
+
     /**
      * @var array<int, array<string, mixed>>|null
      */
@@ -301,6 +303,21 @@ class DynamicTableData implements DynamicTableDataProvider
     public function actionsMaxVisible(): ?int
     {
         return $this->actionsMaxVisible;
+    }
+
+    /**
+     * Open the row URL (see {@see withRowOpenUrl()}) with a single click instead of a double click.
+     */
+    public function withRowOpenOnClick(bool $enabled = true): self
+    {
+        $this->openRowOnClick = $enabled;
+
+        return $this;
+    }
+
+    public function openRowOnClick(): bool
+    {
+        return $this->openRowOnClick && $this->rowOpenUrlEnabled;
     }
 
     public function rowInteractionEnabled(): bool

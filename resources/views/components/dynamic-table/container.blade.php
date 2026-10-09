@@ -3,11 +3,12 @@
     'headers' => [],
     'rows' => [],
     'class' => '',
-    'emptyText' => 'No data available.',
+    'emptyText' => null,
     'columnVisibilityKey' => null,
 ])
 
 @php
+    $emptyText ??= __('verdant::table.empty');
     $vm = \Dennenboom\VerdantUI\Tables\DynamicTableViewModel::from(
         $data,
         $headers,
@@ -53,7 +54,8 @@
     ] : null;
     $showSearch = !empty($vm->searchableColumns);
     $showFilter = !empty($vm->filterColumns);
-    $showToolbar = $showSearch || $visibilityKey || $showFilter;
+    $hasToolbarActions = isset($toolbar) && trim((string) $toolbar) !== '';
+    $showToolbar = $showSearch || $visibilityKey || $showFilter || $hasToolbarActions;
     $hasBulkEdit = $vm->hasBulkEdit;
     $bulkStoreKey = $hasBulkEdit ? ('vtbulk_' . ($storeKey ?? uniqid('tbl_'))) : null;
 
@@ -105,14 +107,18 @@
                     @include('verdant::components.dynamic-table.management.search-bar', [
                         'searchTerm' => $vm->searchTerm,
                         'paramName' => 'search',
-                        'placeholder' => 'Search…',
+                        'placeholder' => __('verdant::table.search_placeholder'),
                         'searchApiUrl' => $vm->searchApiUrl,
                     ])
                 </div>
             @endif
 
-            @if($showFilter || $visibilityKey)
+            @if($showFilter || $visibilityKey || $hasToolbarActions)
                 <div class="v-flex v-items-center v-gap-2 v-shrink-0">
+                    @if($hasToolbarActions)
+                        {{ $toolbar }}
+                    @endif
+
                     @if($showFilter)
                         @include('verdant::components.dynamic-table.management.filter-modal', [
                             'vm' => $vm,

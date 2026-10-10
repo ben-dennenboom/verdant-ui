@@ -1,6 +1,7 @@
 @props(['name', 'label', 'options' => [], 'valueKey' => 'value', 'labelKey' => 'label', 'selected' => null, 'multiple' => false, 'required' => false, 'first_empty' => true, 'disabled' => false, 'placeholder' => null, 'searchUrl' => null, 'selectedLabel' => null, 'selectedLabelExpression' => null])
 
 @php
+    $aligned = (bool) config('verdant.ui.aligned_form_controls');
     $cleanName = str_replace(['[]', '[', ']'], ['', '.', ''], $name);
     $fallbackSelected = old($cleanName, $selected);
     $id = uniqid();
@@ -135,7 +136,7 @@
 >
     <div class="v-flex v-items-center v-justify-between">
         <label for="{{ $id }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{{ $label }}@if($required)<span class="required_asterisk">*</span>@endif</label>
-        @unless($required)
+        @unless($required && config('verdant.ui.hide_reset_on_required_selects'))
             <button type="button" @click="reset" :disabled="disabled" :class="disabled ? 'v-opacity-40 v-cursor-not-allowed' : ''" class="v-text-red-500 v-text-sm">{{ __('verdant::form.reset') }}</button>
         @endunless
     </div>
@@ -145,14 +146,19 @@
                 @click="if (!disabled) isOpen = !isOpen"
                 :disabled="disabled"
                 :class="disabled ? 'v-opacity-50 v-cursor-not-allowed v-bg-gray-100 dark:v-bg-gray-700' : ''"
-                class="v-bg-white dark:v-bg-gray-800 v-relative v-w-full v-border v-border-secondary-300 dark:v-border-gray-600 v-shadow-sm v-px-4 v-py-2 v-text-left focus:v-ring-secondary-500 focus:v-border-secondary-500 v-text-gray-900 dark:v-text-gray-100"
+                class="{{ $aligned
+                    ? 'v-bg-white dark:v-bg-gray-800 v-relative v-w-full v-rounded v-border v-border-secondary-300 dark:v-border-gray-600 v-shadow-sm v-py-2 v-pl-3 v-pr-10 v-text-left v-text-base sm:v-text-sm v-leading-6 sm:v-leading-5 focus:v-ring-secondary-500 focus:v-border-secondary-500 v-text-gray-900 dark:v-text-gray-100'
+                    : 'v-bg-white dark:v-bg-gray-800 v-relative v-w-full v-border v-border-secondary-300 dark:v-border-gray-600 v-shadow-sm v-px-4 v-py-2 v-text-left focus:v-ring-secondary-500 focus:v-border-secondary-500 v-text-gray-900 dark:v-text-gray-100' }}"
                 tabindex="0">
-            <div x-show="!selectedLabels().length" class="v-text-gray-500 dark:v-text-gray-400">
+            <div x-show="!selectedLabels().length" class="{{ $aligned ? 'v-truncate ' : '' }}v-text-gray-500 dark:v-text-gray-400">
                 {{ $placeholder ?? __('verdant::form.nothing_selected') }}
             </div>
-            <div x-show="selectedLabels().length" class="v-flex v-flex-wrap v-gap-1">
+            @if($aligned)
+                <div x-show="selectedLabels().length && !multiple" class="v-truncate" x-text="selectedLabels()[0]"></div>
+            @endif
+            <div x-show="selectedLabels().length{{ $aligned ? ' && multiple' : '' }}" class="v-flex v-flex-wrap v-gap-1">
                 <template x-for="(label, index) in displayedLabels()" :key="index">
-                    <span class="v-inline-flex v-items-center v-px-2 v-py-0.5 v-bg-gray-100 dark:v-bg-gray-700 v-text-gray-800 dark:v-text-gray-200"
+                    <span class="v-inline-flex v-items-center {{ $aligned ? 'v-rounded v-px-1.5' : 'v-px-2 v-py-0.5' }} v-bg-gray-100 dark:v-bg-gray-700 v-text-gray-800 dark:v-text-gray-200"
                           x-text="label"></span>
                 </template>
             </div>
@@ -175,7 +181,9 @@
             </div>
 
             <ul class="v-max-h-60 v-overflow-auto v-py-1 v-list-none">
-                <li x-show="! loading && filteredOptions().length === 0" class="v-px-4 v-py-2 v-text-sm v-text-gray-500 dark:v-text-gray-400">{{ __('verdant::form.no_results') }}</li>
+                @if($searchUrl || config('verdant.ui.aligned_form_controls'))
+                    <li x-show="! loading && filteredOptions().length === 0" class="v-px-4 v-py-2 v-text-sm v-text-gray-500 dark:v-text-gray-400">{{ __('verdant::form.no_results') }}</li>
+                @endif
                 <template x-for="(option, index) in filteredOptions()" :key="index">
                     <li @click="toggleOption(option)"
                         :class="{'v-bg-primary-100 dark:v-bg-primary-500': isSelected(option) }"

@@ -1,3 +1,6 @@
+@if(! config('verdant.ui.numbered_pagination'))
+    @include('verdant::components.dynamic-table.pagination-classic')
+@else
 @if ($vm->paginator && $vm->paginator->hasPages())
     @php
         $paginator = $vm->paginator;
@@ -57,4 +60,5 @@
             @endif
         </div>
     </nav>
+@endif
 @endif

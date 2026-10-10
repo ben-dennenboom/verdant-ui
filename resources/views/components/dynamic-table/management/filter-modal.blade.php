@@ -13,9 +13,11 @@
     })->count();
     $hasExplicitFilterInQuery = collect($filterKeys)->contains(fn($key) => request()->query->has($key));
     $currentPath = \Illuminate\Support\Str::before(request()->getRequestUri(), '?');
-    $clearUrl = $activeCount > 0 && $hasExplicitFilterInQuery
-        ? $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '')
-        : null;
+    $clearUrl = match (true) {
+        config('verdant.ui.explicit_table_clear') && $activeCount > 0 => $currentPath . '?' . http_build_query([...\Illuminate\Support\Arr::except($currentQuery, ['page']), ...array_fill_keys($filterKeys, '')]),
+        $activeCount > 0 && $hasExplicitFilterInQuery => $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : ''),
+        default => null,
+    };
     $formId = $modalId . '-form';
 @endphp
 

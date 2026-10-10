@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'search_placeholder' => 'Search…',
+    'search_placeholder' => 'Search...',
     'more' => '+:count more',
     'no_results' => 'No results',
     'show' => 'Show',

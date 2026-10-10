@@ -8,7 +8,9 @@
 @php
     $currentQuery = request()->except($paramName);
     $currentPath = \Illuminate\Support\Str::before(request()->getRequestUri(), '?');
-    $clearUrlBase = $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '');
+    $clearUrlBase = config('verdant.ui.explicit_table_clear')
+        ? $currentPath . '?' . http_build_query([...\Illuminate\Support\Arr::except($currentQuery, ['page']), $paramName => ''])
+        : $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '');
     $clearUrl = $searchTerm !== '' ? $clearUrlBase : null;
     $inputId = 'v-table-search-' . $paramName;
     $resultsId = 'v-table-search-results-' . $paramName;

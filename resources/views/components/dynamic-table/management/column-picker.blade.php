@@ -40,10 +40,10 @@
                 :id="panelId"
                 role="region"
                 aria-label="{{ __('verdant::table.visible_columns') }}"
-                class="v-absolute {{ $popupPosition }} md:v-left-auto md:v-right-0 md:v-translate-x-0 v-z-20 v-mt-2 v-w-72 v-max-w-[calc(100vw-2rem)] v-rounded-md v-border v-border-gray-200 dark:v-border-gray-600 v-bg-floating v-p-3 v-shadow-lg"
+                class="v-absolute {{ $popupPosition }} md:v-left-auto md:v-right-0 md:v-translate-x-0 v-z-20 v-mt-2 {{ config('verdant.ui.wide_column_picker') ? 'v-w-72 v-max-w-[calc(100vw-2rem)]' : 'v-w-60' }} v-rounded-md v-border v-border-gray-200 dark:v-border-gray-600 v-bg-floating v-p-3 v-shadow-lg"
             >
-                <div class="v-flex v-items-center v-justify-between v-gap-2 v-pb-2">
-                    <div class="v-whitespace-nowrap v-text-sm v-font-semibold v-text-gray-900 dark:v-text-gray-100">{{ __('verdant::table.visible_columns') }}</div>
+                <div class="v-flex v-items-center v-justify-between {{ config('verdant.ui.wide_column_picker') ? 'v-gap-2 ' : '' }}v-pb-2">
+                    <div class="{{ config('verdant.ui.wide_column_picker') ? 'v-whitespace-nowrap ' : '' }}v-text-sm v-font-semibold v-text-gray-900 dark:v-text-gray-100">{{ __('verdant::table.visible_columns') }}</div>
                     <x-v-button.transparent
                         type="button"
                         class="v-text-xs v-text-gray-600 dark:v-text-gray-400 hover:v-underline"
@@ -72,7 +72,7 @@
                     <x-v-button.light
                         type="button"
                         outline
-                        class="v-flex-1 v-min-w-0 !v-px-2 v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
+                        class="v-flex-1 {{ config('verdant.ui.wide_column_picker') ? 'v-min-w-0 !v-px-2 ' : '' }}v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
                         @click="showAll()"
                     >
                         {{ __('verdant::table.show_all') }}
@@ -81,7 +81,7 @@
                     <x-v-button.light
                         type="button"
                         outline
-                        class="v-flex-1 v-min-w-0 !v-px-2 v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
+                        class="v-flex-1 {{ config('verdant.ui.wide_column_picker') ? 'v-min-w-0 !v-px-2 ' : '' }}v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
                         @click="hideAll()"
                     >
                         {{ __('verdant::table.hide_all') }}

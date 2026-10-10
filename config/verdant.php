@@ -36,6 +36,15 @@ return [
         ],
     ],
 
+    'ui' => [
+        'aligned_form_controls' => false,
+        'explicit_table_clear' => false,
+        'translations' => false,
+        'numbered_pagination' => false,
+        'wide_column_picker' => false,
+        'hide_reset_on_required_selects' => false,
+    ],
+
     'components' => [
         'buttons' => true,
         'forms'   => true,

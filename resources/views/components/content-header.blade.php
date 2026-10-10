@@ -1,19 +1,19 @@
 @props(['title', 'subtitle' => null])
 
-<div class="v-rounded-t v-bg-surface v-shadow-sm dark:v-border-b dark:v-border-gray-700">
-    <div class="v-py-6 v-px-4 sm:v-px-6 lg:v-px-8">
-        <div class="v-flex v-flex-col lg:v-flex-row lg:v-items-center lg:v-justify-between v-gap-4">
-            <div class="v-min-w-0">
+<div class="v:rounded-t v:bg-surface v:shadow-sm v:dark:border-b v:dark:border-gray-700">
+    <div class="v:py-6 v:px-4 v:sm:px-6 v:lg:px-8">
+        <div class="v:flex v:flex-col v:lg:flex-row v:lg:items-center v:lg:justify-between v:gap-4">
+            <div class="v:min-w-0">
                 @if ($subtitle)
-                    <h3 class="v-text-lg v-leading-6 v-font-medium v-text-gray-900 dark:v-text-gray-100">{{ $title }}</h3>
-                    <p class="v-mt-1 v-text-sm v-text-gray-500 dark:v-text-gray-400">{{ $subtitle }}</p>
+                    <h3 class="v:text-lg v:leading-6 v:font-medium v:text-gray-900 v:dark:text-gray-100">{{ $title }}</h3>
+                    <p class="v:mt-1 v:text-sm v:text-gray-500 v:dark:text-gray-400">{{ $subtitle }}</p>
                 @else
-                    <h1 class="v-text-2xl v-font-semibold v-text-gray-900 dark:v-text-gray-100">{{ $title }}</h1>
+                    <h1 class="v:text-2xl v:font-semibold v:text-gray-900 v:dark:text-gray-100">{{ $title }}</h1>
                 @endif
             </div>
             @if(isset($actions) && $actions)
-                <div class="v-w-full lg:v-w-auto v-overflow-x-auto">
-                    <div class="v-inline-flex v-min-w-full lg:v-min-w-0 v-gap-1">
+                <div class="v:w-full v:lg:w-auto v:overflow-x-auto">
+                    <div class="v:inline-flex v:min-w-full v:lg:min-w-0 v:gap-1">
                         {{ $actions }}
                     </div>
                 </div>

@@ -9,7 +9,7 @@
     activeTab: {{ $firstIndex !== null ? (int) $firstIndex : 0 }},
     languages: @js($languages)
 }">
-    <label class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300 v-mb-1">{{ $label }}@if($required)<span class="required_asterisk">*</span>@endif</label>
+    <label class="v:block v:font-medium v:text-gray-700 v:dark:text-gray-300 v:mb-1">{{ $label }}@if($required)<span class="required_asterisk">*</span>@endif</label>
 
     <x-v-form.translation-tabs :languages="$languages"/>
 
@@ -20,10 +20,10 @@
             $value = $lang['value'] ?? '';
         @endphp
         <div x-show="activeTab === {{ $index }}"
-             x-transition:enter="v-transition v-duration-150 v-ease-out"
+             x-transition:enter="v-transition v:duration-150 v:ease-out"
              x-transition:enter-start="v-opacity-0"
              x-transition:enter-end="v-opacity-100"
-             class="v-mt-1"
+             class="v:mt-1"
              @if($index !== $firstIndex) style="display: none" @endif>
             <x-v-form.input
                 :name="$name"
@@ -31,7 +31,7 @@
                 :type="$type"
                 :value="$value"
                 :required="$required && $index === $firstIndex"
-                class="!v-mt-0"
+                class="v:mt-0!"
             />
         </div>
     @endforeach

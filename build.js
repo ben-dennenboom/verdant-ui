@@ -1,8 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import postcss from 'postcss';
-import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
 import {fileURLToPath} from 'url';
 import https from 'https';
 
@@ -23,24 +20,6 @@ fs.mkdirSync(path.join(fontAwesomeDir, 'webfonts'), {recursive: true});
 
 const alpineDir = path.join(vendorDir, 'alpine');
 fs.mkdirSync(alpineDir, {recursive: true});
-
-const cssInput = fs.readFileSync(
-    path.join(__dirname, 'resources', 'css', 'verdant-ui.css'),
-    'utf8'
-);
-
-const cssWithoutFontAwesome = cssInput.replace('@import \'@fortawesome/fontawesome-free/css/all.css\';', '');
-
-const cssOutput = await postcss([
-  tailwindcss('./tailwind.config.js'),
-  autoprefixer()
-])
-    .process(cssWithoutFontAwesome, {
-      from: path.join(__dirname, 'resources', 'css', 'verdant-ui.css'),
-      to: path.join(buildDir, 'verdant-ui.css')
-    });
-
-fs.writeFileSync(path.join(buildDir, 'verdant-ui.css'), cssOutput.css);
 
 fs.copyFileSync(
     path.join(__dirname, 'resources', 'js', 'verdant-ui.js'),

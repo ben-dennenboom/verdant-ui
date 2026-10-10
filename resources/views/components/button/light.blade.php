@@ -12,8 +12,8 @@
 <x-v-button.base
     {{ $attributes->merge([
         'class' => $outline
-            ? 'v-bg-transparent v-border-secondary-500 dark:v-border-secondary-600 v-text-secondary-800 dark:v-text-secondary-300 hover:v-bg-secondary-700 dark:hover:v-bg-secondary-500 dark:hover:v-text-black hover:v-text-white focus:v-border-secondary-800' . ($disabled ? ' v-cursor-not-allowed' : '')
-            : 'v-bg-white dark:v-bg-gray-700 v-border-secondary-500 dark:v-border-secondary-600 v-text-secondary-800 dark:v-text-secondary-200 hover:v-bg-secondary-200 dark:hover:v-bg-gray-600 focus:v-border-secondary-800' . ($disabled ? ' v-cursor-not-allowed' : '')
+            ? 'v:bg-transparent v:border-secondary-500 v:dark:border-secondary-600 v:text-secondary-800 v:dark:text-secondary-300 v:hover:bg-secondary-700 v:dark:hover:bg-secondary-500 v:dark:hover:text-black v:hover:text-white v:focus:border-secondary-800' . ($disabled ? ' v:cursor-not-allowed' : '')
+            : 'v:bg-white v:dark:bg-gray-700 v:border-secondary-500 v:dark:border-secondary-600 v:text-secondary-800 v:dark:text-secondary-200 v:hover:bg-secondary-200 v:dark:hover:bg-gray-600 v:focus:border-secondary-800' . ($disabled ? ' v:cursor-not-allowed' : '')
     ]) }}
     :href="$href"
     :disabled="$disabled"

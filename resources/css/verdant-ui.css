@@ -1,13 +1,71 @@
-@import '@fortawesome/fontawesome-free/css/all.css';
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss' prefix(v);
 
-@import './richtext.css';
-@import './grid-layout.css';
-@import './grid-views.css';
-@import './grid-utils.css';
-@import './grid-toolbar.css';
+@import './richtext.css' layer(utilities);
+@import './grid-layout.css' layer(utilities);
+@import './grid-views.css' layer(utilities);
+@import './grid-utils.css' layer(utilities);
+@import './grid-toolbar.css' layer(utilities);
+
+@plugin '@tailwindcss/forms';
+
+@config '../../tailwind.config.js';
+
+@theme {
+    --color-blue-100: #E6F2FF;
+    --color-blue-200: #B3D9FF;
+    --color-blue-400: #63A9F7;
+    --color-blue-600: #2A76D2;
+    --color-blue-800: #114B7F;
+    --color-blue-900: #0A2540;
+
+    --color-gray-100: #F3F4F6;
+    --color-gray-200: #E5E7EB;
+    --color-gray-300: #D1D5DB;
+    --color-gray-900: #1F2937;
+
+    --color-primary: var(--color-primary);
+    --color-primary-50: var(--color-primary-50);
+    --color-primary-100: var(--color-primary-100);
+    --color-primary-200: var(--color-primary-200);
+    --color-primary-300: var(--color-primary-300);
+    --color-primary-400: var(--color-primary-400);
+    --color-primary-500: var(--color-primary-500);
+    --color-primary-600: var(--color-primary-600);
+    --color-primary-700: var(--color-primary-700);
+    --color-primary-800: var(--color-primary-800);
+    --color-primary-900: var(--color-primary-900);
+
+    --color-secondary: var(--color-secondary);
+    --color-secondary-50: var(--color-secondary-50);
+    --color-secondary-100: var(--color-secondary-100);
+    --color-secondary-200: var(--color-secondary-200);
+    --color-secondary-300: var(--color-secondary-300);
+    --color-secondary-400: var(--color-secondary-400);
+    --color-secondary-500: var(--color-secondary-500);
+    --color-secondary-600: var(--color-secondary-600);
+    --color-secondary-700: var(--color-secondary-700);
+    --color-secondary-800: var(--color-secondary-800);
+    --color-secondary-900: var(--color-secondary-900);
+
+    --color-surface: var(--v-bg-primary, rgb(255 255 255));
+    --color-surface-muted: var(--v-bg-secondary, rgb(249 250 251));
+    --color-floating: var(--v-bg-floating, rgb(255 255 255));
+
+    --color-v-text-primary: var(--v-text-primary, rgb(17 24 39));
+    --color-v-text-secondary: var(--v-text-secondary, rgb(107 114 128));
+
+    --color-v-border-primary: var(--v-border-primary, rgb(229 231 235));
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 .required_asterisk {
     color: red;
@@ -19,4 +77,69 @@
 .v-sidebar[data-collapsed="true"] .v-sidebar-expanded-only,
 .v-sidebar:not([data-collapsed="true"]) .v-sidebar-collapsed-only {
     display: none;
+}
+
+@layer components {
+    .v-form-input {
+        appearance: none;
+        background-color: #ffffff;
+        border-color: theme(--color-gray-300);
+        border-width: 1px;
+        border-radius: theme(--radius);
+        padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+        font-size: var(--text-sm);
+        line-height: 1.5; /* normal line height equivalent */
+        color: theme(--color-gray-900);
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px theme(--color-blue-200);
+            border-color: theme(--color-blue-300);
+        }
+
+        [data-theme="dark"] & {
+            background-color: theme(--color-gray-800);
+            border-color: theme(--color-gray-600);
+            color: theme(--color-gray-100);
+
+            &:focus {
+                box-shadow: 0 0 0 3px rgb(51 183 231 / 0.3);
+                border-color: rgb(51 183 231);
+            }
+        }
+    }
+
+    .v-form-checkbox {
+        appearance: none;
+        color: #ffffff;
+        width: calc(var(--spacing) * 4);
+        height: calc(var(--spacing) * 4);
+        border: 1px solid theme(--color-gray-300);
+        border-radius: theme(--radius);
+        background-color: #ffffff;
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px theme(--color-blue-200);
+            border-color: theme(--color-blue-300);
+        }
+
+        &:checked {
+            border-color: transparent;
+            background-color: currentColor;
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        [data-theme="dark"] & {
+            background-color: theme(--color-gray-700);
+            border-color: theme(--color-gray-600);
+
+            &:focus {
+                box-shadow: 0 0 0 3px rgb(51 183 231 / 0.3);
+                border-color: rgb(51 183 231);
+            }
+        }
+    }
 }

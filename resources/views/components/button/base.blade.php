@@ -11,7 +11,7 @@
 ])
 
 @php
-    $baseClasses = 'v-rounded inline-flex v-items-center v-justify-center v-px-4 v-py-2 v-border v-text-base v-font-medium focus:v-outline-none v-transition v-ease-in-out v-duration-150';
+    $baseClasses = 'v:rounded inline-flex v:items-center v:justify-center v:px-4 v:py-2 v:border v:text-base v:font-medium v:focus:outline-hidden v:transition v:ease-in-out v:duration-150';
     $tag = $href ? 'a' : 'button';
     $attributes = $attributes->merge([
         'type' => $tag === 'button' ? $type : null,
@@ -29,22 +29,22 @@
     <x-v-tooltip :text="$tooltip" :position="$tooltipPosition">
         <{{ $tag }} {{ $attributes }} @if($isSubmitButton) x-init="$el.closest('form')?.addEventListener('submit', () => { $el.disabled = true }, { once: true })" @endif>
         @if($icon)
-            <i class="fas fa-{{ $icon }} {{ $hasText ? 'v-mr-2' : '' }}"></i>
+            <i class="fas fa-{{ $icon }} {{ $hasText ? 'v:mr-2' : '' }}"></i>
         @endif
         {{ $slot }}
         @if($iconRight)
-            <i class="fas fa-{{ $iconRight }} {{ $hasText ? 'v-ml-2' : '' }}"></i>
+            <i class="fas fa-{{ $iconRight }} {{ $hasText ? 'v:ml-2' : '' }}"></i>
         @endif
     </{{ $tag }}>
     </x-v-tooltip>
 @else
     <{{ $tag }} {{ $attributes }} @if($isSubmitButton) x-init="$el.closest('form')?.addEventListener('submit', () => { $el.disabled = true }, { once: true })" @endif>
     @if($icon)
-        <i class="fas fa-{{ $icon }} {{ $hasText ? 'v-mr-2' : '' }}"></i>
+        <i class="fas fa-{{ $icon }} {{ $hasText ? 'v:mr-2' : '' }}"></i>
     @endif
     {{ $slot }}
     @if($iconRight)
-        <i class="fas fa-{{ $iconRight }} {{ $hasText ? 'v-ml-2' : '' }}"></i>
+        <i class="fas fa-{{ $iconRight }} {{ $hasText ? 'v:ml-2' : '' }}"></i>
     @endif
     </{{ $tag }}>
 @endif

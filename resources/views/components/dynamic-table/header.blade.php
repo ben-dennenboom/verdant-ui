@@ -5,7 +5,7 @@
 <div x-data="dynamicTableSort({
         columns: @js($vm->sort?->columns ?? [])
     })"
-    class="v-grid v-bg-gray-50 dark:v-bg-gray-700 v-relative"
+    class="v:grid v:bg-gray-50 v:dark:bg-gray-700 v:relative"
     @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
         :style="'grid-template-columns: {{ $bulkPrefix }}' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"
     @else
@@ -17,7 +17,7 @@
     @endif
 >
     @if($vm->hasBulkEdit)
-        <div class="v-pl-3 v-pr-1 v-py-3 v-flex v-items-center v-justify-center"
+        <div class="v:pl-3 v:pr-1 v:py-3 v:flex v:items-center v:justify-center"
             @if(!empty($columnVisibility['orderEnabled'])) style="order: -1;" @endif
         >
             <input
@@ -26,7 +26,7 @@
                 :checked="$store[@js($bulkStoreKey)].allRowKeys.length > 0 && $store[@js($bulkStoreKey)].allRowKeys.every(k => $store[@js($bulkStoreKey)].selected.includes(k))"
                 @change="$store[@js($bulkStoreKey)].toggleAll()"
                 title="Select all on this page"
-                class="v-rounded v-border-gray-300 dark:v-border-gray-600 v-text-primary-600 focus:v-ring-primary-500 v-bg-white dark:v-bg-gray-700 v-cursor-pointer"
+                class="v:rounded v:border-gray-300 v:dark:border-gray-600 v:text-primary-600 v:focus:ring-primary-500 v:bg-white v:dark:bg-gray-700 v:cursor-pointer"
             >
         </div>
     @endif
@@ -35,9 +35,9 @@
         @php
             $columnKey = $vm->columnKeyForIndex($loop->index);
             $alignClass = match ($header['align'] ?? '') {
-                'center' => 'v-text-center',
-                'right'  => 'v-text-right',
-                default  => 'v-text-left',
+                'center' => 'v:text-center',
+                'right'  => 'v:text-right',
+                default  => 'v:text-left',
             };
         @endphp
         <div class="
@@ -57,14 +57,14 @@
                 <button
                     type="button"
                     title="{{ !empty($header['tooltip']) ? e($header['tooltip']) : 'Click to sort' }}"
-                    class="v-inline-flex v-items-center v-gap-1 hover:v-underline"
+                    class="v:inline-flex v:items-center v:gap-1 v:hover:underline"
                     @click="toggle('{{ $header['key'] }}')"
                 >
                     {{ $header['label'] }}
 
                     <template x-if="isActive('{{ $header['key'] }}')">
                         <i
-                            class="v-text-xs fa v-text-blue-500"
+                            class="v:text-xs fa v:text-blue-500"
                             :class="directionFor('{{ $header['key'] }}') === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down'"
                         ></i>
                     </template>
@@ -78,7 +78,7 @@
     <template x-if="hasSorting()">
         <button
             type="button"
-            class="v-absolute v-right-3 v-top-1/2 -v-translate-y-1/2 v-text-red-500"
+            class="v:absolute v:right-3 v:top-1/2 v:-translate-y-1/2 v:text-red-500"
             title="Reset sorting"
             @click.stop="reset"
         >

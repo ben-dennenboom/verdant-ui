@@ -101,12 +101,12 @@ class VerdantUI
 
             if (is_string($shades)) {
                 $rgb = self::hexToRgb($shades);
-                $css .= "{$varPrefix}: {$rgb};";
+                $css .= "{$varPrefix}: rgb({$rgb});";
 
                 if (!str_starts_with($colorName, 'v-')) {
                     $generatedShades = self::generateColorShades($shades);
                     foreach ($generatedShades as $shade => $rgb) {
-                        $css .= "{$varPrefix}-{$shade}: {$rgb};";
+                        $css .= "{$varPrefix}-{$shade}: rgb({$rgb});";
                     }
                 }
 
@@ -128,9 +128,9 @@ class VerdantUI
                 $rgb = self::hexToRgb($color);
 
                 if ($shade === 'default') {
-                    $css .= "{$varPrefix}: {$rgb};";
+                    $css .= "{$varPrefix}: rgb({$rgb});";
                 } else {
-                    $css .= "{$varPrefix}-{$shade}: {$rgb};";
+                    $css .= "{$varPrefix}-{$shade}: rgb({$rgb});";
                 }
             }
 
@@ -142,7 +142,7 @@ class VerdantUI
 
                     foreach ($generatedShades as $shade => $rgb) {
                         if (!isset($shades[$shade]) && $shade !== 'default') {
-                            $css .= "{$varPrefix}-{$shade}: {$rgb};";
+                            $css .= "{$varPrefix}-{$shade}: rgb({$rgb});";
                         }
                     }
                 }

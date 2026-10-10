@@ -18,7 +18,7 @@
         return this.openIndex === index;
     }
 }"
-     class="v-divide-y v-divide-gray-200 dark:v-divide-gray-600 v-border v-border-gray-200 dark:v-border-gray-600 v-rounded-lg v-overflow-hidden"
+     class="v:divide-y v:divide-gray-200 v:dark:divide-gray-600 v:border v:border-gray-200 v:dark:border-gray-600 v:rounded-lg v:overflow-hidden"
 >
     {{ $slot }}
 </div>

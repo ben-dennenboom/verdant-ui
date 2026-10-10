@@ -20,7 +20,7 @@
 @endphp
 
 <div
-    class="v-flex v-items-center v-gap-2 v-flex-1 v-min-w-0 {{ $searchApiUrl ? 'v-relative' : '' }}"
+    class="v:flex v:items-center v:gap-2 v:flex-1 v:min-w-0 {{ $searchApiUrl ? 'v:relative' : '' }}"
     @if($searchApiUrl)
         x-data="verdantTableSearch({
             apiUrl: @js($searchApiUrl),
@@ -33,7 +33,7 @@
     <form
         method="GET"
         action="{{ $currentPath }}"
-        class="v-flex v-items-center v-gap-2 v-w-full {{ $searchApiUrl ? 'v-relative v-flex-1' : '' }}"
+        class="v:flex v:items-center v:gap-2 v:w-full {{ $searchApiUrl ? 'v:relative v:flex-1' : '' }}"
         role="search"
     >
         @foreach ($currentQuery as $name => $value)
@@ -45,8 +45,8 @@
                 <input type="hidden" name="{{ $name }}" value="{{ $value }}" />
             @endif
         @endforeach
-        <label for="{{ $inputId }}" class="v-sr-only">Search table</label>
-        <div class="v-relative v-flex-1">
+        <label for="{{ $inputId }}" class="v:sr-only">Search table</label>
+        <div class="v:relative v:flex-1">
             <div class="{{ $inputWrapperClass }}">
                 <input
                     type="text"
@@ -73,7 +73,7 @@
                 <x-verdant::button.transparent
                     type="submit"
                     icon="magnifying-glass"
-                    class="v-shrink-0 v-rounded-l-none v-rounded-r v-p-2 v-border-0"
+                    class="v:shrink-0 v:rounded-l-none v:rounded-r v:p-2 v:border-0"
                     aria-label="Search"
                 />
             </div>
@@ -89,19 +89,19 @@
                         v-py-1 v-shadow-lg"
                 >
                     <template x-if="loading">
-                        <div class="v-px-3 v-py-4 v-text-sm v-text-gray-500 dark:v-text-gray-400 v-text-center">
+                        <div class="v:px-3 v:py-4 v:text-sm v:text-gray-500 v:dark:text-gray-400 v:text-center">
                             Loading…
                         </div>
                     </template>
                     <template x-if="!loading && results.length > 0">
-                        <ul class="v-divide-y v-divide-gray-100 dark:v-divide-gray-700">
+                        <ul class="v:divide-y v:divide-gray-100 v:dark:divide-gray-700">
                             <template x-for="(item, index) in results" :key="index">
                                 <li role="option" :aria-selected="focusedIndex === index">
                                     <a
                                         :href="item.url"
                                         class="v-block v-px-3 v-py-2 v-text-sm v-text-gray-900 dark:v-text-gray-100
                                             hover:v-bg-gray-50 dark:hover:v-bg-gray-700"
-                                        :class="{ 'v-bg-gray-50 dark:v-bg-gray-700': focusedIndex === index }"
+                                        :class="{ 'v:bg-gray-50 v:dark:bg-gray-700': focusedIndex === index }"
                                         x-text="item.label"
                                         @mouseenter="focusedIndex = index"
                                         @click="open = false"

@@ -18,32 +18,32 @@
 @forelse ($vm->rows as $row)
     @php
         $rowBgClass = match($row->rowStyle?->variant ?? '') {
-            'success' => 'v-bg-green-50 dark:v-bg-green-900/20 hover:v-bg-green-100 dark:hover:v-bg-green-900/30',
-            'info'    => 'v-bg-blue-50 dark:v-bg-blue-900/20 hover:v-bg-blue-100 dark:hover:v-bg-blue-900/30',
-            'warning' => 'v-bg-yellow-50 dark:v-bg-yellow-900/20 hover:v-bg-yellow-100 dark:hover:v-bg-yellow-900/30',
-            'danger'  => 'v-bg-red-50 dark:v-bg-red-900/20 hover:v-bg-red-100 dark:hover:v-bg-red-900/30',
-            default   => 'hover:v-bg-gray-50 dark:hover:v-bg-gray-700',
+            'success' => 'v:bg-green-50 v:dark:bg-green-900/20 v:hover:bg-green-100 v:dark:hover:bg-green-900/30',
+            'info'    => 'v:bg-blue-50 v:dark:bg-blue-900/20 v:hover:bg-blue-100 v:dark:hover:bg-blue-900/30',
+            'warning' => 'v:bg-yellow-50 v:dark:bg-yellow-900/20 v:hover:bg-yellow-100 v:dark:hover:bg-yellow-900/30',
+            'danger'  => 'v:bg-red-50 v:dark:bg-red-900/20 v:hover:bg-red-100 v:dark:hover:bg-red-900/30',
+            default   => 'v:hover:bg-gray-50 v:dark:hover:bg-gray-700',
         };
-        $boldClass = $row->rowStyle?->bold ? ' v-font-semibold' : '';
+        $boldClass = $row->rowStyle?->bold ? ' v:font-semibold' : '';
     @endphp
     <div
         @if($vm->hasBulkEdit && $row->rowKey !== null)
             x-data="{ rowHovered: false }"
             @mouseenter="rowHovered = true"
             @mouseleave="rowHovered = false"
-            class="v-grid v-items-center v-cursor-default{{ $boldClass }}"
+            class="v:grid v:items-center v:cursor-default{{ $boldClass }}"
             @click="if ($event.shiftKey) { $store[@js($bsk)].toggle(@js($row->rowKey)); $event.preventDefault(); }"
             @dblclick="$store[@js($bsk)].openRow(@js($row->openUrl))"
             :class="$store[@js($bsk)].isSelected(@js($row->rowKey))
-                ? 'v-bg-primary-50 dark:v-bg-primary-900/20 hover:v-bg-primary-100 dark:hover:v-bg-primary-900/30'
+                ? 'v:bg-primary-50 v:dark:bg-primary-900/20 v:hover:bg-primary-100 v:dark:hover:bg-primary-900/30'
                 : @js($rowBgClass)"
         @elseif($rowIx && $row->rowKey !== null)
-            class="v-grid v-items-center v-cursor-pointer{{ $boldClass }}"
+            class="v:grid v:items-center v:cursor-pointer{{ $boldClass }}"
             @click="selectRow(@js($row->rowKey))"
             @dblclick="openRow(@js($row->openUrl))"
-            :class="isSelected(@js($row->rowKey)) ? 'v-bg-blue-50 dark:v-bg-blue-900/20 hover:v-bg-blue-100 dark:hover:v-bg-blue-900/30' : @js($rowBgClass)"
+            :class="isSelected(@js($row->rowKey)) ? 'v:bg-blue-50 v:dark:bg-blue-900/20 v:hover:bg-blue-100 v:dark:hover:bg-blue-900/30' : @js($rowBgClass)"
         @else
-            class="v-grid v-items-center {{ $rowBgClass }}{{ $boldClass }}"
+            class="v:grid v:items-center {{ $rowBgClass }}{{ $boldClass }}"
         @endif
         @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
             :style="'grid-template-columns: {{ $bulkPrefix }}' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"
@@ -58,7 +58,7 @@
         {{-- Bulk checkbox cell --}}
         @if($vm->hasBulkEdit)
             <div
-                class="v-pl-3 v-pr-1 v-py-4 v-flex v-items-center v-justify-center"
+                class="v:pl-3 v:pr-1 v:py-4 v:flex v:items-center v:justify-center"
                 @if(!empty($columnVisibility['orderEnabled'])) style="order: -1;" @endif
                 @click.stop
                 @dblclick.stop
@@ -69,7 +69,7 @@
                         x-show="rowHovered || $store[@js($bsk)].selected.length > 0"
                         :checked="$store[@js($bsk)].isSelected(@js($row->rowKey))"
                         @change="$store[@js($bsk)].toggle(@js($row->rowKey))"
-                        class="v-rounded v-border-gray-300 dark:v-border-gray-600 v-text-primary-600 focus:v-ring-primary-500 v-bg-white dark:v-bg-gray-700 v-cursor-pointer"
+                        class="v:rounded v:border-gray-300 v:dark:border-gray-600 v:text-primary-600 v:focus:ring-primary-500 v:bg-white v:dark:bg-gray-700 v:cursor-pointer"
                     >
                 @endif
             </div>
@@ -80,9 +80,9 @@
                 $columnKey = $vm->columnKeyForIndex($loop->index);
                 $header    = $vm->headers[$loop->index] ?? [];
                 $alignClass = match ($header['align'] ?? '') {
-                    'center' => 'v-text-center',
-                    'right'  => 'v-text-right',
-                    default  => 'v-text-left',
+                    'center' => 'v:text-center',
+                    'right'  => 'v:text-right',
+                    default  => 'v:text-left',
                 };
             @endphp
             <div class="
@@ -99,7 +99,7 @@
                 @endif
             >
                 @if ($cell->isActions)
-                    <div class="v-flex v-justify-center">
+                    <div class="v:flex v:justify-center">
                         @if ($cell->value instanceof \Illuminate\Contracts\Support\Htmlable)
                             {!! $cell->value->toHtml() !!}
                         @elseif (is_array($cell->actions) && count($cell->actions))
@@ -115,7 +115,7 @@
         @endforeach
     </div>
 @empty
-    <div class="v-px-6 v-py-4 v-text-sm text-gray-500 dark:text-gray-400">
+    <div class="v:px-6 v:py-4 v:text-sm text-gray-500 dark:text-gray-400">
         {{ $emptyText }}
     </div>
 @endforelse

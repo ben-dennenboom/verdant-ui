@@ -19,7 +19,7 @@
     $formId = $modalId . '-form';
 @endphp
 
-<div class="v-shrink-0 v-flex v-items-center v-gap-2">
+<div class="v:shrink-0 v:flex v:items-center v:gap-2">
     <x-v-button.light
         type="button"
         icon="filter"
@@ -27,10 +27,10 @@
         aria-haspopup="dialog"
         aria-controls="{{ $modalId }}"
         @click="$dispatch('open-modal', '{{ $modalId }}')"
-        class="v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 v-whitespace-nowrap dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
+        class="v:text-sm v:border-gray-500 v:dark:border-gray-600 v:text-gray-700 v:whitespace-nowrap v:dark:text-gray-300 v:hover:bg-gray-200 v:dark:hover:bg-gray-600 v:focus:ring-gray-500"
     >
         @if($activeCount > 0)
-            <span class="v-ml-1 v-inline-flex v-items-center v-justify-center v-min-w-5 v-h-5 v-rounded-full v-bg-primary-100 dark:v-bg-primary-900 v-text-primary-800 dark:v-text-primary-200 v-text-xs">
+            <span class="v:ml-1 v:inline-flex v:items-center v:justify-center v:min-w-5 v:h-5 v:rounded-full v:bg-primary-100 v:dark:bg-primary-900 v:text-primary-800 v:dark:text-primary-200 v:text-xs">
                 {{ $activeCount }}
             </span>
         @endif
@@ -39,7 +39,7 @@
     @if($clearUrl)
         <a
             href="{{ $clearUrl }}"
-            class="v-text-red-500 v-text-sm v-whitespace-nowrap"
+            class="v:text-red-500 v:text-sm v:whitespace-nowrap"
         >
             Clear
         </a>
@@ -64,11 +64,11 @@
                 @endif
             @endforeach
 
-            <h3 class="v-text-lg v-font-medium v-leading-6 v-text-gray-900 dark:v-text-gray-100" id="{{ $modalId }}-title">
+            <h3 class="v:text-lg v:font-medium v:leading-6 v:text-gray-900 v:dark:text-gray-100" id="{{ $modalId }}-title">
                 Filters
             </h3>
 
-            <div class="v-mt-4 v-mb-4 v-space-y-4">
+            <div class="v:mt-4 v:mb-4 v:space-y-4">
                 @foreach ($filterColumns as $col)
                     @php
                         $key = $col['key'];
@@ -88,7 +88,7 @@
                             value="1"
                             :checked="!!$value"
                             :id="$modalId . '-' . $key"
-                            class="v-mb-0"
+                            class="v:mb-0"
                         />
                     @elseif ($type === 'select')
                         <x-v-form.select
@@ -107,21 +107,21 @@
                             :value="$value"
                             :placeholder="$placeholder"
                             :id="$modalId . '-' . $key"
-                            class="v-mb-0"
+                            class="v:mb-0"
                         />
                     @endif
                 @endforeach
             </div>
 
-            <div class="v-mt-5 sm:v-mt-4 v-flex v-justify-between">
+            <div class="v:mt-5 v:sm:mt-4 v:flex v:justify-between">
                 <x-v-button.light
                     type="button"
                     @click="$dispatch('close-modal')"
-                    class="v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
+                    class="v:border-gray-500 v:dark:border-gray-600 v:text-gray-700 v:dark:text-gray-300 v:hover:bg-gray-200 v:dark:hover:bg-gray-600 v:focus:ring-gray-500"
                 >
                     Cancel
                 </x-v-button.light>
-                <div class="v-flex v-gap-2">
+                <div class="v:flex v:gap-2">
                     @if($clearUrl)
                         <x-v-button.danger
                             :href="$clearUrl"

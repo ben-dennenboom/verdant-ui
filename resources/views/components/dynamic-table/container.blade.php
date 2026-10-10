@@ -78,7 +78,7 @@
 @endif
 
 <div
-    class="v-rounded v-bg-surface v-border v-border-gray-200 dark:v-border-gray-700 {{ $class }}"
+    class="v:rounded v:bg-surface v:border v:border-gray-200 v:dark:border-gray-700 {{ $class }}"
     @if($visibilityKey)
         data-columns-store="{{ $storeKey }}"
         x-data="verdantTableColumns({
@@ -99,9 +99,9 @@
     @endif
 >
     @if($showToolbar)
-        <div class="v-flex v-flex-col md:v-flex-row v-items-stretch md:v-items-center v-justify-between v-gap-3 v-px-4 v-py-3 v-border-b v-border-gray-200 dark:v-border-gray-700">
+        <div class="v:flex v:flex-col v:md:flex-row v:items-stretch v:md:items-center v:justify-between v:gap-3 v:px-4 v:py-3 v:border-b v:border-gray-200 v:dark:border-gray-700">
             @if($showSearch)
-                <div class="v-w-full md:v-flex-1 md:v-min-w-0">
+                <div class="v:w-full v:md:flex-1 v:md:min-w-0">
                     @include('verdant::components.dynamic-table.management.search-bar', [
                         'searchTerm' => $vm->searchTerm,
                         'paramName' => 'search',
@@ -112,7 +112,7 @@
             @endif
 
             @if($showFilter || $visibilityKey)
-                <div class="v-flex v-items-center v-gap-2 v-shrink-0">
+                <div class="v:flex v:items-center v:gap-2 v:shrink-0">
                     @if($showFilter)
                         @include('verdant::components.dynamic-table.management.filter-modal', [
                             'vm' => $vm,
@@ -132,8 +132,8 @@
         </div>
     @endif
 
-    <div class="v-hidden lg:v-block">
-        <div class="v-min-w-full">
+    <div class="v:hidden v:lg:block">
+        <div class="v:min-w-full">
             @include('verdant::components.dynamic-table.header', ['columnVisibility' => $columnVisibility, 'bulkStoreKey' => $bulkStoreKey])
             @include('verdant::components.dynamic-table.body-table', [
                 'columnVisibility' => $columnVisibility,
@@ -143,7 +143,7 @@
         </div>
     </div>
 
-    <div class="v-block lg:v-hidden v-p-4">
+    <div class="v:block v:lg:hidden v:p-4">
         @include('verdant::components.dynamic-table.body-cards', [
             'columnVisibility' => $columnVisibility,
             'emptyText' => $emptyText,

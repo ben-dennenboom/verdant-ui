@@ -532,6 +532,9 @@
 .v-min-w-\[180px\]{
     min-width: 180px;
 }
+.v-min-w-\[2rem\]{
+    min-width: 2rem;
+}
 .v-min-w-full{
     min-width: 100%;
 }
@@ -540,6 +543,9 @@
 }
 .v-max-w-\[300px\]{
     max-width: 300px;
+}
+.v-max-w-\[calc\(100vw-2rem\)\]{
+    max-width: calc(100vw - 2rem);
 }
 .v-max-w-full{
     max-width: 100%;
@@ -13922,6 +13928,10 @@
 .v-p-6{
     padding: 1.5rem;
 }
+.\!v-px-2{
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+}
 .v-px-0{
     padding-left: 0px;
     padding-right: 0px;
@@ -13929,6 +13939,10 @@
 .v-px-1{
     padding-left: 0.25rem;
     padding-right: 0.25rem;
+}
+.v-px-1\.5{
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
 }
 .v-px-2{
     padding-left: 0.5rem;
@@ -124691,6 +124705,9 @@
     .sm\:v-flex{
         display: flex;
     }
+    .sm\:v-inline-flex{
+        display: inline-flex;
+    }
     .sm\:v-h-10{
         height: 2.5rem;
     }
@@ -124705,6 +124722,15 @@
     }
     .sm\:v-max-w-2xl{
         max-width: 42rem;
+    }
+    .sm\:v-max-w-3xl{
+        max-width: 48rem;
+    }
+    .sm\:v-max-w-4xl{
+        max-width: 56rem;
+    }
+    .sm\:v-max-w-5xl{
+        max-width: 64rem;
     }
     .sm\:v-max-w-lg{
         max-width: 32rem;
@@ -137754,6 +137780,9 @@
     }
     .sm\:v-text-sm{
         font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+    .sm\:v-leading-5{
         line-height: 1.25rem;
     }
     .sm\:v-text-blue-100{

@@ -22,6 +22,8 @@ class VerdantUIServiceProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'verdant');
+        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'verdant');
+        $this->keepEnglishTextsUnlessTranslated();
 
         $this->registerComponents();
         $this->registerBladeDirectives();
@@ -106,5 +108,32 @@ class VerdantUIServiceProvider extends ServiceProvider
             ],
             'verdant-source'
         );
+    }
+
+    private function keepEnglishTextsUnlessTranslated(): void
+    {
+        $this->app->booted(function () {
+            if (config('verdant.ui.translations')) {
+                return;
+            }
+
+            $english = fn () => collect(File::files(__DIR__ . '/../lang/en'))
+                ->mapWithKeys(fn ($file) => [$file->getFilenameWithoutExtension() => require $file->getPathname()])
+                ->all();
+
+            $apply = function (string $locale) use ($english) {
+                foreach ($english() as $group => $lines) {
+                    $this->app['translator']->addLines(
+                        collect(\Illuminate\Support\Arr::dot($lines))->mapWithKeys(fn ($line, $key) => ["{$group}.{$key}" => $line])->all(),
+                        $locale,
+                        'verdant',
+                    );
+                }
+            };
+
+            $apply($this->app->getLocale());
+
+            $this->app['events']->listen(\Illuminate\Foundation\Events\LocaleUpdated::class, fn ($event) => $apply($event->locale));
+        });
     }
 }

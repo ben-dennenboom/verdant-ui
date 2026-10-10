@@ -11,7 +11,8 @@
 ])
 
 @php
-    $baseClasses = 'v-rounded inline-flex v-items-center v-justify-center v-px-4 v-py-2 v-border v-text-base v-font-medium focus:v-outline-none v-transition v-ease-in-out v-duration-150';
+    $sizeClasses = config('verdant.ui.aligned_form_controls') ? 'v-text-base sm:v-text-sm v-leading-6 sm:v-leading-5' : 'v-text-base';
+    $baseClasses = "v-rounded inline-flex v-items-center v-justify-center v-px-4 v-py-2 v-border {$sizeClasses} v-font-medium focus:v-outline-none v-transition v-ease-in-out v-duration-150";
     $tag = $href ? 'a' : 'button';
     $attributes = $attributes->merge([
         'type' => $tag === 'button' ? $type : null,

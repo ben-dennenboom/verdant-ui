@@ -1,14 +1,16 @@
 @props([
     'searchTerm' => '',
     'paramName' => 'search',
-    'placeholder' => 'Search…',
+    'placeholder' => __('verdant::table.search_placeholder'),
     'searchApiUrl' => null,
 ])
 
 @php
     $currentQuery = request()->except($paramName);
     $currentPath = \Illuminate\Support\Str::before(request()->getRequestUri(), '?');
-    $clearUrlBase = $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '');
+    $clearUrlBase = config('verdant.ui.explicit_table_clear')
+        ? $currentPath . '?' . http_build_query([...\Illuminate\Support\Arr::except($currentQuery, ['page']), $paramName => ''])
+        : $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '');
     $clearUrl = $searchTerm !== '' ? $clearUrlBase : null;
     $inputId = 'v-table-search-' . $paramName;
     $resultsId = 'v-table-search-results-' . $paramName;
@@ -45,7 +47,7 @@
                 <input type="hidden" name="{{ $name }}" value="{{ $value }}" />
             @endif
         @endforeach
-        <label for="{{ $inputId }}" class="v-sr-only">Search table</label>
+        <label for="{{ $inputId }}" class="v-sr-only">{{ __('verdant::table.search_table') }}</label>
         <div class="v-relative v-flex-1">
             <div class="{{ $inputWrapperClass }}">
                 <input
@@ -56,7 +58,7 @@
                     placeholder="{{ $placeholder }}"
                     autocomplete="off"
                     class="{{ $inputClass }}"
-                    aria-label="Search table"
+                    aria-label="{{ __('verdant::table.search_table') }}"
                     @if($searchApiUrl)
                         aria-expanded="false"
                         aria-haspopup="listbox"
@@ -74,7 +76,7 @@
                     type="submit"
                     icon="magnifying-glass"
                     class="v-shrink-0 v-rounded-l-none v-rounded-r v-p-2 v-border-0"
-                    aria-label="Search"
+                    aria-label="{{ __('verdant::table.search') }}"
                 />
             </div>
             @if($searchApiUrl)
@@ -124,7 +126,7 @@
                     x-cloak
                 @endif
             >
-                Clear
+                {{ __('verdant::table.clear') }}
             </a>
         @endif
     </form>

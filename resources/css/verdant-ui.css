@@ -1,4 +1,4 @@
-@import 'tailwindcss' prefix(v);
+@layer theme, base, components, utilities;
 
 @import './richtext.css' layer(utilities);
 @import './grid-layout.css' layer(utilities);
@@ -6,9 +6,20 @@
 @import './grid-utils.css' layer(utilities);
 @import './grid-toolbar.css' layer(utilities);
 
+@import "tailwindcss/theme" layer(theme)prefix(v);
+@import "tailwindcss/utilities" layer(utilities) prefix(v);
+
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
 @plugin '@tailwindcss/forms';
 
-@config '../../tailwind.config.js';
+/*
+    Needed filesize x 4, presumed not needed since tailwind 4?
+    @source inline("v:{,hover:,focus:,dark:,group-hover:,sm:,md:,lg:}{bg,text,border}-{red,green,blue,orange,yellow,purple,gray,primary,secondary,white,black}-{50,100,200,300,400,500,600,700,800,900,950}");
+*/
+
+@source "../views/**/*.blade.php";
+@source "../js/**/*.js";
 
 @theme {
     --color-blue-100: #E6F2FF;
@@ -53,18 +64,27 @@
 
     --color-v-text-primary: var(--v-text-primary, rgb(17 24 39));
     --color-v-text-secondary: var(--v-text-secondary, rgb(107 114 128));
-
     --color-v-border-primary: var(--v-border-primary, rgb(229 231 235));
 }
 
+[data-theme="dark"], [data-theme="dark"] * {
+    --v-color-surface: var(--v-bg-primary, rgb(31 41 55));
+    --v-color-surface-muted: var(--v-bg-secondary, rgb(17 24 39));
+    --v-color-floating: var(--v-bg-floating, rgb(31 41 55));
+
+    --v-color-v-text-primary: var(--v-text-primary, rgb(249 250 251));
+    --v-color-v-text-secondary: var(--v-text-secondary, rgb(156 163 175));
+    --v-color-v-border-primary: var(--v-border-primary, rgb(75 85 99));
+}
+
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentcolor);
+    }
 }
 
 .required_asterisk {

@@ -1,3 +1,5 @@
+import '../css/verdant-ui.css';
+
 document.addEventListener('DOMContentLoaded', function () {
   if (window.Alpine) {
     initializeVerdant();

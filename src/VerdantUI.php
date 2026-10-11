@@ -15,6 +15,7 @@ class VerdantUI
         $dynamicTableActionsJsPath = self::assetPath('js/dynamic-table-actions.js');
         $dynamicTableBulkJsPath = self::assetPath('js/dynamic-table-bulk.js');
         $vatNumberCheckerJsPath = self::assetPath('js/vat-number-checker.js');
+        $richtextJsPath = self::assetPath('js/richtext.js');
         $fontAwesomePath = self::assetPath('vendor/fontawesome/css/all.min.css');
         $fontAwesomeSolidPath = self::assetPath('vendor/fontawesome/webfonts/fa-solid-900.woff2');
         $alpineJsPath = self::assetPath('vendor/alpine/alpine.min.js');
@@ -45,6 +46,7 @@ class VerdantUI
         <script src="{$dynamicTableActionsJsPath}" defer></script>
         <script src="{$dynamicTableBulkJsPath}" defer></script>
         <script src="{$vatNumberCheckerJsPath}" defer></script>
+        <script src="{$richtextJsPath}" defer></script>
         {$alpine}
         <script>
             window.verdantPrefix = "v-"

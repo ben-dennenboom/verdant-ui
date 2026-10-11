@@ -1,1 +1,0 @@
-document.addEventListener(`alpine:init`,()=>{Alpine.store(`grids`,{states:{},get(e){return this.states[e]||(this.states[e]={hasScroll:!1,isAtStart:!0,isAtEnd:!1,tileView:!1}),this.states[e]},update(e,t){this.states[e]||(this.states[e]={}),Object.assign(this.states[e],t)}})});

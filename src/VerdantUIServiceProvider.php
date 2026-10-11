@@ -99,6 +99,7 @@ class VerdantUIServiceProvider extends ServiceProvider
             [
                 __DIR__ . '/../package.json'       => base_path('package.verdant.json'),
                 __DIR__ . '/../vite.config.js'     => base_path('vite.verdant.config.js'),
+                __DIR__ . '/../verdant-build.js'   => base_path('verdant-build.js'),
                 __DIR__ . '/../tailwind.config.js' => base_path('tailwind.verdant.config.js'),
                 __DIR__ . '/../resources/js'       => resource_path('js/vendor/verdant'),
                 __DIR__ . '/../resources/css'      => resource_path('css/vendor/verdant'),

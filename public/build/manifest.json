@@ -1,0 +1,59 @@
+{
+  "resources/js/dynamic-table-actions.js": {
+    "file": "js/dynamic-table-actions.js",
+    "name": "dynamic-table-actions",
+    "src": "resources/js/dynamic-table-actions.js",
+    "isEntry": true
+  },
+  "resources/js/dynamic-table-bulk.js": {
+    "file": "js/dynamic-table-bulk.js",
+    "name": "dynamic-table-bulk",
+    "src": "resources/js/dynamic-table-bulk.js",
+    "isEntry": true
+  },
+  "resources/js/dynamic-table-columns.js": {
+    "file": "js/dynamic-table-columns.js",
+    "name": "dynamic-table-columns",
+    "src": "resources/js/dynamic-table-columns.js",
+    "isEntry": true
+  },
+  "resources/js/dynamic-table-search.js": {
+    "file": "js/dynamic-table-search.js",
+    "name": "dynamic-table-search",
+    "src": "resources/js/dynamic-table-search.js",
+    "isEntry": true
+  },
+  "resources/js/dynamic-table-sort.js": {
+    "file": "js/dynamic-table-sort.js",
+    "name": "dynamic-table-sort",
+    "src": "resources/js/dynamic-table-sort.js",
+    "isEntry": true
+  },
+  "resources/js/dynamic-table-state.js": {
+    "file": "js/dynamic-table-state.js",
+    "name": "dynamic-table-state",
+    "src": "resources/js/dynamic-table-state.js",
+    "isEntry": true
+  },
+  "resources/js/richtext.js": {
+    "file": "js/richtext.js",
+    "name": "richtext",
+    "src": "resources/js/richtext.js",
+    "isEntry": true
+  },
+  "resources/js/vat-number-checker.js": {
+    "file": "js/vat-number-checker.js",
+    "name": "vat-number-checker",
+    "src": "resources/js/vat-number-checker.js",
+    "isEntry": true
+  },
+  "resources/js/verdant-ui.js": {
+    "file": "js/verdant-ui.js",
+    "name": "verdant-ui",
+    "src": "resources/js/verdant-ui.js",
+    "isEntry": true,
+    "css": [
+      "css/verdant-ui.css"
+    ]
+  }
+}

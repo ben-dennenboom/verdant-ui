@@ -1,13 +1,20 @@
 import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
-import { verdantFiles, verdantDependencies } from './verdant-build';
+import laravel from 'laravel-vite-plugin';
+import verdant from './verdant-build.js';
 
 export default defineConfig({
-  plugins: [tailwindcss(), verdantDependencies()],
+  plugins: [
+      laravel({
+          input: verdant.files(),
+          refresh: true,
+      }),
+      tailwindcss(),
+      verdant()
+  ],
   build: {
     outDir: 'public/build',
     rolldownOptions: {
-      input: verdantFiles(),
       output: {
         entryFileNames: 'js/[name].js',
         assetFileNames: ({ name = '' }) => {

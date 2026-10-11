@@ -1,17 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 
-export function verdantFiles() {
-    return Object.fromEntries(
-        fs.readdirSync('resources/js')
-            .filter(file => file.endsWith('.js'))
-            .map(file => [file.replace(/\.js$/, ''), `resources/js/${file}`])
-    );
-}
-
-export function verdantDependencies() {
+function verdant() {
     return {
-        name: 'verdant-copy-vendor',
+        name: 'verdant-dependencies',
         closeBundle() {
             const out = path.resolve('public/build');
             const copies = [
@@ -37,3 +29,12 @@ export function verdantDependencies() {
         },
     };
 }
+verdant.files = function () {
+    return Object.fromEntries(
+        fs.readdirSync('resources/js')
+            .filter(file => file.endsWith('.js'))
+            .map(file => [file.replace(/\.js$/, ''), `resources/js/${file}`])
+    );
+};
+
+export default verdant;

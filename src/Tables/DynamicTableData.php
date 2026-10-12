@@ -50,6 +50,8 @@ class DynamicTableData implements DynamicTableDataProvider
      */
     protected ?string $searchApiUrl = null;
 
+    protected bool $clientSearch = false;
+
     /**
      * @var array<int, array<string, mixed>>|null
      */
@@ -292,6 +294,11 @@ class DynamicTableData implements DynamicTableDataProvider
         return $this->searchApiUrl;
     }
 
+    public function clientSearchEnabled(): bool
+    {
+        return $this->clientSearch;
+    }
+
     /**
      * @return array<int, array<string, mixed>>|null
      */
@@ -522,6 +529,34 @@ class DynamicTableData implements DynamicTableDataProvider
     }
 
     /**
+     * Group the rows under a full-width header row. The callback receives the source model and returns
+     * the group label (string or Htmlable). A header is rendered each time the label changes, so the
+     * rows must already be ordered by group; leave the columns unsortable to keep the groups intact.
+     */
+    public function withRowGroups(callable $callback): self
+    {
+        $items = $this->resolveRowOpenSourceItems();
+        if ($items === null || $items->count() !== count($this->rows)) {
+            return $this;
+        }
+
+        foreach ($this->rows as $i => &$row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            $label = $callback($items[$i] ?? null);
+
+            $row['_row_group'] = $label instanceof \Illuminate\Contracts\Support\Htmlable
+                ? ['label' => $label->toHtml(), 'html' => true]
+                : ['label' => (string) $label, 'html' => false];
+        }
+        unset($row);
+
+        return $this;
+    }
+
+    /**
      * Set how many actions to show inline before overflow dropdown.
      */
     public function withActionsMaxVisible(int $n): self
@@ -583,6 +618,18 @@ class DynamicTableData implements DynamicTableDataProvider
     public function withSearchApiUrl(string $url): self
     {
         $this->searchApiUrl = $url;
+
+        return $this;
+    }
+
+    /**
+     * Filter the rendered rows while typing instead of submitting the search to the server.
+     * Only the rows of the current page are searched. Uses the searchable columns when set,
+     * otherwise every non-action column.
+     */
+    public function withClientSearch(bool $enabled = true): self
+    {
+        $this->clientSearch = $enabled;
 
         return $this;
     }

@@ -52,7 +52,7 @@
         'defaultOrder' => $vm->defaultColumnOrder,
         'saveUrl' => $vm->preferencesSaveUrl,
     ] : null;
-    $showSearch = !empty($vm->searchableColumns);
+    $showSearch = !empty($vm->searchableColumns) || $vm->clientSearch;
     $showFilter = !empty($vm->filterColumns);
     $hasToolbarActions = isset($toolbar) && trim((string) $toolbar) !== '';
     $showToolbar = $showSearch || $visibilityKey || $showFilter || $hasToolbarActions;
@@ -81,6 +81,8 @@
 
 <div
     class="v-rounded v-bg-surface v-border v-border-gray-200 dark:v-border-gray-700 {{ $class }}"
+    @if($vm->clientSearch) data-v-table @endif
+    @if(config('verdant.ui.striped_table_rows')) data-v-striped @endif
     @if($visibilityKey)
         data-columns-store="{{ $storeKey }}"
         x-data="verdantTableColumns({
@@ -101,14 +103,15 @@
     @endif
 >
     @if($showToolbar)
-        <div class="v-flex v-flex-col md:v-flex-row v-items-stretch md:v-items-center v-justify-between v-gap-3 v-px-4 v-py-3 v-border-b v-border-gray-200 dark:v-border-gray-700">
+        <div class="v-flex v-flex-col md:v-flex-row v-items-stretch v-justify-between v-gap-3 v-px-4 v-py-3 v-border-b v-border-gray-200 dark:v-border-gray-700">
             @if($showSearch)
-                <div class="v-w-full md:v-flex-1 md:v-min-w-0">
+                <div class="v-flex v-w-full md:v-flex-1 md:v-min-w-0">
                     @include('verdant::components.dynamic-table.management.search-bar', [
                         'searchTerm' => $vm->searchTerm,
                         'paramName' => 'search',
                         'placeholder' => __('verdant::table.search_placeholder'),
                         'searchApiUrl' => $vm->searchApiUrl,
+                        'clientSearch' => $vm->clientSearch,
                     ])
                 </div>
             @endif

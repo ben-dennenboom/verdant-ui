@@ -20,3 +20,43 @@
 .v-sidebar:not([data-collapsed="true"]) .v-sidebar-collapsed-only {
     display: none;
 }
+
+[data-v-search-hidden] {
+    display: none !important;
+}
+
+:where([data-v-striped] [data-v-row]:nth-child(even of [data-v-row]:not([data-v-search-hidden]))) {
+    background-color: rgb(var(--v-table-stripe-bg, 243 244 246));
+}
+
+.v-dt-header-themed {
+    background-color: rgb(var(--v-table-header-bg));
+}
+
+.v-dt-group-themed {
+    background-color: rgb(var(--v-table-group-bg));
+}
+
+.v-dt-row-success,
+.v-dt-row-success:hover {
+    background-color: rgb(var(--v-table-row-success-bg));
+}
+
+.v-dt-row-info,
+.v-dt-row-info:hover {
+    background-color: rgb(var(--v-table-row-info-bg));
+}
+
+.v-dt-row-warning,
+.v-dt-row-warning:hover {
+    background-color: rgb(var(--v-table-row-warning-bg));
+}
+
+.v-dt-row-danger,
+.v-dt-row-danger:hover {
+    background-color: rgb(var(--v-table-row-danger-bg));
+}
+
+.v-dt-row-themed:hover {
+    box-shadow: inset 0 0 0 9999px rgb(0 0 0 / 0.075);
+}

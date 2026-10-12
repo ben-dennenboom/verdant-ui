@@ -23,7 +23,7 @@
     x-show="show"
     id="{{ $id }}"
     class="v-fixed v-inset-0 v-z-50"
-    style="display: none;"
+    style="display: none;@if(filled(config('verdant.ui.modal_z_index'))) z-index: {{ (int) config('verdant.ui.modal_z_index') }};@endif"
 >
     <div class="v-absolute v-inset-0 v-bg-gray-700 v-bg-opacity-75 dark:v-bg-opacity-80 v-transition-opacity"
          x-show="show"
@@ -36,7 +36,7 @@
          @click="show = false">
     </div>
 
-    <div class="v-fixed v-inset-0 v-z-50 v-overflow-y-auto">
+    <div class="v-fixed v-inset-0 v-z-50 v-overflow-y-auto" @if(filled(config('verdant.ui.modal_z_index'))) style="z-index: {{ (int) config('verdant.ui.modal_z_index') }};" @endif>
         <div class="v-flex v-min-h-full v-items-center v-justify-center v-p-4 v-text-center sm:v-p-0">
             <div
                 x-show="show"

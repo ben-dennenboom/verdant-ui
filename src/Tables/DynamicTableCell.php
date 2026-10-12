@@ -88,6 +88,7 @@ final class DynamicTableCell
                 'icon' => $action['icon'] ?? null,
                 'route' => $url,
                 'form' => $action['form'] ?? false,
+                'confirm' => $action['confirm'] ?? null,
                 'method' => $action['method'] ?? null,
                 'disabled' => $action['disabled'] ?? false,
             ];

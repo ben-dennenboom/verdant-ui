@@ -13,14 +13,15 @@
                 @php $icon = $action['icon'] ?? null; @endphp
                 <div x-show="visibleCount > {{ $i }}" x-transition class="v-inline-flex v-items-center {{ $i >= 0 ? 'v-border-r' : '' }} v-border-gray-200 dark:v-border-gray-600">
                     @if(!empty($action['form']))
-                        <form action="{{ $action['route'] }}" method="POST" class="v-inline-flex v-items-center">
+                        <form action="{{ $action['route'] }}" method="POST" class="v-inline-flex v-items-center"
+                              @if(!empty($action['confirm'])) @submit="if (! confirm(@js($action['confirm']))) $event.preventDefault()" @endif>
                             @csrf
                             @if(isset($action['method']))
                                 @method($action['method'])
                             @endif
                             <button type="submit"
                                     @disabled($disabled)
-                                    class="v-p-1 v-px-2 v-text-sm hover:v-bg-gray-50 {{ $disabled ? 'v-text-gray-300 v-cursor-not-allowed' : 'v-text-gray-700' }}"
+                                    class="v-bg-transparent v-border-0 v-p-1 v-px-2 v-text-sm v-whitespace-nowrap hover:v-bg-gray-50 {{ $disabled ? 'v-text-gray-300 v-cursor-not-allowed' : 'v-text-gray-700' }}"
                             >
                                 @if($icon)<i class="fas fa-{{ $icon }} v-mr-2"></i>@endif
                                 {{ $action['label'] }}
@@ -33,7 +34,7 @@
                         </span>
                     @else
                         <a href="{{ $action['route'] }}"
-                           class="v-p-1 v-px-2 v-text-sm v-text-gray-700 hover:v-bg-gray-50">
+                           class="v-p-1 v-px-2 v-text-sm v-text-gray-700 v-no-underline v-whitespace-nowrap hover:v-bg-gray-50">
                             @if($icon)<i class="fas fa-{{ $icon }} v-mr-2"></i>@endif
                             {{ $action['label'] }}
                         </a>
@@ -45,7 +46,7 @@
         <button x-show="hasOverflow"
                 x-transition
                 @click="open = !open"
-                class="v-p-1 v-text-sm v-text-gray-700 hover:v-bg-gray-50 v-border-gray-200 dark:v-border-gray-600"
+                class="v-bg-transparent v-border-0 v-p-1 v-text-sm v-text-gray-700 v-no-underline v-whitespace-nowrap hover:v-bg-gray-50 v-border-gray-200 dark:v-border-gray-600"
         >
             <i class="fa-solid fa-ellipsis-vertical"></i>
         </button>
@@ -63,14 +64,15 @@
 
                 <div x-show="visibleCount <= {{ $i }}" x-transition>
                     @if(!empty($action['form']))
-                        <form action="{{ $action['route'] }}" method="POST">
+                        <form action="{{ $action['route'] }}" method="POST"
+                              @if(!empty($action['confirm'])) @submit="if (! confirm(@js($action['confirm']))) $event.preventDefault()" @endif>
                             @csrf
                             @if(isset($action['method']))
                                 @method($action['method'])
                             @endif
                             <button type="submit"
                                     @disabled($disabled)
-                                    class="v-block v-w-full v-text-left v-px-4 v-py-2 v-text-sm hover:v-bg-gray-50 {{ $disabled ? 'v-text-gray-300 v-cursor-not-allowed' : 'v-text-gray-700' }}"
+                                    class="v-bg-transparent v-border-0 v-block v-w-full v-text-left v-px-4 v-py-2 v-text-sm hover:v-bg-gray-50 {{ $disabled ? 'v-text-gray-300 v-cursor-not-allowed' : 'v-text-gray-700' }}"
                             >
                                 @if($icon)<i class="fas fa-{{ $icon }} v-mr-2"></i>@endif
                                 {{ $action['label'] }}
@@ -83,7 +85,7 @@
                         </span>
                     @else
                         <a href="{{ $action['route'] }}"
-                           class="v-block v-px-4 v-py-2 v-text-sm v-text-gray-700 hover:v-bg-gray-50"
+                           class="v-block v-px-4 v-py-2 v-text-sm v-text-gray-700 v-no-underline v-whitespace-nowrap hover:v-bg-gray-50"
                         >
                             @if($icon)<i class="fas fa-{{ $icon }} v-mr-2"></i>@endif
                             {{ $action['label'] }}

@@ -43,6 +43,8 @@ return [
         'numbered_pagination' => false,
         'wide_column_picker' => false,
         'hide_reset_on_required_selects' => false,
+        'striped_table_rows' => false,
+        'modal_z_index' => null,
     ],
 
     'components' => [

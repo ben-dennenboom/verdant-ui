@@ -114,7 +114,7 @@
             @endif
 
             @if($showFilter || $visibilityKey || $hasToolbarActions)
-                <div class="v-flex v-items-center v-gap-2 v-shrink-0">
+                <div class="v-flex v-items-center v-gap-2 v-shrink-0 v-ml-auto">
                     @if($hasToolbarActions)
                         {{ $toolbar }}
                     @endif

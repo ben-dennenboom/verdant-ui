@@ -30,6 +30,8 @@ final class DynamicTableViewModel
 
     public bool $rowInteractionEnabled = false;
 
+    public bool $openRowOnClick = false;
+
     /** @var array<int, array<string, mixed>>|null */
     public ?array $bulkFields = null;
 
@@ -126,6 +128,7 @@ final class DynamicTableViewModel
             }
 
             $vm->rowInteractionEnabled = $data->rowInteractionEnabled();
+            $vm->openRowOnClick = $data->openRowOnClick();
 
             $bulkFields = $data->bulkFields();
             if (!empty($bulkFields)) {

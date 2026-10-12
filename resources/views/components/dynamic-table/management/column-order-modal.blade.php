@@ -7,7 +7,7 @@
             x-on:open-modal.window="if ($event.detail === '{{ $modalId }}') syncFromStore()"
         >
             <h3 class="v-text-lg v-font-medium v-leading-6 v-text-gray-900 dark:v-text-gray-100" id="{{ $modalId }}-title">
-                Change column order
+                {{ __('verdant::table.change_column_order') }}
             </h3>
 
             <div class="v-text-sm v-text-gray-500 dark:v-text-gray-400 v-mt-1 v-mb-4">
@@ -57,7 +57,7 @@
                     class="v-text-sm v-text-gray-600 dark:v-text-gray-400 hover:v-underline"
                     @click="resetOrder()"
                 >
-                    Reset
+                    {{ __('verdant::table.reset') }}
                 </x-v-button.transparent>
 
                 <div class="v-flex v-gap-2">
@@ -66,11 +66,11 @@
                         @click="$dispatch('close-modal')"
                         class="v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
                     >
-                        Cancel
+                        {{ __('verdant::table.cancel') }}
                     </x-v-button.light>
 
                     <x-v-button.primary type="button" @click="save(); $dispatch('close-modal')">
-                        Save order
+                        {{ __('verdant::table.save_order') }}
                     </x-v-button.primary>
                 </div>
             </div>

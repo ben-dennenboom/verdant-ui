@@ -794,3 +794,35 @@ $table = UsersTable::make($users)
 ```
 
 This reads any previously stored `visible_columns`/`column_order` and uses them as the defaults (taking priority over `localStorage`, which becomes a write-through cache instead of the source of truth), and wires the column picker to `POST` `{ visible_columns: [...], column_order: [...] }` to `saveUrl` whenever the user toggles a column, shows/hides all, resets, or drags columns into a new order.
+---
+
+## Open rows with a single click
+
+By default a row opens its `withRowOpenUrl()` target on double-click (single click selects it). Call `withRowOpenOnClick()` to open on a single click instead; selecting text inside a row does not trigger navigation.
+
+```php
+$table = UsersTable::make($users)->withRowOpenOnClick();
+```
+
+## Toolbar actions
+
+Put your own buttons (export, import…) next to the filter and column buttons with the `toolbar` slot:
+
+```blade
+<x-v-dynamic-table.container :data="$table">
+    <x-slot:toolbar>
+        <x-v-button.secondary :href="request()->fullUrlWithQuery(['export' => 'xlsx'])" icon="file-export">Export</x-v-button.secondary>
+    </x-slot:toolbar>
+</x-v-dynamic-table.container>
+```
+
+## Translations and pagination
+
+All table texts go through `__('verdant::table.*')` (English and French included, publishable via `lang/vendor/verdant`). Length-aware paginators show page numbers with ellipses and a “from–to of total” summary.
+
+## Form helpers
+
+- `<x-v-form.input>` accepts `hint` (help text under the field) and `revealable` (show/hide button, for passwords).
+- `<x-v-form.toggle>` accepts `description` (text under the label) and works with array names such as `permissions[members.view]`.
+- `<x-v-form.select>` accepts `search-url` (options fetched from that URL as the user types: `GET url?q=term` returning `[{value, label, ...}]`) with `selected-label` for the initial value, and dispatches a `select-change` event (`detail: {name, value, option}`) whenever an option is picked.
+- `selected-label-expression` (JavaScript expression) gives the label of the selected value when the option is not loaded, e.g. inside `x-for` rows with remote options.

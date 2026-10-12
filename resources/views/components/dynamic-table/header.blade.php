@@ -25,7 +25,7 @@
                 x-show="$store[@js($bulkStoreKey)].selected.length > 0"
                 :checked="$store[@js($bulkStoreKey)].allRowKeys.length > 0 && $store[@js($bulkStoreKey)].allRowKeys.every(k => $store[@js($bulkStoreKey)].selected.includes(k))"
                 @change="$store[@js($bulkStoreKey)].toggleAll()"
-                title="Select all on this page"
+                title="{{ __('verdant::table.select_all_on_page') }}"
                 class="v-rounded v-border-gray-300 dark:v-border-gray-600 v-text-primary-600 focus:v-ring-primary-500 v-bg-white dark:v-bg-gray-700 v-cursor-pointer"
             >
         </div>
@@ -56,7 +56,7 @@
             @if (!empty($header['sortable']) && !empty($header['key']))
                 <button
                     type="button"
-                    title="{{ !empty($header['tooltip']) ? e($header['tooltip']) : 'Click to sort' }}"
+                    title="{{ !empty($header['tooltip']) ? e($header['tooltip']) : __('verdant::table.click_to_sort') }}"
                     class="v-inline-flex v-items-center v-gap-1 hover:v-underline"
                     @click="toggle('{{ $header['key'] }}')"
                 >
@@ -79,7 +79,7 @@
         <button
             type="button"
             class="v-absolute v-right-3 v-top-1/2 -v-translate-y-1/2 v-text-red-500"
-            title="Reset sorting"
+            title="{{ __('verdant::table.reset_sorting') }}"
             @click.stop="reset"
         >
             <i class="fa fa-xmark"></i>

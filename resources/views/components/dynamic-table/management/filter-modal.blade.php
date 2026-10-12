@@ -13,9 +13,11 @@
     })->count();
     $hasExplicitFilterInQuery = collect($filterKeys)->contains(fn($key) => request()->query->has($key));
     $currentPath = \Illuminate\Support\Str::before(request()->getRequestUri(), '?');
-    $clearUrl = $activeCount > 0 && $hasExplicitFilterInQuery
-        ? $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '')
-        : null;
+    $clearUrl = match (true) {
+        config('verdant.ui.explicit_table_clear') && $activeCount > 0 => $currentPath . '?' . http_build_query([...\Illuminate\Support\Arr::except($currentQuery, ['page']), ...array_fill_keys($filterKeys, '')]),
+        $activeCount > 0 && $hasExplicitFilterInQuery => $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : ''),
+        default => null,
+    };
     $formId = $modalId . '-form';
 @endphp
 
@@ -23,7 +25,7 @@
     <x-v-button.light
         type="button"
         icon="filter"
-        aria-label="Filter table"
+        aria-label="{{ __('verdant::table.filter_table') }}"
         aria-haspopup="dialog"
         aria-controls="{{ $modalId }}"
         @click="$dispatch('open-modal', '{{ $modalId }}')"
@@ -41,7 +43,7 @@
             href="{{ $clearUrl }}"
             class="v-text-red-500 v-text-sm v-whitespace-nowrap"
         >
-            Clear
+            {{ __('verdant::table.clear') }}
         </a>
     @endif
 </div>
@@ -65,7 +67,7 @@
             @endforeach
 
             <h3 class="v-text-lg v-font-medium v-leading-6 v-text-gray-900 dark:v-text-gray-100" id="{{ $modalId }}-title">
-                Filters
+                {{ __('verdant::table.filters') }}
             </h3>
 
             <div class="v-mt-4 v-mb-4 v-space-y-4">
@@ -119,7 +121,7 @@
                     @click="$dispatch('close-modal')"
                     class="v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500"
                 >
-                    Cancel
+                    {{ __('verdant::table.cancel') }}
                 </x-v-button.light>
                 <div class="v-flex v-gap-2">
                     @if($clearUrl)
@@ -127,11 +129,11 @@
                             :href="$clearUrl"
                             outline
                         >
-                            Reset
+                            {{ __('verdant::table.reset') }}
                         </x-v-button.danger>
                     @endif
                     <x-v-button.primary type="submit">
-                        Apply
+                        {{ __('verdant::table.apply') }}
                     </x-v-button.primary>
                 </div>
             </div>

@@ -150,6 +150,22 @@ Blade:
 <x-v-dynamic-table.container :data="$table" emptyText="No users found." />
 ```
 
+Form actions (e.g. delete) can ask for confirmation before submitting:
+
+```php
+['label' => 'Delete', 'icon' => 'trash', 'route' => 'users.destroy', 'params' => ['user' => 'id'], 'form' => true, 'method' => 'DELETE', 'confirm' => 'Delete this user?'],
+```
+
+### Row groups
+
+Group rows under a full-width header row (e.g. requests per mail group). The callback receives the source model and returns the label (string or `Htmlable`); a header is rendered each time the label changes, so order the rows by group and keep the columns unsortable. With client search, a group header is hidden when none of its rows match.
+
+```php
+$table->withRowGroups(fn (Request $request) => $request->group->name);
+```
+
+Optional colour: `theme.colors.v-table-group-bg`.
+
 ### 3. Column visibility
 
 Explicit default visible column keys:
@@ -234,6 +250,20 @@ $table->withSearchApiUrl(route('api.users.search'));
 
 API should return JSON: array of objects with at least `url` and `label`.
 
+Client side search (filters the rows already rendered, nothing is sent to the server):
+
+```php
+$table->withClientSearch();
+// Optional: only search these columns (default: every non-action column)
+$table->withClientSearch()->withSearchableColumns(['name', 'email']);
+```
+
+- Typing hides the rows that do not contain every word of the search term (case insensitive), on the desktop table and the mobile cards. When nothing matches, "No matching rows." is shown.
+- The search text of each row is the plain text of its cells (HTML from `render`/`format` is stripped), rendered in a `data-v-search` attribute.
+- Only the rows of the current page are searched: use it with an unpaginated collection when the whole list must be searchable.
+- `?search=` in the URL pre-fills the search bar.
+- Array config: pass `'client_search' => true`.
+
 ### 7. Export
 
 Reuse column definitions for CSV/Excel:
@@ -272,7 +302,7 @@ $table = DynamicTableData::fromCollection($users, $columns, $actions, auth()->us
 
 | Prop | Description |
 |------|-------------|
-| `data` | `DynamicTableDataProvider` instance or array with `headers`, `rows`, and optionally `filters`, `column_visibility_key`, `default_visible_columns`, `searchable_columns`, `search_api_url` |
+| `data` | `DynamicTableDataProvider` instance or array with `headers`, `rows`, and optionally `filters`, `column_visibility_key`, `default_visible_columns`, `searchable_columns`, `search_api_url`, `client_search` |
 | `headers` | Fallback array of headers when `data` is not provided |
 | `rows` | Fallback array of rows when `data` is not provided |
 | `class` | Optional CSS class on the container |
@@ -826,3 +856,20 @@ All table texts go through `__('verdant::table.*')` (English and French included
 - `<x-v-form.toggle>` accepts `description` (text under the label) and works with array names such as `permissions[members.view]`.
 - `<x-v-form.select>` accepts `search-url` (options fetched from that URL as the user types: `GET url?q=term` returning `[{value, label, ...}]`) with `selected-label` for the initial value, and dispatches a `select-change` event (`detail: {name, value, option}`) whenever an option is picked.
 - `selected-label-expression` (JavaScript expression) gives the label of the selected value when the option is not loaded, e.g. inside `x-for` rows with remote options.
+
+---
+
+## Theming & host CSS
+
+Verdant ships without Tailwind's preflight, so its components must not rely on browser defaults. Buttons, links and lists inside the dynamic table reset their own background, border, underline and list padding, so the table looks the same inside a Bootstrap (or other) host page.
+
+Optional, per project (`config/verdant.php`):
+
+| Key | Default | Effect |
+|-----|---------|--------|
+| `ui.striped_table_rows` | `false` | Every second desktop row gets `theme.colors.v-table-stripe-bg` (rows hidden by the client search are skipped). Row variants, hover and selection colours still win. |
+| `theme.colors.v-table-header-bg` | not set | Background of the table header row. When not set, the default header colours are used. |
+| `theme.colors.v-table-stripe-bg` | `#f3f4f6` | Stripe colour used by `ui.striped_table_rows`. |
+| `theme.colors.v-table-row-{success,info,warning,danger}-bg` | not set | Background of rows with that `RowStyle` variant (desktop rows and cards), with a subtle darker hover. When not set, the default light variant colours are used. |
+| `ui.modal_z_index` | `null` (Tailwind `z-50`) | z-index of `<x-v-modal>` (also the table filter modal). Raise it when the host layout has fixed/sticky elements above 50 (Bootstrap uses 1020-1050). |
+

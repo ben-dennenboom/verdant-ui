@@ -12,6 +12,9 @@ final class DynamicTableRow
 
     public ?RowStyle $rowStyle = null;
 
+    /** @var array{label: string, html: bool}|null */
+    public ?array $group = null;
+
     public function __construct(array $rawRow, DynamicTableViewModel $vm)
     {
         $this->cells = [];
@@ -22,6 +25,10 @@ final class DynamicTableRow
 
         if (array_key_exists('_row_key', $rawRow) && $rawRow['_row_key'] !== null && $rawRow['_row_key'] !== '') {
             $this->rowKey = (string) $rawRow['_row_key'];
+        }
+
+        if (array_key_exists('_row_group', $rawRow) && is_array($rawRow['_row_group'])) {
+            $this->group = $rawRow['_row_group'];
         }
 
         if (array_key_exists('_row_style', $rawRow) && is_array($rawRow['_row_style'])) {

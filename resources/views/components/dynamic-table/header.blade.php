@@ -5,7 +5,7 @@
 <div x-data="dynamicTableSort({
         columns: @js($vm->sort?->columns ?? [])
     })"
-    class="v-grid v-bg-gray-50 dark:v-bg-gray-700 v-relative"
+    class="v-grid v-bg-gray-50 dark:v-bg-gray-700 v-relative @if(filled(config('verdant.theme.colors.v-table-header-bg'))) v-dt-header-themed @endif"
     @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
         :style="'grid-template-columns: {{ $bulkPrefix }}' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"
     @else
@@ -57,7 +57,7 @@
                 <button
                     type="button"
                     title="{{ !empty($header['tooltip']) ? e($header['tooltip']) : __('verdant::table.click_to_sort') }}"
-                    class="v-inline-flex v-items-center v-gap-1 hover:v-underline"
+                    class="v-inline-flex v-items-center v-gap-1 v-bg-transparent v-border-0 v-p-0 v-text-inherit hover:v-underline"
                     @click="toggle('{{ $header['key'] }}')"
                 >
                     {{ $header['label'] }}
@@ -78,7 +78,7 @@
     <template x-if="hasSorting()">
         <button
             type="button"
-            class="v-absolute v-right-3 v-top-1/2 -v-translate-y-1/2 v-text-red-500"
+            class="v-absolute v-right-3 v-top-1/2 -v-translate-y-1/2 v-text-red-500 v-bg-transparent v-border-0 v-p-0"
             title="{{ __('verdant::table.reset_sorting') }}"
             @click.stop="reset"
         >

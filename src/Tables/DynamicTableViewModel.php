@@ -20,6 +20,9 @@ final class DynamicTableViewModel
     public ?array $searchableColumns = null;
     public string $searchTerm = '';
     public ?string $searchApiUrl = null;
+
+    /** When true, the search bar filters the rendered rows instead of submitting to the server. */
+    public bool $clientSearch = false;
     /** @var array<int, array<string, mixed>>|null */
     public ?array $filterColumns = null;
     /** @var array<string, mixed>|null */
@@ -117,6 +120,8 @@ final class DynamicTableViewModel
                 $vm->searchApiUrl = $apiUrl;
             }
 
+            $vm->clientSearch = $data->clientSearchEnabled();
+
             $filterCols = $data->filterColumns();
             if (!is_null($filterCols) && $filterCols !== []) {
                 $vm->filterColumns = self::normalizeFilterColumns($filterCols);
@@ -155,6 +160,9 @@ final class DynamicTableViewModel
             }
             if (isset($data['search_api_url'])) {
                 $vm->searchApiUrl = $data['search_api_url'];
+            }
+            if (isset($data['client_search'])) {
+                $vm->clientSearch = (bool) $data['client_search'];
             }
             if (isset($data['filters']) && is_array($data['filters']) && $data['filters'] !== []) {
                 $vm->filterColumns = self::normalizeFilterColumns($data['filters']);
@@ -368,6 +376,40 @@ final class DynamicTableViewModel
         $key = $this->columnKeys[$index] ?? null;
 
         return !is_null($key) ? (string) $key : 'col-' . $index;
+    }
+
+    /**
+     * Plain, lowercased text of the row used by the client side search: the searchable columns
+     * when set, otherwise every non-action column.
+     */
+    public function rowSearchText(DynamicTableRow $row): string
+    {
+        $searchableColumns = $this->searchableColumns ?? [];
+        $texts = [];
+
+        foreach ($row->cells as $index => $cell) {
+            if ($cell->isActions) {
+                continue;
+            }
+
+            if ($searchableColumns !== [] && !in_array($this->columnKeyForIndex($index), $searchableColumns, true)) {
+                continue;
+            }
+
+            $value = $cell->value instanceof \Illuminate\Contracts\Support\Htmlable
+                ? $cell->value->toHtml()
+                : $cell->value;
+
+            if (!is_scalar($value) && !$value instanceof \Stringable) {
+                continue;
+            }
+
+            $texts[] = html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5);
+        }
+
+        $text = preg_replace('/\s+/u', ' ', implode(' ', $texts)) ?? '';
+
+        return mb_strtolower(trim($text));
     }
 
     /**

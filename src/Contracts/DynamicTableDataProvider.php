@@ -62,6 +62,12 @@ interface DynamicTableDataProvider
     public function searchApiUrl(): ?string;
 
     /**
+     * When true, the search bar filters the rows already rendered in the table (client side)
+     * instead of submitting the search term to the server.
+     */
+    public function clientSearchEnabled(): bool;
+
+    /**
      * Filter definitions for the filter modal. Each item: key, label, type (text|number|date|checkbox|select),
      * and for select: options (array of ['value' => x, 'label' => y] or value => label).
      * Return null to hide the filter button/modal.

@@ -3,6 +3,7 @@
     'paramName' => 'search',
     'placeholder' => __('verdant::table.search_placeholder'),
     'searchApiUrl' => null,
+    'clientSearch' => false,
 ])
 
 @php
@@ -14,15 +15,51 @@
     $clearUrl = $searchTerm !== '' ? $clearUrlBase : null;
     $inputId = 'v-table-search-' . $paramName;
     $resultsId = 'v-table-search-results-' . $paramName;
-    $inputWrapperClass = 'v-flex v-items-stretch v-rounded v-shadow-sm v-border v-border-gray-300 dark:v-border-gray-600
+    $inputWrapperClass = 'v-flex v-flex-1 v-items-stretch v-rounded v-shadow-sm v-border v-border-gray-300 dark:v-border-gray-600
         v-bg-white dark:v-bg-gray-800 focus-within:v-ring-1 focus-within:v-ring-gray-500 focus-within:v-border-gray-500';
     $inputClass = 'v-flex-1 v-min-w-0 v-border-0 v-border-r border-gray-300 dark:v-border-gray-700 v-bg-transparent v-rounded-l v-rounded-r-none v-px-3 v-py-1
         v-shadow-sm v-text-sm v-text-gray-900 dark:v-text-gray-100 placeholder:v-text-gray-400
         dark:placeholder:v-text-gray-500 focus:v-outline-none focus:v-ring-0 focus:v-border-gray-500';
 @endphp
 
+@if($clientSearch)
 <div
-    class="v-flex v-items-center v-gap-2 v-flex-1 v-min-w-0 {{ $searchApiUrl ? 'v-relative' : '' }}"
+    class="v-flex v-items-stretch v-gap-2 v-flex-1 v-min-w-0"
+    x-data="verdantTableClientSearch({ searchTerm: @js($searchTerm) })"
+>
+    <form class="v-flex v-items-stretch v-gap-2 v-w-full" role="search" @submit.prevent>
+        <label for="{{ $inputId }}" class="v-sr-only">{{ __('verdant::table.search_table') }}</label>
+        <div class="v-relative v-flex v-flex-1">
+            <div class="{{ $inputWrapperClass }}">
+                <input
+                    type="text"
+                    id="{{ $inputId }}"
+                    placeholder="{{ $placeholder }}"
+                    autocomplete="off"
+                    class="{{ $inputClass }}"
+                    aria-label="{{ __('verdant::table.search_table') }}"
+                    x-model="query"
+                    @keydown.escape="query = ''"
+                />
+                <span class="v-shrink-0 v-flex v-items-center v-px-2 v-text-gray-500 dark:v-text-gray-400" aria-hidden="true">
+                    <i class="fas fa-magnifying-glass"></i>
+                </span>
+            </div>
+        </div>
+        <button
+            type="button"
+            class="v-shrink-0 v-self-center v-bg-transparent v-border-0 v-p-0 v-text-sm v-text-gray-500 hover:v-text-gray-700 dark:hover:v-text-gray-400 hover:v-underline"
+            x-show="query.trim() !== ''"
+            x-cloak
+            @click="query = ''"
+        >
+            {{ __('verdant::table.clear') }}
+        </button>
+    </form>
+</div>
+@else
+<div
+    class="v-flex v-items-stretch v-gap-2 v-flex-1 v-min-w-0 {{ $searchApiUrl ? 'v-relative' : '' }}"
     @if($searchApiUrl)
         x-data="verdantTableSearch({
             apiUrl: @js($searchApiUrl),
@@ -35,7 +72,7 @@
     <form
         method="GET"
         action="{{ $currentPath }}"
-        class="v-flex v-items-center v-gap-2 v-w-full {{ $searchApiUrl ? 'v-relative v-flex-1' : '' }}"
+        class="v-flex v-items-stretch v-gap-2 v-w-full {{ $searchApiUrl ? 'v-relative v-flex-1' : '' }}"
         role="search"
     >
         @foreach ($currentQuery as $name => $value)
@@ -48,7 +85,7 @@
             @endif
         @endforeach
         <label for="{{ $inputId }}" class="v-sr-only">{{ __('verdant::table.search_table') }}</label>
-        <div class="v-relative v-flex-1">
+        <div class="v-relative v-flex v-flex-1">
             <div class="{{ $inputWrapperClass }}">
                 <input
                     type="text"
@@ -118,7 +155,7 @@
         @if ($clearUrl !== null || $searchApiUrl)
             <a
                 href="{{ $clearUrl ?? $clearUrlBase }}"
-                class="v-shrink-0 v-text-sm v-text-gray-500 hover:v-text-gray-700
+                class="v-shrink-0 v-self-center v-text-sm v-text-gray-500 hover:v-text-gray-700
                     dark:hover:v-text-gray-400 hover:v-underline"
 
                 @if($searchApiUrl)
@@ -131,3 +168,4 @@
         @endif
     </form>
 </div>
+@endif

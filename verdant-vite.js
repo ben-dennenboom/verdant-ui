@@ -31,7 +31,7 @@ function verdant() {
 }
 verdant.files = function () {
     return Object.fromEntries(
-        fs.readdirSync('resources/js')
+        fs.readdirSync('resources/js', { recursive: true })
             .filter(file => file.endsWith('.js'))
             .map(file => [file.replace(/\.js$/, ''), `resources/js/${file}`])
     );

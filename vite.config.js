@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import laravel from 'laravel-vite-plugin';
-import verdant from './verdant-build.js';
+import verdant from './verdant-vite.js';
 
 export default defineConfig({
     plugins: [

@@ -10,7 +10,7 @@ use Illuminate\View\Compilers\BladeCompiler;
 
 class VerdantUIServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(
             __DIR__ . '/../config/verdant.php',
@@ -18,7 +18,7 @@ class VerdantUIServiceProvider extends ServiceProvider
         );
     }
 
-    public function boot()
+    public function boot(): void
     {
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'verdant');
@@ -29,9 +29,9 @@ class VerdantUIServiceProvider extends ServiceProvider
         $this->publishAssets();
     }
 
-    protected function registerComponents()
+    protected function registerComponents(): void
     {
-        $this->callAfterResolving(BladeCompiler::class, function () {
+        $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade) {
             $componentsPath = __DIR__ . '/../resources/views/components';
 
             $componentFiles = $this->findComponentFiles($componentsPath);
@@ -41,12 +41,12 @@ class VerdantUIServiceProvider extends ServiceProvider
 
                 $name = str_replace([DIRECTORY_SEPARATOR, '.blade.php'], ['.', ''], $relPath);
 
-                Blade::component("verdant::components.{$name}", "v-{$name}");
+                $blade->component("verdant::components.{$name}", "v-{$name}");
             }
         });
     }
 
-    protected function registerBladeDirectives()
+    protected function registerBladeDirectives(): void
     {
         Blade::directive('verdantAssets', function () {
             return "<?php echo \Dennenboom\VerdantUI\VerdantUI::assets(); ?>";
@@ -57,7 +57,7 @@ class VerdantUIServiceProvider extends ServiceProvider
         });
     }
 
-    protected function findComponentFiles($directory)
+    protected function findComponentFiles(string $directory): array
     {
         $files = [];
 
@@ -70,7 +70,7 @@ class VerdantUIServiceProvider extends ServiceProvider
         return $files;
     }
 
-    protected function publishAssets()
+    protected function publishAssets(): void
     {
         $this->publishes(
             [
@@ -99,7 +99,7 @@ class VerdantUIServiceProvider extends ServiceProvider
             [
                 __DIR__ . '/../package.json'       => base_path('package.verdant.json'),
                 __DIR__ . '/../vite.config.js'     => base_path('vite.verdant.config.js'),
-                __DIR__ . '/../verdant-build.js'   => base_path('verdant-build.js'),
+                __DIR__ . '/../verdant-vite.js'   => base_path('verdant-vite.js'),
                 __DIR__ . '/../tailwind.config.js' => base_path('tailwind.verdant.config.js'),
                 __DIR__ . '/../resources/js'       => resource_path('js/vendor/verdant'),
                 __DIR__ . '/../resources/css'      => resource_path('css/vendor/verdant'),

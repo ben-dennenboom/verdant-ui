@@ -38,17 +38,17 @@
         x-cloak @endif
     data-column-id="{{ $columnId }}" data-span="{{ $span }}"
     {{ $attributes->merge([
-        'class' => "v-grid-cell v:group v-hideable-column v:px-6 v:py-4 v:font-medium v:text-gray-900 v:dark:text-gray-100 $wrapClass $spanClass $class",
+        'class' => "v:grid-cell v:group v:hideable-column v:px-6 v:py-4 v:font-medium v:text-gray-900 v:dark:text-gray-100 $wrapClass $spanClass $class",
     ]) }}
     @if (!$spanClass && $span > 1) style="grid-column: span {{ $span }} / span {{ $span }};" @endif>
-    <div class="v-cell-wrapper">
+    <div class="v:cell-wrapper">
         @if ($label)
-            <span class="v-cell-tileview-label">
+            <span class="v:cell-tileview-label">
                 {{ $label }}
             </span>
         @endif
 
-        <div class="v-cell-content">
+        <div class="v:cell-content">
             {{ $slot }}
         </div>
     </div>

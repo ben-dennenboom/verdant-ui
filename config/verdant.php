@@ -3,7 +3,6 @@
 return [
     'assets' => [
         'include_fontawesome' => true,
-        'include_alpine' => true,
         'path_prefix' => 'vendor/verdant',
     ],
 

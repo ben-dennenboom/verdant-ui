@@ -11,14 +11,14 @@
     <div x-ref="gridWrapper" :class="tileView ? 'v:p-4' : ''" class="v:relative v:overflow-x-auto v:overflow-y-visible"
         @scroll.passive="updateScrollState($refs.gridWrapper)">
 
-        <div x-ref="gridLayout" class="v:grid v-grid-layout" :class="tileView ? 'v-tile-view v:gap-4' : 'v-table-view'"
+        <div x-ref="gridLayout" class="v:grid v:grid-layout" :class="tileView ? 'v:tile-view v:gap-4' : 'v:table-view'"
             :style="getGridStyle()">
 
-            <div class="v-grid-header-wrapper" style="display: contents;">
+            <div class="v:grid-header-wrapper" style="display: contents;">
                 {{ $header }}
             </div>
 
-            <div class="v-grid-body-wrapper" style="display: contents;">
+            <div class="v:grid-body-wrapper" style="display: contents;">
                 {{ $slot }}
             </div>
         </div>

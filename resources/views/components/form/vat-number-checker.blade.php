@@ -51,3 +51,6 @@
         @enderror
     </div>
 @endif
+@once
+    <script src="{{ url('vendor/verdant/js/form/vat-number-checker.js') }}" type="module"></script>
+@endonce

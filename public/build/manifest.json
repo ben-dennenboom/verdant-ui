@@ -35,16 +35,16 @@
     "src": "resources/js/dynamic-table-state.js",
     "isEntry": true
   },
-  "resources/js/richtext.js": {
-    "file": "js/richtext.js",
-    "name": "richtext",
-    "src": "resources/js/richtext.js",
+  "resources/js/form/richtext.js": {
+    "file": "js/form/richtext.js",
+    "name": "form/richtext",
+    "src": "resources/js/form/richtext.js",
     "isEntry": true
   },
-  "resources/js/vat-number-checker.js": {
-    "file": "js/vat-number-checker.js",
-    "name": "vat-number-checker",
-    "src": "resources/js/vat-number-checker.js",
+  "resources/js/form/vat-number-checker.js": {
+    "file": "js/form/vat-number-checker.js",
+    "name": "form/vat-number-checker",
+    "src": "resources/js/form/vat-number-checker.js",
     "isEntry": true
   },
   "resources/js/verdant-ui.js": {

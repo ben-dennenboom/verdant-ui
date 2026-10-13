@@ -109,3 +109,7 @@
   <p class="v:mt-2 v:text-red-600">{{ $message }}</p>
   @enderror
 </div>
+
+@once
+  <script src="{{ url('vendor/verdant/js/form/richtext.js') }}" type="module"></script>
+@endonce

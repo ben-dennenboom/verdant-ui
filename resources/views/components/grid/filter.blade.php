@@ -22,7 +22,7 @@
 <div x-data="{ open: false }">
 
   <x-v-modal :id="$id" maxWidth="lg">
-    <form id="{{ $id }}-form" class="v-form v-auto-filter" method="get" action="{{ $route }}">
+    <form id="{{ $id }}-form" class="v:form v:auto-filter" method="get" action="{{ $route }}">
       <div class="v:sm:flex v:sm:items-start">
         <div class="v:w-full">
           <h3 class="v:text-lg v:font-medium v:leading-6 v:text-gray-900 v:dark:text-gray-100" id="modal-title">

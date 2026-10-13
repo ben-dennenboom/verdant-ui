@@ -1,9 +1,9 @@
 @layer theme, base, components, utilities;
 
 @import './richtext.css' layer(utilities);
-@import './grid-layout.css' layer(utilities);
-@import './grid-views.css' layer(utilities);
-@import './grid-utils.css' layer(utilities);
+@import './grid-layout.css' layer(utilities)prefix(v);
+@import './grid-views.css' layer(utilities)prefix(v);
+@import './grid-utils.css' layer(utilities)prefix(v);
 @import './grid-toolbar.css' layer(utilities);
 
 @import "tailwindcss/theme" layer(theme)prefix(v);
@@ -13,10 +13,7 @@
 
 @plugin '@tailwindcss/forms';
 
-/*
-    Needed filesize x 4, presumed not needed since tailwind 4?
-    @source inline("v:{,hover:,focus:,dark:,group-hover:,sm:,md:,lg:}{bg,text,border}-{red,green,blue,orange,yellow,purple,gray,primary,secondary,white,black}-{50,100,200,300,400,500,600,700,800,900,950}");
-*/
+@source inline("v:{,hover:,focus:,dark:,group-hover:,sm:,md:,lg:}{bg,text,border}-{red,green,blue,orange,yellow,purple,gray,primary,secondary,white,black}-{50,100,200,300,400,500,600,700,800,900,950}");
 
 @source "../views/**/*.blade.php";
 @source "../js/**/*.js";

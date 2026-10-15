@@ -1,0 +1,15 @@
+laravel: '@testbench'
+
+env:
+  - VERDANT_DOCS_ENABLED=(true)
+
+workbench:
+  start: '/'
+  install: false
+  discovers:
+    web: true
+    components: false
+    views: true
+  sync:
+    - from: public/build
+      to: public/vendor/verdant

@@ -36,9 +36,13 @@
                 ? 'v:mb-4 v:rounded-lg v:border v:border-primary-300 v:dark:border-primary-600 v:bg-primary-50 v:dark:bg-primary-900/20 v:p-4 {{ $boldClass }}'
                 : 'v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 {{ $boldClass }}'"
         @elseif($rowIx && $row->rowKey !== null)
-            class="v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 v:cursor-pointer{{ $boldClass }}"
-            @click="selectRow(@js($row->rowKey))"
-            @dblclick="openRow(@js($row->openUrl))"
+            class="v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 v:shadow-sm v:cursor-pointer{{ $boldClass }}"
+            @if($vm->openRowOnClick)
+                @click="if (! window.getSelection().toString()) openRow(@js($row->openUrl))"
+            @else
+                @click="selectRow(@js($row->rowKey))"
+                @dblclick="openRow(@js($row->openUrl))"
+            @endif
             :class="isSelected(@js($row->rowKey)) ? 'v:ring-2 v:ring-blue-400 v:dark:ring-blue-600' : ''"
         @else
             class="v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 {{ $boldClass }}"
@@ -54,7 +58,7 @@
                         @change="$store[@js($bsk)].toggle(@js($row->rowKey))"
                         class="v:rounded v:border-gray-300 v:dark:border-gray-600 v:text-primary-600 v:focus:ring-primary-500 v:bg-white v:dark:bg-gray-700"
                     >
-                    <span class="v:text-xs v:text-gray-500 v:dark:text-gray-400" x-show="$store[@js($bsk)].isSelected(@js($row->rowKey))" x-cloak>Selected</span>
+                    <span class="v:text-xs v:text-gray-500 v:dark:text-gray-400" x-show="$store[@js($bsk)].isSelected(@js($row->rowKey))" x-cloak>{{ __('verdant::table.selected') }}</span>
                 </label>
             </div>
         @endif

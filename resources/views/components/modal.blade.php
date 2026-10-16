@@ -9,6 +9,10 @@
         'lg' => 'v:sm:max-w-lg',
         'xl' => 'v:sm:max-w-xl',
         '2xl' => 'v:sm:max-w-2xl',
+        '3xl' => 'v:sm:max-w-3xl',
+        '4xl' => 'v:sm:max-w-4xl',
+        '5xl' => 'v:sm:max-w-5xl',
+
     ][$maxWidth];
 @endphp
 

@@ -38,9 +38,13 @@
                 ? 'v:bg-primary-50 v:dark:bg-primary-900/20 v:hover:bg-primary-100 v:dark:hover:bg-primary-900/30'
                 : @js($rowBgClass)"
         @elseif($rowIx && $row->rowKey !== null)
-            class="v:grid v:items-center v:cursor-pointer{{ $boldClass }}"
-            @click="selectRow(@js($row->rowKey))"
-            @dblclick="openRow(@js($row->openUrl))"
+            class="v-grid v-items-center v-cursor-pointer{{ $boldClass }}"
+            @if($vm->openRowOnClick)
+                @click="if (! window.getSelection().toString()) openRow(@js($row->openUrl))"
+            @else
+                @click="selectRow(@js($row->rowKey))"
+                @dblclick="openRow(@js($row->openUrl))"
+            @endif
             :class="isSelected(@js($row->rowKey)) ? 'v:bg-blue-50 v:dark:bg-blue-900/20 v:hover:bg-blue-100 v:dark:hover:bg-blue-900/30' : @js($rowBgClass)"
         @else
             class="v:grid v:items-center {{ $rowBgClass }}{{ $boldClass }}"

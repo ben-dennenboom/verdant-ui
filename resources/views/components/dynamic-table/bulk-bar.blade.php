@@ -154,7 +154,7 @@
                 type="submit"
                 class="v:ml-3 v:text-sm v:font-medium v:text-primary-600 v:dark:text-primary-400 v:hover:text-primary-800 v:dark:hover:text-primary-200 v:transition-colors"
             >
-                Apply
+                {{ __('verdant::table.apply') }}
             </button>
 
             {{-- Clear --}}
@@ -163,7 +163,7 @@
                 @click="$store[@js($bsk)].clear(); $refs.bulkForm.reset()"
                 class="v:ml-3 v:text-sm v:text-gray-500 v:dark:text-gray-400 v:hover:text-gray-700 v:dark:hover:text-gray-200 v:transition-colors"
             >
-                Clear
+                {{ __('verdant::table.clear') }}
             </button>
         </div>
     </form>

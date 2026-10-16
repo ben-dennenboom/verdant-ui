@@ -12,8 +12,8 @@
 <x-verdant::button.base
     {{ $attributes->merge([
         'class' => $outline
-            ? 'v:bg-transparent v:border-accent-700 dark:v:border-accent-600 v:text-accent-700 dark:v:text-accent-400 v:dark:hover:text-black hover:v:bg-accent-700 dark:hover:v:bg-accent-500 v:hover:text-white focus:v:ring-accent-500' . ($disabled ? ' v:cursor-not-allowed' : '')
-            : 'v:bg-accent-700 dark:v:bg-accent-600 v:border-transparent v:text-white hover:v:bg-accent-800 dark:hover:v:bg-accent-500 focus:v:ring-accent-500' . ($disabled ? ' v:cursor-not-allowed' : '')
+            ? 'v:bg-transparent v:border-accent-700 v:dark:border-accent-600 v:text-accent-700 v:dark:text-accent-400 v:dark:hover:text-black v:hover:bg-accent-700 v:dark:hover:bg-accent-500 v:hover:text-white v:focus:ring-accent-500' . ($disabled ? ' v:cursor-not-allowed' : '')
+            : 'v:bg-accent-700 v:dark:bg-accent-600 v:border-transparent v:text-white v:hover:bg-accent-800 v:dark:hover:bg-accent-500 v:focus:ring-accent-500' . ($disabled ? ' v:cursor-not-allowed' : '')
     ]) }}
     :href="$href"
     :disabled="$disabled"

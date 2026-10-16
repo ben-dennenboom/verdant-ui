@@ -38,14 +38,14 @@
         @if($description)
             <div>
                 <label for="{{ $inputId }}"
-                       class="v:block v:font-medium v:text-gray-700 dark:v:text-gray-300 v:cursor-pointer v:select-none">
+                       class="v:block v:font-medium v:text-gray-700 v:dark:text-gray-300 v:cursor-pointer v:select-none">
                     {!! $label !!}@if($required)<span class="required_asterisk">*</span>@endif
                 </label>
-                <p class="v:text-sm v:text-gray-500 dark:v:text-gray-400">{{ $description }}</p>
+                <p class="v:text-sm v:text-gray-500 v:dark:text-gray-400">{{ $description }}</p>
             </div>
         @else
             <label for="{{ $inputId }}"
-                   class="v:block v:font-medium v:text-gray-700 dark:v:text-gray-300 v:cursor-pointer v:select-none">
+                   class="v:block v:font-medium v:text-gray-700 v:dark:text-gray-300 v:cursor-pointer v:select-none">
                 {!! $label !!}@if($required)<span class="required_asterisk">*</span>@endif
             </label>
         @endif

@@ -39,13 +39,13 @@
 
             @foreach ($elements as $element)
                 @if (is_string($element))
-                    <span class="{{ $linkClass }} v:hidden sm:v:inline-flex v:text-gray-400">…</span>
+                    <span class="{{ $linkClass }} v:hidden v:sm:inline-flex v:text-gray-400">…</span>
                 @else
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
                             <span class="{{ $linkClass }} v:bg-primary-600 v:font-semibold v:text-white" aria-current="page">{{ $page }}</span>
                         @else
-                            <a href="{{ $url }}" class="{{ $linkClass }} v:hidden sm:v:inline-flex v:text-gray-600 v:dark:text-gray-300 v:hover:bg-gray-100 v:dark:hover:bg-gray-700" aria-label="{{ __('verdant::table.go_to_page', ['page' => $page]) }}">{{ $page }}</a>
+                            <a href="{{ $url }}" class="{{ $linkClass }} v:hidden v:sm:inline-flex v:text-gray-600 v:dark:text-gray-300 v:hover:bg-gray-100 v:dark:hover:bg-gray-700" aria-label="{{ __('verdant::table.go_to_page', ['page' => $page]) }}">{{ $page }}</a>
                         @endif
                     @endforeach
                 @endif
@@ -60,4 +60,5 @@
             @endif
         </div>
     </nav>
+@endif
 @endif

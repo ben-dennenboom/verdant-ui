@@ -27,7 +27,7 @@
 @endphp
 
 @if($tooltip)
-    <x-v:tooltip :text="$tooltip" :position="$tooltipPosition">
+    <x-v-tooltip :text="$tooltip" :position="$tooltipPosition">
         <{{ $tag }} {{ $attributes }} @if($isSubmitButton) x-init="$el.closest('form')?.addEventListener('submit', () => { $el.disabled = true }, { once: true })" @endif>
         @if($icon)
             <i class="fas fa-{{ $icon }} {{ $hasText ? 'v:mr-2' : '' }}"></i>
@@ -37,7 +37,7 @@
             <i class="fas fa-{{ $iconRight }} {{ $hasText ? 'v:ml-2' : '' }}"></i>
         @endif
     </{{ $tag }}>
-    </x-v:tooltip>
+    </x-v-tooltip>
 @else
     <{{ $tag }} {{ $attributes }} @if($isSubmitButton) x-init="$el.closest('form')?.addEventListener('submit', () => { $el.disabled = true }, { once: true })" @endif>
     @if($icon)

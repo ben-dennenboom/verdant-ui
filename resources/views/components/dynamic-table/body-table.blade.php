@@ -91,7 +91,7 @@
             @endphp
             <div class="
                 v:px-6 v:py-4 @if($key === 0 && $vm->hasBulkEdit) v:pl-3 @endif v:text-sm
-                v:text-gray-900 dark:v:text-gray-300 {{ $alignClass }} {{ $cell->class }}
+                v:text-gray-900 v:dark:text-gray-300 {{ $alignClass }} {{ $cell->class }}
             "
                 @if(($rowIx || $vm->hasBulkEdit) && $cell->isActions) @click.stop @dblclick.stop @endif
                 @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))

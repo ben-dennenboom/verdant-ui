@@ -33,15 +33,15 @@
             @click="if ($event.shiftKey) { $store[@js($bsk)].toggle(@js($row->rowKey)); $event.preventDefault(); }"
             @dblclick="$store[@js($bsk)].openRow(@js($row->openUrl))"
             :class="$store[@js($bsk)].isSelected(@js($row->rowKey))
-                ? 'v:mb-4 v:rounded-lg v:border v:border-primary-300 v:dark:border-primary-600 v:bg-primary-50 v:dark:bg-primary-900/20 v:p-4 v:shadow-sm{{ $boldClass }}'
-                : 'v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 v:shadow-sm{{ $boldClass }}'"
+                ? 'v:mb-4 v:rounded-lg v:border v:border-primary-300 v:dark:border-primary-600 v:bg-primary-50 v:dark:bg-primary-900/20 v:p-4 {{ $boldClass }}'
+                : 'v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 {{ $boldClass }}'"
         @elseif($rowIx && $row->rowKey !== null)
-            class="v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 v:shadow-sm v:cursor-pointer{{ $boldClass }}"
+            class="v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 v:cursor-pointer{{ $boldClass }}"
             @click="selectRow(@js($row->rowKey))"
             @dblclick="openRow(@js($row->openUrl))"
             :class="isSelected(@js($row->rowKey)) ? 'v:ring-2 v:ring-blue-400 v:dark:ring-blue-600' : ''"
         @else
-            class="v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 v:shadow-sm{{ $boldClass }}"
+            class="v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 {{ $boldClass }}"
         @endif
     >
         {{-- Bulk checkbox for cards --}}

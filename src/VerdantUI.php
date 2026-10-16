@@ -8,12 +8,6 @@ class VerdantUI
     {
         $verdantCssPath = self::assetPath('css/verdant-ui.css');
         $verdantJsPath = self::assetPath('js/verdant-ui.js');
-        $dynamicTableSortJsPath = self::assetPath('js/dynamic-table-sort.js');
-        $dynamicTableColumnsJsPath = self::assetPath('js/dynamic-table-columns.js');
-        $dynamicTableStateJsPath = self::assetPath('js/dynamic-table-state.js');
-        $dynamicTableSearchJsPath = self::assetPath('js/dynamic-table-search.js');
-        $dynamicTableActionsJsPath = self::assetPath('js/dynamic-table-actions.js');
-        $dynamicTableBulkJsPath = self::assetPath('js/dynamic-table-bulk.js');
         $fontAwesomePath = self::assetPath('vendor/fontawesome/css/all.min.css');
         $fontAwesomeSolidPath = self::assetPath('vendor/fontawesome/webfonts/fa-solid-900.woff2');
         $cropperJsPath = self::assetPath('js/cropper.min.js');
@@ -34,12 +28,6 @@ class VerdantUI
         <style>{$customColors}</style>
         <script src="{$cropperJsPath}" defer></script>
         <script src="{$verdantJsPath}" defer></script>
-        <script src="{$dynamicTableSortJsPath}" defer></script>
-        <script src="{$dynamicTableColumnsJsPath}" defer></script>
-        <script src="{$dynamicTableStateJsPath}" defer></script>
-        <script src="{$dynamicTableSearchJsPath}" defer></script>
-        <script src="{$dynamicTableActionsJsPath}" defer></script>
-        <script src="{$dynamicTableBulkJsPath}" defer></script>
         HTML;
     }
 

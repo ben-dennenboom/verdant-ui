@@ -10,15 +10,12 @@
     width: 100%;
 }
 
-/* * Structural wrappers: 
- * 'display: contents' is used so these wrappers don't interfere 
+/* * Structural wrappers:
+ * 'display: contents' is used so these wrappers don't interfere
  * with the direct relationship between cells and the parent grid.
  */
-.v\:grid-header-wrapper {
-    display: contents;
-}
-
-.v\:grid-body-wrapper {
+.v\:grid-header-wrapper,
+.v\:grid-body-wrapper{
     display: contents;
 }
 
@@ -42,11 +39,11 @@
 }
 
 /* Dark mode overrides for Header & Body */
-:is(.dark .\v\:grid-header-wrapper > div) {
-    background-color: rgb(55 65 81); 
+:is(.dark .v\:grid-header-wrapper > div) {
+    background-color: rgb(55 65 81);
 }
 
-:is(.dark .\v\:contents-row > div) {
+:is(.dark .v\:contents-row > div) {
     border-color: rgb(55 65 81);
 }
 
@@ -57,7 +54,7 @@
 
 /**
  * HOVER STATES
- * Uses .v:group on the row/cell to trigger background changes
+ * Uses .v\:group on the row/cell to trigger background changes
  */
 .v\:group:hover > div {
     background-color: rgb(249 250 251);

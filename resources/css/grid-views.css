@@ -38,7 +38,7 @@
     display: contents !important;
 }
 
-/* * ROW TO CARD TRANSFORMATION 
+/* * ROW TO CARD TRANSFORMATION
  * Converts 'display: contents' rows into standalone physical cards.
  */
 .v\:tile-view .v\:contents-row {
@@ -60,7 +60,7 @@
 }
 
 /* Dark mode support for Cards */
-:is(.dark .v\:tile-view .v\:contents-row) {
+:is(.dark .v\tile-view .v\contents-row) {
     background: rgb(31 41 55);
     border-color: rgb(55 65 81);
 }
@@ -80,7 +80,7 @@
     border-bottom: none !important;
 }
 
-:is(.dark .v\:tile-view .v\:grid-cell) {
+:is(.dark .v\tile-view .v\grid-cell) {
     border-bottom-color: rgb(55 65 81) !important;
 }
 
@@ -105,7 +105,7 @@
 }
 
 /* Dark mode for labels */
-:is(.dark .v\:tile-view .v\:cell-tileview-label) {
+:is(.dark .v\tile-view .v\cell-tileview-label) {
     color: #9ca3af;
 }
 
@@ -169,7 +169,7 @@
 /**
  * 5. TABLE VIEW SPECIFIC OVERRIDES
  */
-.table-view .cell-tileview-label {
+.v\:table-view .v\:cell-tileview-label {
     display: none !important;
 }
 
@@ -177,7 +177,7 @@
  * 6. UI COMPONENTS
  * Styles for the view toggle buttons and resets.
  */
-.view-toggle-btn {
+.v\:view-toggle-btn {
     width: 44px;
     height: 44px;
     background-color: #f3f4f6;
@@ -189,10 +189,10 @@
     transition: all 0.2s;
 }
 
-.view-toggle-btn:hover {
+.v\:view-toggle-btn:hover {
     background-color: #e5e7eb;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-:is(.dark .view-toggle-btn) { background-color: rgb(55 65 81); }
-:is(.dark .view-toggle-btn i) { color: #d1d5db; }
+:is(.dark .v\view-toggle-btn) { background-color: rgb(55 65 81); }
+:is(.dark .v\view-toggle-btn i) { color: #d1d5db; }

@@ -41,8 +41,8 @@
             };
         @endphp
         <div class="
-            v-px-6 v-py-3 @if($key === 0 && $vm->hasBulkEdit) v-pl-3 @endif v-text-md v-font-semibold v-text-gray-700
-            dark:v-text-gray-300 {{ $alignClass }} {{ $header['class'] ?? '' }}
+            v:px-6 v:py-3 @if($key === 0 && $vm->hasBulkEdit) v:pl-3 @endif v:text-md v:font-semibold v:text-gray-700
+            dark:v:text-gray-300 {{ $alignClass }} {{ $header['class'] ?? '' }}
         "
             @if(!empty($header['tooltip'])) title="{{ e($header['tooltip']) }}" @endif
             @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))

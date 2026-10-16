@@ -21,13 +21,13 @@
         <i class="{{ $sidebarItemIconClass }} v:flex-none v:w-6"></i>
         <span @class(
         [
-            "v-sidebar-label v:flex-1 v:ml-2",
+            "v:sidebar-label v:flex-1 v:ml-2",
             "hidden" => $collapsed
         ])>
             {!! $label !!}
         </span>
         @if($slot->isNotEmpty())
-            <i class="v-sidebar-chevron fas fa-chevron-down v:ml-auto"></i>
+            <i class="v:sidebar-chevron fas fa-chevron-down v:ml-auto"></i>
         @endif
     </a>
 </li>

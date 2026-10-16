@@ -1,9 +1,9 @@
 @layer theme, base, components, utilities;
 
 @import './richtext.css' layer(utilities);
-@import './grid-layout.css' layer(utilities)prefix(v);
-@import './grid-views.css' layer(utilities)prefix(v);
-@import './grid-utils.css' layer(utilities)prefix(v);
+@import './grid-layout.css' layer(utilities);
+@import './grid-views.css' layer(utilities);
+@import './grid-utils.css' layer(utilities);
 @import './grid-toolbar.css' layer(utilities);
 
 @import "tailwindcss/theme" layer(theme)prefix(v);
@@ -88,16 +88,16 @@
     color: red;
 }
 
-.v-sidebar[data-collapsed="true"] .v-sidebar-label,
-.v-sidebar[data-collapsed="true"] .v-sidebar-chevron,
-.v-sidebar[data-collapsed="true"] .v-sidebar-children,
-.v-sidebar[data-collapsed="true"] .v-sidebar-expanded-only,
-.v-sidebar:not([data-collapsed="true"]) .v-sidebar-collapsed-only {
+.v\:sidebar[data-collapsed="true"] .v\:sidebar-label,
+.v\:sidebar[data-collapsed="true"] .v\:sidebar-chevron,
+.v\:sidebar[data-collapsed="true"] .v\:sidebar-children,
+.v\:sidebar[data-collapsed="true"] .v\:sidebar-expanded-only,
+.v\:sidebar:not([data-collapsed="true"]) .v\:sidebar-collapsed-only {
     display: none;
 }
 
 @layer components {
-    .v-form-input {
+    .v\:form-input {
         appearance: none;
         background-color: #ffffff;
         border-color: theme(--color-gray-300);
@@ -126,7 +126,7 @@
         }
     }
 
-    .v-form-checkbox {
+    .v\:form-checkbox {
         appearance: none;
         color: #ffffff;
         width: calc(var(--spacing) * 4);

@@ -5,7 +5,7 @@
     $firstIndex = array_key_first($languages);
 @endphp
 
-<div class="v-mb-5 v-w-full" x-data="{
+<div class="v:mb-5 v:w-full" x-data="{
     activeTab: {{ $firstIndex !== null ? (int) $firstIndex : 0 }},
     languages: @js($languages)
 }">
@@ -20,9 +20,9 @@
             $value = $lang['value'] ?? '';
         @endphp
         <div x-show="activeTab === {{ $index }}"
-             x-transition:enter="v-transition v:duration-150 v:ease-out"
-             x-transition:enter-start="v-opacity-0"
-             x-transition:enter-end="v-opacity-100"
+             x-transition:enter="v:transition v:duration-150 v:ease-out"
+             x-transition:enter-start="v:opacity-0"
+             x-transition:enter-end="v:opacity-100"
              class="v:mt-1"
              @if($index !== $firstIndex) style="display: none" @endif>
             <x-v-form.textarea

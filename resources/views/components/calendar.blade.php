@@ -150,9 +150,9 @@
       </div>
     </div>
 
-    <div x-show="selectedDay" x-transition:enter="v-transition v:ease-out v:duration-300"
-         x-transition:enter-start="v-opacity-0 v:transform v:translate-x-4"
-         x-transition:enter-end="v-opacity-100 v:transform v:translate-x-0"
+    <div x-show="selectedDay" x-transition:enter="v:transition v:ease-out v:duration-300"
+         x-transition:enter-start="v:opacity-0 v:translate-x-4"
+         x-transition:enter-end="v:opacity-100 v:translate-x-0"
          class="v:bg-surface v:rounded-lg v:border v:border-gray-200 v:shadow-sm v:overflow-hidden v:h-fit v:sticky v:top-4">
       <div class="v:p-5 v:border-b v:border-gray-100 v:flex v:justify-between v:items-center">
         <span class="v:text-lg v:font-semibold v:text-gray-900" x-text="formatDate(selectedDay)"></span>

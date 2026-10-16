@@ -70,17 +70,17 @@
        @v-sidebar-expand="collapsed = false"
        data-collapsed="{{ $collapsed ? 'true' : 'false' }}"
        :data-collapsed="collapsed"
-    {{ $attributes->merge(['class' => 'v-sidebar v:group/sidebar v:flex v:flex-col v:flex-none v:h-full v:w-72 v:data-[collapsed=true]:w-20 v:bg-surface v:border-r v:border-gray-200 v:dark:border-gray-700 v:transition-[width] v:duration-200']) }}>
+    {{ $attributes->merge(['class' => 'v:sidebar v:group/sidebar v:flex v:flex-col v:flex-none v:h-full v:w-72 v:data-[collapsed=true]:w-20 v:bg-surface v:border-r v:border-gray-200 v:dark:border-gray-700 v:transition-[width] v:duration-200']) }}>
     <div class="v:flex v:items-center v:justify-between v:gap-2 v:px-4 v:py-5 v:group-data-[collapsed=true]/sidebar:flex-col v:group-data-[collapsed=true]/sidebar:justify-center">
         <a @if($dashboardUrl) href="{{ $dashboardUrl }}" @endif class="v:flex v:items-center v:min-w-0">
-            <span class="v-sidebar-expanded-only v:min-w-0">
+            <span class="v:sidebar-expanded-only v:min-w-0">
                 @if(isset($logo))
                     {{ $logo }}
                 @else
                     <span class="v:block v:truncate v:text-2xl v:font-bold v:tracking-tight v:text-primary-600 v:dark:text-primary-400">{{ $brand }}</span>
                 @endif
             </span>
-            <span class="v-sidebar-collapsed-only">
+            <span class="v:sidebar-collapsed-only">
                 @if(isset($logoCollapsed))
                     {{ $logoCollapsed }}
                 @else
@@ -95,8 +95,8 @@
                     :aria-label="collapsed ? @js(__('Expand menu')) : @js(__('Collapse menu'))"
                     :aria-expanded="!collapsed"
                     class="v:flex v:flex-none v:items-center v:justify-center v:w-8 v:h-8 v:rounded v:text-gray-400 v:hover:text-gray-700 v:dark:hover:text-gray-200 v:hover:bg-gray-100 v:dark:hover:bg-gray-700">
-                <i class="v-sidebar-expanded-only {{ $collapseIconClass }}"></i>
-                <i class="v-sidebar-collapsed-only {{ $expandIconClass }}"></i>
+                <i class="v:sidebar-expanded-only {{ $collapseIconClass }}"></i>
+                <i class="v:sidebar-collapsed-only {{ $expandIconClass }}"></i>
             </button>
         @endif
     </div>
@@ -134,11 +134,11 @@
                 @endif
 
                 @if($userName)
-                    <span class="v-sidebar-label v:flex-1 v:min-w-0 v:truncate v:text-sm v:font-medium">{{ $userName }}</span>
+                    <span class="v:sidebar-label v:flex-1 v:min-w-0 v:truncate v:text-sm v:font-medium">{{ $userName }}</span>
                 @endif
 
                 @if($hasSubmenu)
-                    <i class="v-sidebar-chevron fa-solid fa-chevron-up v:text-xs v:text-gray-400 v:transition-transform" :class="menuOpen ? 'v:rotate-180' : ''"></i>
+                    <i class="v:sidebar-chevron fa-solid fa-chevron-up v:text-xs v:text-gray-400 v:transition-transform" :class="menuOpen ? 'v:rotate-180' : ''"></i>
                 @endif
             </button>
 

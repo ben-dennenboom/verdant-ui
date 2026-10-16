@@ -17,7 +17,7 @@
     $firstIndex = array_key_first($languages);
 @endphp
 
-<div class="v-mb-5 v-w-full" x-data="{
+<div class="v:mb-5 v:w-full" x-data="{
     activeTab: {{ $firstIndex !== null ? (int) $firstIndex : 0 }},
     languages: @js($languages)
 }">
@@ -32,10 +32,10 @@
             $src = $lang['value'] ?? $lang['src'] ?? null;
         @endphp
         <div x-show="activeTab === {{ $index }}"
-             x-transition:enter="v-transition v:duration-150 v:ease-out"
-             x-transition:enter-start="v-opacity-0"
-             x-transition:enter-end="v-opacity-100"
-             class="v:mt-1 v:[&_.v-mb-4]:mb-0!"
+             x-transition:enter="v:transition v:duration-150 v:ease-out"
+             x-transition:enter-start="v:opacity-0"
+             x-transition:enter-end="v:opacity-100"
+             class="v:mt-1 v:[&_.v:mb-4]:mb-0!"
              @if($index !== $firstIndex) style="display: none" @endif>
             <x-v-form.image-cropper
                 :name="$name"

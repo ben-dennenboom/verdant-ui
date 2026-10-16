@@ -31,3 +31,7 @@
         </div>
     @endif
 </div>
+
+@once
+    <script src="{{ asset('js/grid.js') }}" type="module"></script>
+@endonce

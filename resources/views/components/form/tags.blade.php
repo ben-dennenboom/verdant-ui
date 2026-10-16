@@ -47,7 +47,7 @@
 
     <div
         @click="$refs.tagsInput.focus()"
-        class="v:mt-1 v:flex v:flex-wrap v:items-center v:gap-2 v:rounded v:border v:border-secondary-300 v:dark:border-gray-600 v:bg-white v:dark:bg-gray-800 v:px-3 v:py-2 v:shadow-sm v:cursor-text v:focus-within:ring-1 v:focus-within:ring-secondary-500 v:focus-within:border-secondary-500"
+        class="v:mt-1 v:flex v:flex-wrap v:items-center v:gap-2 v:rounded v:border v:border-secondary-300 v:dark:border-gray-600 v:bg-white v:dark:bg-gray-800 v:px-3 v:py-2 v:cursor-text v:focus-within:ring-1 v:focus-within:ring-secondary-500 v:focus-within:border-secondary-500"
     >
         <template x-for="(tag, index) in tags" :key="tag">
             <span class="v:inline-flex v:items-center v:gap-1.5 v:rounded-full v:bg-secondary-100 v:dark:bg-secondary-900 v:text-secondary-800 v:dark:text-secondary-200 v:text-sm v:px-3 v:py-1">

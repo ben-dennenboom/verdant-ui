@@ -9,12 +9,12 @@
 <div
     x-show="$store[@js($bsk)].selected.length > 0"
     x-cloak
-    x-transition:enter="v-transition v:ease-out v:duration-200"
-    x-transition:enter-start="v-opacity-0 v:translate-y-3"
-    x-transition:enter-end="v-opacity-100 v:translate-y-0"
-    x-transition:leave="v-transition v:ease-in v:duration-150"
-    x-transition:leave-start="v-opacity-100 v:translate-y-0"
-    x-transition:leave-end="v-opacity-0 v:translate-y-3"
+    x-transition:enter="v:transition v:ease-out v:duration-200"
+    x-transition:enter-start="v:opacity-0 v:translate-y-3"
+    x-transition:enter-end="v:opacity-100 v:translate-y-0"
+    x-transition:leave="v:transition v:ease-in v:duration-150"
+    x-transition:leave-start="v:opacity-100 v:translate-y-0"
+    x-transition:leave-end="v:opacity-0 v:translate-y-3"
     class="v:fixed v:bottom-6 v:left-1/2 v:-translate-x-1/2 v:z-50"
 >
     <form method="POST" action="{{ $bulkActionUrl }}" x-ref="bulkForm">
@@ -75,12 +75,12 @@
                             <div
                                 x-show="open"
                                 x-cloak
-                                x-transition:enter="v-transition v:ease-out v:duration-100"
-                                x-transition:enter-start="v-opacity-0 v:scale-95"
-                                x-transition:enter-end="v-opacity-100 v:scale-100"
-                                x-transition:leave="v-transition v:ease-in v:duration-75"
-                                x-transition:leave-start="v-opacity-100 v:scale-100"
-                                x-transition:leave-end="v-opacity-0 v:scale-95"
+                                x-transition:enter="v:transition v:ease-out v:duration-100"
+                                x-transition:enter-start="v:opacity-0 v:scale-95"
+                                x-transition:enter-end="v:opacity-100 v:scale-100"
+                                x-transition:leave="v:transition v:ease-in v:duration-75"
+                                x-transition:leave-start="v:opacity-100 v:scale-100"
+                                x-transition:leave-end="v:opacity-0 v:scale-95"
                                 class="v:absolute v:bottom-full v:left-1/2 v:-translate-x-1/2 v:mb-3 v:min-w-40 v:bg-floating v:rounded-lg v:shadow-lg v:border v:border-gray-200 v:py-1 v:z-50 v:max-h-56 v:overflow-y-auto"
                             >
                                 @if ($noneOpt)

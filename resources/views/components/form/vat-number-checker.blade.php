@@ -19,7 +19,7 @@
                 value="{{ old($name, $value) }}"
                 x-on:blur="check($event.target.value)"
                 {{ $required ? 'required' : '' }}
-                {{ $attributes->merge(['class' => 'v:rounded v:mt-1 v:focus:ring-secondary-500 v:focus:border-secondary-500 v:block v:w-full v:shadow-sm v:sm:text-sm v:border-secondary-300 v:bg-white v:dark:bg-gray-800 v:text-gray-900 v:dark:text-gray-100 v:dark:border-gray-600 v:pr-10']) }}
+                {{ $attributes->merge(['class' => 'v:rounded v:mt-1 v:focus:ring-secondary-500 v:focus:border-secondary-500 v:block v:w-full v:sm:text-sm v:border-secondary-300 v:bg-white v:dark:bg-gray-800 v:text-gray-900 v:dark:text-gray-100 v:dark:border-gray-600 v:pr-10']) }}
             />
 
             <span class="v:absolute v:inset-y-0 v:right-0 v:mt-1 v:flex v:items-center v:pr-3 v:pointer-events-none">

@@ -12,10 +12,10 @@
         <i class="fas fa-columns v:text-2xl v:text-gray-600 v:dark:text-gray-300"></i>
     </x-button.toolbar>
 
-    <div x-show="open" @click.away="open = false" x-cloak x-transition:enter="v-transition v:ease-out v:duration-200"
-        x-transition:enter-start="v-opacity-0 v:scale-95 v:-translate-y-2"
-        x-transition:enter-end="v-opacity-100 v:scale-100 v:translate-y-0"
-        class="v-column-manager-dropdown v:absolute v:right-0 v:z-50 v:mt-2 v:w-64 v:origin-top-right v:rounded-xl v:bg-floating v:p-4 v:shadow-2xl v:ring-1 v:ring-black/5">
+    <div x-show="open" @click.away="open = false" x-cloak x-transition:enter="v:transition v:ease-out v:duration-200"
+        x-transition:enter-start="v:opacity-0 v:scale-95 v:-translate-y-2"
+        x-transition:enter-end="v:opacity-100 v:scale-100 v:translate-y-0"
+        class="v:column-manager-dropdown v:absolute v:right-0 v:z-50 v:mt-2 v:w-64 v:origin-top-right v:rounded-xl v:bg-floating v:p-4 v:shadow-2xl v:ring-1 v:ring-black/5">
 
         <div
             class="v:flex v:items-center v:justify-between v:mb-3 v:border-b v:border-gray-100 v:dark:border-gray-700 v:pb-2">

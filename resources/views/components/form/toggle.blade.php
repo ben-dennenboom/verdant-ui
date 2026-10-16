@@ -31,7 +31,7 @@
         >
             <span
                 :class="on ? 'v:translate-x-7' : 'v:translate-x-0'"
-                class="v:pointer-events-none v:inline-block v:h-6 v:w-6 v:transform v:rounded-full v:bg-white v:shadow v:ring-0 v:transition v:duration-200 v:ease-in-out"
+                class="v:pointer-events-none v:inline-block v:h-6 v:w-6 v:rounded-full v:bg-white v:ring-0 v:transition v:duration-200 v:ease-in-out"
             ></span>
         </button>
 

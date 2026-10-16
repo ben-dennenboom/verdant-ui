@@ -10,13 +10,13 @@
     $currentPath = \Illuminate\Support\Str::before(request()->getRequestUri(), '?');
     $clearUrlBase = $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '');
     $clearUrl = $searchTerm !== '' ? $clearUrlBase : null;
-    $inputId = 'v-table-search-' . $paramName;
-    $resultsId = 'v-table-search-results-' . $paramName;
-    $inputWrapperClass = 'v-flex v-items-stretch v-rounded v-shadow-sm v-border v-border-gray-300 dark:v-border-gray-600
-        v-bg-white dark:v-bg-gray-800 focus-within:v-ring-1 focus-within:v-ring-gray-500 focus-within:v-border-gray-500';
-    $inputClass = 'v-flex-1 v-min-w-0 v-border-0 v-border-r border-gray-300 dark:v-border-gray-700 v-bg-transparent v-rounded-l v-rounded-r-none v-px-3 v-py-1
-        v-shadow-sm v-text-sm v-text-gray-900 dark:v-text-gray-100 placeholder:v-text-gray-400
-        dark:placeholder:v-text-gray-500 focus:v-outline-none focus:v-ring-0 focus:v-border-gray-500';
+    $inputId = 'v:table-search-' . $paramName;
+    $resultsId = 'v:table-search-results-' . $paramName;
+    $inputWrapperClass = 'v:flex v:items-stretch v:rounded v:border v:border-gray-300 v:dark:border-gray-600
+        v:bg-white dark:v:bg-gray-800 v:focus-within:ring-1 v:focus-within:ring-gray-500 v:focus-within:border-gray-500';
+    $inputClass = 'v:flex-1 v:min-w-0 v:border-0 v:border-r border-gray-300 dark:v:border-gray-700 v:bg-transparent v:rounded-l v:rounded-r-none v:px-3 v:py-1
+        v:text-sm v:text-gray-900 dark:v:text-gray-100 placeholder:v:text-gray-400
+        v:dark:placeholder:text-gray-500 v:focus:outline-hidden v:focus:ring-0 v:focus:border-gray-500';
 @endphp
 
 <div
@@ -84,9 +84,9 @@
                     x-show="open && (results.length > 0 || loading)"
                     x-cloak
                     x-transition
-                    class="v-absolute v-left-0 v-right-0 v-z-30 v-mt-1 v-max-h-60 v-overflow-auto v-rounded-md
-                        v-border v-border-gray-200 dark:v-border-gray-600 v-bg-floating
-                        v-py-1 v-shadow-lg"
+                    class="v:absolute v:left-0 v:right-0 v:z-30 v:mt-1 v:max-h-60 v:overflow-auto v:rounded-md
+                        v:border v:border-gray-200 dark:v:border-gray-600 v:bg-floating
+                        v:py-1 v:shadow-lg"
                 >
                     <template x-if="loading">
                         <div class="v:px-3 v:py-4 v:text-sm v:text-gray-500 v:dark:text-gray-400 v:text-center">
@@ -99,8 +99,8 @@
                                 <li role="option" :aria-selected="focusedIndex === index">
                                     <a
                                         :href="item.url"
-                                        class="v-block v-px-3 v-py-2 v-text-sm v-text-gray-900 dark:v-text-gray-100
-                                            hover:v-bg-gray-50 dark:hover:v-bg-gray-700"
+                                        class="v:block v:px-3 v:py-2 v:text-sm v:text-gray-900 dark:v:text-gray-100
+                                            hover:v:bg-gray-50 dark:hover:v:bg-gray-700"
                                         :class="{ 'v:bg-gray-50 v:dark:bg-gray-700': focusedIndex === index }"
                                         x-text="item.label"
                                         @mouseenter="focusedIndex = index"
@@ -116,8 +116,8 @@
         @if ($clearUrl !== null || $searchApiUrl)
             <a
                 href="{{ $clearUrl ?? $clearUrlBase }}"
-                class="v-shrink-0 v-text-sm v-text-gray-500 hover:v-text-gray-700
-                    dark:hover:v-text-gray-400 hover:v-underline"
+                class="v:shrink-0 v:text-sm v:text-gray-500 hover:v:text-gray-700
+                    dark:hover:v:text-gray-400 hover:v:underline"
 
                 @if($searchApiUrl)
                     x-show="query.trim() !== ''"

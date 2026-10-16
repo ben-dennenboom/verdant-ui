@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 function verdant() {
     return {
@@ -29,12 +29,28 @@ function verdant() {
         },
     };
 }
+
 verdant.files = function () {
-    return Object.fromEntries(
-        fs.readdirSync('resources/js', { recursive: true })
-            .filter(file => file.endsWith('.js'))
-            .map(file => [file.replace(/\.js$/, ''), `resources/js/${file}`])
-    );
+    const baseDir = 'resources/js';
+    const files = {};
+
+    for (const item of fs.readdirSync(baseDir, { withFileTypes: true })) {
+        if (item.isFile() && item.name.endsWith('.js')) {
+            files[item.name.slice(0, -3)] = path.join(baseDir, item.name);
+        } else if (item.isDirectory()) {
+            const dirPath = path.join(baseDir, item.name);
+
+            if (fs.existsSync(path.join(dirPath, 'index.js'))) {
+                files[item.name] = path.join(dirPath, 'index.js');
+            } else {
+                for (const file of fs.readdirSync(dirPath).filter(f => f.endsWith('.js'))) {
+                    files[`${item.name}/${file.slice(0, -3)}`] = path.join(dirPath, file);
+                }
+            }
+        }
+    }
+
+    return files;
 };
 
 export default verdant;

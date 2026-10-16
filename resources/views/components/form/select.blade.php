@@ -104,7 +104,7 @@
                 @click="if (!disabled) isOpen = !isOpen"
                 :disabled="disabled"
                 :class="disabled ? 'v:opacity-50 v:cursor-not-allowed v:bg-gray-100 v:dark:bg-gray-700' : ''"
-                class="v:bg-white v:dark:bg-gray-800 v:relative v:w-full v:border v:border-secondary-300 v:dark:border-gray-600 v:shadow-sm v:px-4 v:py-2 v:text-left v:focus:ring-secondary-500 v:focus:border-secondary-500 v:text-gray-900 v:dark:text-gray-100"
+                class="v:bg-white v:dark:bg-gray-800 v:relative v:w-full v:border v:border-secondary-300 v:dark:border-gray-600 v:px-4 v:py-2 v:text-left v:focus:ring-secondary-500 v:focus:border-secondary-500 v:text-gray-900 v:dark:text-gray-100"
                 tabindex="0">
             <div x-show="!selectedLabels().length" class="v:text-gray-500 v:dark:text-gray-400">
                 Nothing selected

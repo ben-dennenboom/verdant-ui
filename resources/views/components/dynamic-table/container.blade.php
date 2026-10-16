@@ -67,7 +67,7 @@
     ];
 @endphp
 
-<script>
+<script type="module">
     document.addEventListener('DOMContentLoaded', function () {
         if (window.verdantTableState) window.verdantTableState(@js($stateConfig));
     });
@@ -116,7 +116,7 @@
                     @if($showFilter)
                         @include('verdant::components.dynamic-table.management.filter-modal', [
                             'vm' => $vm,
-                            'modalId' => 'v-dynamic-table-filter-' . ($storeKey ?? 'default'),
+                            'modalId' => 'v:dynamic-table-filter-' . ($storeKey ?? 'default'),
                         ])
                     @endif
 
@@ -158,3 +158,8 @@
     @include('verdant::components.dynamic-table.bulk-bar', ['vm' => $vm, 'bulkStoreKey' => $bulkStoreKey])
 </div>
 @endif
+
+@once
+    <script src="{{ asset('vendor/verdant/js/dynamic-table.js') }}" type="module"></script>
+
+@endonce

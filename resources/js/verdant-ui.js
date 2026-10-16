@@ -1,3 +1,5 @@
+import '../css/verdant-ui.css';
+
 document.addEventListener('DOMContentLoaded', function () {
   if (window.Alpine) {
     initializeVerdant();
@@ -37,4 +39,11 @@ function initializeVerdant() {
       });
     });
   }
+}
+
+import Alpine from 'alpinejs';
+
+if (!window.Alpine) {
+  window.Alpine = Alpine;
+  document.addEventListener('DOMContentLoaded', () => Alpine.start());
 }

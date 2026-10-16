@@ -12,8 +12,8 @@
 <x-v-button.base
     {{ $attributes->merge([
         'class' => $outline
-            ? 'v-bg-transparent v-border-red-700 dark:v-border-red-600 v-text-red-700 dark:v-text-red-400 dark:hover:v-text-black hover:v-bg-red-700 dark:hover:v-bg-red-500 hover:v-text-white focus:v-ring-red-500' . ($disabled ? ' v-cursor-not-allowed' : '')
-            : 'v-bg-red-700 dark:v-bg-red-600 v-border-transparent v-text-white hover:v-bg-red-800 dark:hover:v-bg-red-500 focus:v-ring-red-500' . ($disabled ? ' v-cursor-not-allowed' : '')
+            ? 'v:bg-transparent v:border-red-700 v:dark:border-red-600 v:text-red-700 v:dark:text-red-400 v:dark:hover:text-black v:hover:bg-red-700 v:dark:hover:bg-red-500 v:hover:text-white v:focus:ring-red-500' . ($disabled ? ' v:cursor-not-allowed' : '')
+            : 'v:bg-red-700 v:dark:bg-red-600 v:border-transparent v:text-white v:hover:bg-red-800 v:dark:hover:bg-red-500 v:focus:ring-red-500' . ($disabled ? ' v:cursor-not-allowed' : '')
     ]) }}
     :href="$href"
     :disabled="$disabled"

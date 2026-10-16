@@ -5,73 +5,73 @@
  */
 
 /* Main container: forces the grid context */
-.v-grid-layout {
+.v\:grid-layout {
     display: grid !important;
     width: 100%;
 }
 
-/* * Structural wrappers: 
- * 'display: contents' is used so these wrappers don't interfere 
+/* * Structural wrappers:
+ * 'display: contents' is used so these wrappers don't interfere
  * with the direct relationship between cells and the parent grid.
  */
-.v-grid-header-wrapper,
-.v-grid-body-wrapper{
+.v\:grid-header-wrapper,
+.v\:grid-body-wrapper{
     display: contents;
 }
 
 /* Rows act as a structural group but must remain 'contents' in Table View */
-.v-contents-row {
+.v\:contents-row {
     display: contents !important;
 }
 
 /* Basic cell styling for both Header and Body */
-.v-grid-header-wrapper > div,
-.v-contents-row > div {
+.v\:grid-header-wrapper > div,
+.v\:contents-row > div {
     padding: 1rem;
     border-bottom-width: 1px;
     border-color: rgb(229 231 235);
 }
 
 /* Header-specific styling */
-.v-grid-header-wrapper > div {
+.v\:grid-header-wrapper > div {
     background-color: rgb(249 250 251);
     font-weight: 600;
 }
 
 /* Dark mode overrides for Header & Body */
-:is(.dark .v-grid-header-wrapper > div) {
-    background-color: rgb(55 65 81); 
+:is(.dark .v\:grid-header-wrapper > div) {
+    background-color: rgb(55 65 81);
 }
 
-:is(.dark .v-contents-row > div) {
+:is(.dark .v\:contents-row > div) {
     border-color: rgb(55 65 81);
 }
 
 /* Remove border from the last row to prevent double borders at bottom */
-.v-grid-body-wrapper > .v-contents-row:last-child > div {
+.v\:grid-body-wrapper > .v\:contents-row:last-child > div {
     border-bottom-width: 0;
 }
 
 /**
  * HOVER STATES
- * Uses .v-group on the row/cell to trigger background changes
+ * Uses .v\:group on the row/cell to trigger background changes
  */
-.v-group:hover > div {
+.v\:group:hover > div {
     background-color: rgb(249 250 251);
 }
 
-:is(.dark .v-group:hover > div) {
+:is(.dark .v\:group:hover > div) {
     background-color: #2d3441;
 }
 
 /* Header Links & SVG icons (Sorting arrows etc.) */
-.v-grid-header-wrapper svg {
+.v\:grid-header-wrapper svg {
     width: 0.75rem !important;
     height: 0.75rem !important;
     flex-shrink: 0;
 }
 
-.v-grid-header-wrapper a {
+.v\:grid-header-wrapper a {
     display: inline-flex !important;
     align-items: center !important;
     gap: 0.25rem !important;

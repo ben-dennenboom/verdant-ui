@@ -4,27 +4,17 @@ namespace Dennenboom\VerdantUI;
 
 class VerdantUI
 {
-    public static function assets()
+    public static function assets(): string
     {
         $verdantCssPath = self::assetPath('css/verdant-ui.css');
         $verdantJsPath = self::assetPath('js/verdant-ui.js');
-        $dynamicTableSortJsPath = self::assetPath('js/dynamic-table-sort.js');
-        $dynamicTableColumnsJsPath = self::assetPath('js/dynamic-table-columns.js');
-        $dynamicTableStateJsPath = self::assetPath('js/dynamic-table-state.js');
-        $dynamicTableSearchJsPath = self::assetPath('js/dynamic-table-search.js');
-        $dynamicTableActionsJsPath = self::assetPath('js/dynamic-table-actions.js');
-        $dynamicTableBulkJsPath = self::assetPath('js/dynamic-table-bulk.js');
-        $vatNumberCheckerJsPath = self::assetPath('js/vat-number-checker.js');
         $fontAwesomePath = self::assetPath('vendor/fontawesome/css/all.min.css');
         $fontAwesomeSolidPath = self::assetPath('vendor/fontawesome/webfonts/fa-solid-900.woff2');
-        $alpineJsPath = self::assetPath('vendor/alpine/alpine.min.js');
         $cropperJsPath = self::assetPath('js/cropper.min.js');
         $cropperCssPath = self::assetPath('css/cropper.min.css');
 
-        $includeAlpine = config('verdant.assets.include_alpine', true);
         $includeFontawesome = config('verdant.assets.include_fontawesome', true);
 
-        $alpine = $includeAlpine ? "<script src=\"{$alpineJsPath}\" defer></script>" : "";
         $fontawesome = $includeFontawesome
             ? "<link rel=\"preload\" href=\"{$fontAwesomeSolidPath}\" as=\"font\" type=\"font/woff2\" crossorigin>"
               . "<link rel=\"stylesheet\" href=\"{$fontAwesomePath}\">"
@@ -38,17 +28,6 @@ class VerdantUI
         <style>{$customColors}</style>
         <script src="{$cropperJsPath}" defer></script>
         <script src="{$verdantJsPath}" defer></script>
-        <script src="{$dynamicTableSortJsPath}" defer></script>
-        <script src="{$dynamicTableColumnsJsPath}" defer></script>
-        <script src="{$dynamicTableStateJsPath}" defer></script>
-        <script src="{$dynamicTableSearchJsPath}" defer></script>
-        <script src="{$dynamicTableActionsJsPath}" defer></script>
-        <script src="{$dynamicTableBulkJsPath}" defer></script>
-        <script src="{$vatNumberCheckerJsPath}" defer></script>
-        {$alpine}
-        <script>
-            window.verdantPrefix = "v-"
-        </script>
         HTML;
     }
 
@@ -101,12 +80,12 @@ class VerdantUI
 
             if (is_string($shades)) {
                 $rgb = self::hexToRgb($shades);
-                $css .= "{$varPrefix}: {$rgb};";
+                $css .= "{$varPrefix}: rgb({$rgb});";
 
                 if (!str_starts_with($colorName, 'v-')) {
                     $generatedShades = self::generateColorShades($shades);
                     foreach ($generatedShades as $shade => $rgb) {
-                        $css .= "{$varPrefix}-{$shade}: {$rgb};";
+                        $css .= "{$varPrefix}-{$shade}: rgb({$rgb});";
                     }
                 }
 
@@ -128,9 +107,9 @@ class VerdantUI
                 $rgb = self::hexToRgb($color);
 
                 if ($shade === 'default') {
-                    $css .= "{$varPrefix}: {$rgb};";
+                    $css .= "{$varPrefix}: rgb({$rgb});";
                 } else {
-                    $css .= "{$varPrefix}-{$shade}: {$rgb};";
+                    $css .= "{$varPrefix}-{$shade}: rgb({$rgb});";
                 }
             }
 
@@ -142,7 +121,7 @@ class VerdantUI
 
                     foreach ($generatedShades as $shade => $rgb) {
                         if (!isset($shades[$shade]) && $shade !== 'default') {
-                            $css .= "{$varPrefix}-{$shade}: {$rgb};";
+                            $css .= "{$varPrefix}-{$shade}: rgb({$rgb});";
                         }
                     }
                 }

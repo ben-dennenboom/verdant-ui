@@ -1,28 +1,30 @@
 import { defineConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
+import laravel from 'laravel-vite-plugin';
+import verdant from './verdant-vite.js';
 
 export default defineConfig({
-  plugins: [
-    laravel({
-      input: [
-        'resources/css/verdant-ui.css',
-        'resources/js/verdant-ui.js',
-      ],
-      refresh: true,
-    }),
-  ],
-  build: {
-    outDir: 'public/build',
-    rollupOptions: {
-      output: {
-        entryFileNames: 'js/[name].js',
-        chunkFileNames: 'js/[name].js',
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name.endsWith('.css')) {
-            return 'css/[name][extname]';
-          }
-          return 'assets/[name][extname]';
+    plugins: [
+        laravel({
+            input: verdant.files(),
+            refresh: true,
+        }),
+        tailwindcss(),
+        verdant()
+    ],
+    build: {
+        outDir: 'public/build',
+        rolldownOptions: {
+            watch: { buildDelay: 5000 },
+            output: {
+                entryFileNames: 'js/[name].js',
+                assetFileNames: ({ name = '' }) => {
+                    if (name.endsWith('.css')) {
+                        return 'css/[name][extname]';
+                    }
+                    return 'assets/[name][extname]';
+                },
+            }
         },
-      },
-    },
-  }
+    }
 });

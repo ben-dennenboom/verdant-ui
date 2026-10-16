@@ -1,19 +1,19 @@
 @if ($vm->paginator && $vm->paginator->hasPages())
-    <div class="v-flex v-items-center v-justify-between v-border-t v-border-gray-200 dark:v-border-gray-700 v-px-4 v-py-3 v-text-sm">
+    <div class="v:flex v:items-center v:justify-between v:border-t v:border-gray-200 v:dark:border-gray-700 v:px-4 v:py-3 v:text-sm">
         {{-- Prev --}}
         @if ($vm->paginator->onFirstPage())
-            <span class="v-text-gray-400 dark:v-text-gray-500">Previous</span>
+            <span class="v:text-gray-400 v:dark:text-gray-500">Previous</span>
         @else
             <a
                 href="{{ $vm->paginator->previousPageUrl() }}"
-                class="v-text-primary hover:v-underline"
+                class="v:text-primary v:hover:underline"
             >
                 Previous
             </a>
         @endif
 
         {{-- Page info --}}
-        <span class="v-text-gray-500 dark:v-text-gray-400">
+        <span class="v:text-gray-500 v:dark:text-gray-400">
             Page {{ $vm->paginator->currentPage() }}
             of {{ $vm->paginator->lastPage() }}
         </span>
@@ -22,12 +22,12 @@
         @if ($vm->paginator->hasMorePages())
             <a
                 href="{{ $vm->paginator->nextPageUrl() }}"
-                class="v-text-primary hover:v-underline"
+                class="v:text-primary v:hover:underline"
             >
                 Next
             </a>
         @else
-            <span class="v-text-gray-400 dark:v-text-gray-500">Next</span>
+            <span class="v:text-gray-400 v:dark:text-gray-500">Next</span>
         @endif
     </div>
 @endif

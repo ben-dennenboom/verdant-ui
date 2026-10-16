@@ -14,6 +14,6 @@ composer require dennenboom/verdant-ui
 
 See the [full documentation][1] for examples and detailed explanations of each component.
 
-
+Requires Node.js >=22 for building assets.
 
 [1]: https://verdant.dennenboom.be

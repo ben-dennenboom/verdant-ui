@@ -16,7 +16,7 @@
     $resultsId = 'v:table-search-results-' . $paramName;
     $inputWrapperClass = 'v:flex v:items-stretch v:rounded v:border v:border-gray-300 v:dark:border-gray-600
         v:bg-white v:dark:bg-gray-800 v:focus-within:ring-1 v:focus-within:ring-gray-500 v:focus-within:border-gray-500';
-    $inputClass = 'v:flex-1 v:min-w-0 v:border-0 v:border-r border-gray-300 v:dark:border-gray-700 v:bg-transparent v:rounded-l v:rounded-r-none v:px-3 v:py-1
+    $inputClass = 'v:flex-1 v:min-w-0 v:border-0 v:border-r v:border-gray-300 v:dark:border-gray-700 v:bg-transparent v:rounded-l v:rounded-r-none v:px-3 v:py-1
         v:text-sm v:text-gray-900 v:dark:text-gray-100 v:placeholder:text-gray-400
         v:dark:placeholder:text-gray-500 v:focus:outline-hidden v:focus:ring-0 v:focus:border-gray-500';
 @endphp
@@ -48,7 +48,7 @@
             @endif
         @endforeach
         <label for="{{ $inputId }}" class="v:sr-only">{{ __('verdant::table.search_table') }}</label>
-        <div class="v-relative v-flex-1">
+        <div class="v:relative v:flex-1 v:min-w-0">
             <div class="{{ $inputWrapperClass }}">
                 <input
                     type="text"

@@ -41,7 +41,7 @@
     @if($clearUrl)
         <a
             href="{{ $clearUrl }}"
-            class="v-text-red-500 v-text-sm v-whitespace-nowrap"
+            class="v-self-center v-text-red-500 v-text-sm v-whitespace-nowrap v-no-underline hover:v-underline"
         >
             {{ __('verdant::table.clear') }}
         </a>

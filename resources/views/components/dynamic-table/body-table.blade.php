@@ -25,8 +25,35 @@
             default   => 'hover:v-bg-gray-50 dark:hover:v-bg-gray-700',
         };
         $boldClass = $row->rowStyle?->bold ? ' v-font-semibold' : '';
+        $themedVariant = in_array($row->rowStyle?->variant, ['success', 'info', 'warning', 'danger'], true)
+            && filled(config('verdant.theme.colors.v-table-row-' . $row->rowStyle->variant . '-bg'));
+        if ($themedVariant) {
+            $rowBgClass .= ' v-dt-row-themed v-dt-row-' . $row->rowStyle->variant;
+        }
     @endphp
+    @if($row->group !== null && $row->group['label'] !== ($previousGroupLabel ?? null))
+        @php
+            $previousGroupLabel = $row->group['label'];
+            $groupIndex = ($groupIndex ?? 0) + 1;
+        @endphp
+        <div
+            data-v-group-row="{{ $groupIndex }}"
+            class="v-px-4 v-py-1 v-text-sm v-font-semibold v-text-gray-900 dark:v-text-gray-100 v-bg-gray-100 dark:v-bg-gray-700 @if(filled(config('verdant.theme.colors.v-table-group-bg'))) v-dt-group-themed @endif"
+        >
+            @if($row->group['html'])
+                {!! $row->group['label'] !!}
+            @else
+                {{ $row->group['label'] }}
+            @endif
+        </div>
+    @endif
     <div
+        data-v-row
+        @if($row->group !== null) data-v-row-group="{{ $groupIndex }}" @endif
+        @if($vm->clientSearch)
+            data-v-search-row
+            data-v-search="{{ $vm->rowSearchText($row) }}"
+        @endif
         @if($vm->hasBulkEdit && $row->rowKey !== null)
             x-data="{ rowHovered: false }"
             @mouseenter="rowHovered = true"
@@ -118,6 +145,11 @@
             </div>
         @endforeach
     </div>
+    @if($vm->clientSearch && $loop->last)
+        <div data-v-search-empty data-v-search-hidden class="v-px-6 v-py-4 v-text-sm v-text-gray-500 dark:v-text-gray-400">
+            {{ __('verdant::table.no_matches') }}
+        </div>
+    @endif
 @empty
     <div class="v-px-6 v-py-4 v-text-sm text-gray-500 dark:text-gray-400">
         {{ $emptyText }}

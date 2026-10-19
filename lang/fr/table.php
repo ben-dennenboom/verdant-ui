@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'no_matches' => 'Aucune ligne correspondante.',
     'empty' => 'Aucune donnée.',
     'search_placeholder' => 'Rechercher…',
     'search' => 'Rechercher',

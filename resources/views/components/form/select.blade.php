@@ -137,7 +137,7 @@
     <div class="v-flex v-items-center v-justify-between">
         <label for="{{ $id }}" class="v-block v-font-medium v-text-gray-700 dark:v-text-gray-300">{{ $label }}@if($required)<span class="required_asterisk">*</span>@endif</label>
         @unless($required && config('verdant.ui.hide_reset_on_required_selects'))
-            <button type="button" @click="reset" :disabled="disabled" :class="disabled ? 'v-opacity-40 v-cursor-not-allowed' : ''" class="v-text-red-500 v-text-sm">{{ __('verdant::form.reset') }}</button>
+            <button type="button" @click="reset" :disabled="disabled" :class="disabled ? 'v-opacity-40 v-cursor-not-allowed' : ''" class="v-text-red-500 v-text-sm v-bg-transparent v-border-0 v-p-0">{{ __('verdant::form.reset') }}</button>
         @endunless
     </div>
 
@@ -180,7 +180,7 @@
                        placeholder="{{ __('verdant::form.search_placeholder') }}">
             </div>
 
-            <ul class="v-max-h-60 v-overflow-auto v-py-1 v-list-none">
+            <ul class="v-max-h-60 v-overflow-auto v-py-1 v-m-0 v-pl-0 v-list-none">
                 @if($searchUrl || config('verdant.ui.aligned_form_controls'))
                     <li x-show="! loading && filteredOptions().length === 0" class="v-px-4 v-py-2 v-text-sm v-text-gray-500 dark:v-text-gray-400">{{ __('verdant::form.no_results') }}</li>
                 @endif

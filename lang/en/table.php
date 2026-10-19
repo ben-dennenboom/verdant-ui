@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'no_matches' => 'No matching rows.',
     'empty' => 'No data available.',
     'search_placeholder' => 'Search…',
     'search' => 'Search',

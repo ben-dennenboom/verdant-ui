@@ -1,0 +1,41 @@
+{
+  "resources/js/dynamic-table/index.js": {
+    "file": "js/dynamic-table.js",
+    "name": "dynamic-table",
+    "src": "resources/js/dynamic-table/index.js",
+    "isEntry": true
+  },
+  "resources/js/form/image-cropper.js": {
+    "file": "js/form/image-cropper.js",
+    "name": "form/image-cropper",
+    "src": "resources/js/form/image-cropper.js",
+    "isEntry": true
+  },
+  "resources/js/form/richtext.js": {
+    "file": "js/form/richtext.js",
+    "name": "form/richtext",
+    "src": "resources/js/form/richtext.js",
+    "isEntry": true
+  },
+  "resources/js/form/vat-number-checker.js": {
+    "file": "js/form/vat-number-checker.js",
+    "name": "form/vat-number-checker",
+    "src": "resources/js/form/vat-number-checker.js",
+    "isEntry": true
+  },
+  "resources/js/grid/index.js": {
+    "file": "js/grid.js",
+    "name": "grid",
+    "src": "resources/js/grid/index.js",
+    "isEntry": true
+  },
+  "resources/js/verdant-ui.js": {
+    "file": "js/verdant-ui.js",
+    "name": "verdant-ui",
+    "src": "resources/js/verdant-ui.js",
+    "isEntry": true,
+    "css": [
+      "css/verdant-ui.css"
+    ]
+  }
+}

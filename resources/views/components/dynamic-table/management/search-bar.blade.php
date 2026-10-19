@@ -12,17 +12,17 @@
         ? $currentPath . '?' . http_build_query([...\Illuminate\Support\Arr::except($currentQuery, ['page']), $paramName => ''])
         : $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '');
     $clearUrl = $searchTerm !== '' ? $clearUrlBase : null;
-    $inputId = 'v-table-search-' . $paramName;
-    $resultsId = 'v-table-search-results-' . $paramName;
-    $inputWrapperClass = 'v-flex v-items-stretch v-rounded v-shadow-sm v-border v-border-gray-300 dark:v-border-gray-600
-        v-bg-white dark:v-bg-gray-800 focus-within:v-ring-1 focus-within:v-ring-gray-500 focus-within:v-border-gray-500';
-    $inputClass = 'v-flex-1 v-min-w-0 v-border-0 v-border-r border-gray-300 dark:v-border-gray-700 v-bg-transparent v-rounded-l v-rounded-r-none v-px-3 v-py-1
-        v-shadow-sm v-text-sm v-text-gray-900 dark:v-text-gray-100 placeholder:v-text-gray-400
-        dark:placeholder:v-text-gray-500 focus:v-outline-none focus:v-ring-0 focus:v-border-gray-500';
+    $inputId = 'v:table-search-' . $paramName;
+    $resultsId = 'v:table-search-results-' . $paramName;
+    $inputWrapperClass = 'v:flex v:items-stretch v:rounded v:border v:border-gray-300 v:dark:border-gray-600
+        v:bg-white v:dark:bg-gray-800 v:focus-within:ring-1 v:focus-within:ring-gray-500 v:focus-within:border-gray-500';
+    $inputClass = 'v:flex-1 v:min-w-0 v:border-0 v:border-r v:border-gray-300 v:dark:border-gray-700 v:bg-transparent v:rounded-l v:rounded-r-none v:px-3 v:py-1
+        v:text-sm v:text-gray-900 v:dark:text-gray-100 v:placeholder:text-gray-400
+        v:dark:placeholder:text-gray-500 v:focus:outline-hidden v:focus:ring-0 v:focus:border-gray-500';
 @endphp
 
 <div
-    class="v-flex v-items-center v-gap-2 v-flex-1 v-min-w-0 {{ $searchApiUrl ? 'v-relative' : '' }}"
+    class="v:flex v:items-center v:gap-2 v:flex-1 v:min-w-0 {{ $searchApiUrl ? 'v:relative' : '' }}"
     @if($searchApiUrl)
         x-data="verdantTableSearch({
             apiUrl: @js($searchApiUrl),
@@ -35,7 +35,7 @@
     <form
         method="GET"
         action="{{ $currentPath }}"
-        class="v-flex v-items-center v-gap-2 v-w-full {{ $searchApiUrl ? 'v-relative v-flex-1' : '' }}"
+        class="v:flex v:items-center v:gap-2 v:w-full {{ $searchApiUrl ? 'v:relative v:flex-1' : '' }}"
         role="search"
     >
         @foreach ($currentQuery as $name => $value)
@@ -47,8 +47,8 @@
                 <input type="hidden" name="{{ $name }}" value="{{ $value }}" />
             @endif
         @endforeach
-        <label for="{{ $inputId }}" class="v-sr-only">{{ __('verdant::table.search_table') }}</label>
-        <div class="v-relative v-flex-1">
+        <label for="{{ $inputId }}" class="v:sr-only">{{ __('verdant::table.search_table') }}</label>
+        <div class="v:relative v:flex-1 v:min-w-0">
             <div class="{{ $inputWrapperClass }}">
                 <input
                     type="text"
@@ -75,7 +75,7 @@
                 <x-verdant::button.transparent
                     type="submit"
                     icon="magnifying-glass"
-                    class="v-shrink-0 v-rounded-l-none v-rounded-r v-p-2 v-border-0"
+                    class="v:shrink-0 v:rounded-l-none v:rounded-r v:p-2 v:border-0"
                     aria-label="{{ __('verdant::table.search') }}"
                 />
             </div>
@@ -86,24 +86,24 @@
                     x-show="open && (results.length > 0 || loading)"
                     x-cloak
                     x-transition
-                    class="v-absolute v-left-0 v-right-0 v-z-30 v-mt-1 v-max-h-60 v-overflow-auto v-rounded-md
-                        v-border v-border-gray-200 dark:v-border-gray-600 v-bg-floating
-                        v-py-1 v-shadow-lg"
+                    class="v:absolute v:left-0 v:right-0 v:z-30 v:mt-1 v:max-h-60 v:overflow-auto v:rounded-md
+                        v:border v:border-gray-200 v:dark:border-gray-600 v:bg-floating
+                        v:py-1 v:shadow-lg"
                 >
                     <template x-if="loading">
-                        <div class="v-px-3 v-py-4 v-text-sm v-text-gray-500 dark:v-text-gray-400 v-text-center">
+                        <div class="v:px-3 v:py-4 v:text-sm v:text-gray-500 v:dark:text-gray-400 v:text-center">
                             Loading…
                         </div>
                     </template>
                     <template x-if="!loading && results.length > 0">
-                        <ul class="v-divide-y v-divide-gray-100 dark:v-divide-gray-700">
+                        <ul class="v:divide-y v:divide-gray-100 v:dark:divide-gray-700">
                             <template x-for="(item, index) in results" :key="index">
                                 <li role="option" :aria-selected="focusedIndex === index">
                                     <a
                                         :href="item.url"
-                                        class="v-block v-px-3 v-py-2 v-text-sm v-text-gray-900 dark:v-text-gray-100
-                                            hover:v-bg-gray-50 dark:hover:v-bg-gray-700"
-                                        :class="{ 'v-bg-gray-50 dark:v-bg-gray-700': focusedIndex === index }"
+                                        class="v:block v:px-3 v:py-2 v:text-sm v:text-gray-900 v:dark:text-gray-100
+                                            v:hover:bg-gray-50 v:dark:hover:bg-gray-700"
+                                        :class="{ 'v:bg-gray-50 v:dark:bg-gray-700': focusedIndex === index }"
                                         x-text="item.label"
                                         @mouseenter="focusedIndex = index"
                                         @click="open = false"
@@ -118,8 +118,8 @@
         @if ($clearUrl !== null || $searchApiUrl)
             <a
                 href="{{ $clearUrl ?? $clearUrlBase }}"
-                class="v-shrink-0 v-text-sm v-text-gray-500 hover:v-text-gray-700
-                    dark:hover:v-text-gray-400 hover:v-underline"
+                class="v:shrink-0 v:text-sm v:text-gray-500 v:hover:text-gray-700
+                    v:dark:hover:text-gray-400 b v:hover:underline"
 
                 @if($searchApiUrl)
                     x-show="query.trim() !== ''"

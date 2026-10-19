@@ -9,12 +9,12 @@
     $columns = $columnVisibilityConfig['columns'] ?? [];
     $orderEnabled = $columnVisibilityConfig['orderEnabled'] ?? false;
     $reorderModalId = 'column-order-' . $storeKey;
-    $popupPosition = $hasFilter ? 'v-left-1/2 -v-translate-x-1/2' : '';
+    $popupPosition = $hasFilter ? 'v:left-1/2 v:-translate-x-1/2' : '';
 @endphp
 
-<div class="v-shrink-0 v-flex v-items-center v-justify-end">
+<div class="v:shrink-0 v:flex v:items-center v:justify-end">
     <div
-        class="v-relative"
+        class="v:relative"
         x-data="verdantColumnPicker({
             storeKey: @js($storeKey),
             columns: @js($columns),
@@ -25,66 +25,66 @@
         <x-v-button.light
             type="button"
             icon-right="angle-down"
-            aria-label="{{ __('verdant::table.choose_visible_columns') }}"
+            aria-label="Choose visible columns"
             aria-haspopup="true"
             x-bind:aria-expanded="'open'"
             aria-controls="{{ $columnsPanelId }}"
             @click="open = !open"
-            class="v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
+            class="v:text-sm v:border-gray-500 v:dark:border-gray-600 v:text-gray-700 v:dark:text-gray-300 v:hover:bg-gray-200 v:dark:hover:bg-gray-600 v:focus:ring-gray-500 v:whitespace-nowrap"
         >
-            <i class="fas fa-gear v-mr-1"></i>
+            <i class="fas fa-gear v:mr-1"></i>
         </x-v-button.light>
 
         <template x-if="open">
             <div
                 :id="panelId"
                 role="region"
-                aria-label="{{ __('verdant::table.visible_columns') }}"
-                class="v-absolute {{ $popupPosition }} md:v-left-auto md:v-right-0 md:v-translate-x-0 v-z-20 v-mt-2 {{ config('verdant.ui.wide_column_picker') ? 'v-w-72 v-max-w-[calc(100vw-2rem)]' : 'v-w-60' }} v-rounded-md v-border v-border-gray-200 dark:v-border-gray-600 v-bg-floating v-p-3 v-shadow-lg"
+                aria-label="Visible columns"
+                class="v:absolute {{ $popupPosition }} v:md:left-auto v:md:right-0 v:md:translate-x-0 v:z-20 v:mt-2 v:w-60 v:rounded-md v:border v:border-gray-200 v:dark:border-gray-600 v:bg-floating v:p-3 v:shadow-lg"
             >
-                <div class="v-flex v-items-center v-justify-between {{ config('verdant.ui.wide_column_picker') ? 'v-gap-2 ' : '' }}v-pb-2">
-                    <div class="{{ config('verdant.ui.wide_column_picker') ? 'v-whitespace-nowrap ' : '' }}v-text-sm v-font-semibold v-text-gray-900 dark:v-text-gray-100">{{ __('verdant::table.visible_columns') }}</div>
+                <div class="v:flex v:items-center v:justify-between v:pb-2">
+                    <div class="v:text-sm v:font-semibold v:text-gray-900 v:dark:text-gray-100">Visible columns</div>
                     <x-v-button.transparent
                         type="button"
-                        class="v-text-xs v-text-gray-600 dark:v-text-gray-400 hover:v-underline"
+                        class="v:text-xs v:text-gray-600 v:dark:text-gray-400 v:hover:underline"
                         @click="resetAndClose()"
                     >
-                        {{ __('verdant::table.reset') }}
+                        Reset
                     </x-v-button.transparent>
                 </div>
 
-                <div class="v-max-h-64 v-space-y-2 v-overflow-auto v-pl-1 v-pt-1">
+                <div class="v:max-h-64 v:space-y-2 v:overflow-auto v:pl-1 v:pt-1">
                     <template x-for="col in columns" :key="col.key">
-                        <label class="v-flex v-items-center v-gap-2 v-text-sm v-cursor-pointer">
+                        <label class="v:flex v:items-center v:gap-2 v:text-sm v:cursor-pointer">
                             <input
                                 type="checkbox"
-                                class="v-rounded v-border-secondary-300 dark:v-border-gray-600 v-text-primary-600 focus:v-ring-primary-500 focus:v-border-primary-500 v-shadow-sm sm:v-text-sm not-checked:v-bg-white not-checked:dark:v-bg-gray-800"
+                                class="v:rounded v:border-secondary-300 v:dark:border-gray-600 v:text-primary-600 v:focus:ring-primary-500 v:focus:border-primary-500 v:shadow-sm v:sm:text-sm v:not-checked:bg-white v:dark:not-checked:bg-gray-800"
                                 :checked="isColumnVisible(col.key)"
                                 @change="setColumnVisible(col.key, $event.target.checked)"
                                 :disabled="col.pinned"
                             />
-                            <span :class="col.pinned ? 'v-text-gray-400 dark:v-text-gray-500' : 'v-text-gray-700 dark:v-text-gray-300'" x-text="col.label"></span>
+                            <span :class="col.pinned ? 'v:text-gray-400 v:dark:text-gray-500' : 'v:text-gray-700 v:dark:text-gray-300'" x-text="col.label"></span>
                         </label>
                     </template>
                 </div>
 
-                <div class="v-mt-3 v-flex v-gap-2">
+                <div class="v:mt-3 v:flex v:gap-2">
                     <x-v-button.light
                         type="button"
                         outline
-                        class="v-flex-1 {{ config('verdant.ui.wide_column_picker') ? 'v-min-w-0 !v-px-2 ' : '' }}v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
+                        class="v:flex-1 v:text-sm v:border-gray-500 v:dark:border-gray-600 v:text-gray-700 v:dark:text-gray-300 v:hover:bg-gray-200 v:dark:hover:bg-gray-600 v:focus:ring-gray-500 v:whitespace-nowrap"
                         @click="showAll()"
                     >
-                        {{ __('verdant::table.show_all') }}
+                        Show all
                     </x-v-button.light>
 
                     <x-v-button.light
                         type="button"
                         outline
-                        class="v-flex-1 {{ config('verdant.ui.wide_column_picker') ? 'v-min-w-0 !v-px-2 ' : '' }}v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
+                        class="v:flex-1 v:text-sm v:border-gray-500 v:dark:border-gray-600 v:text-gray-700 v:dark:text-gray-300 v:hover:bg-gray-200 v:dark:hover:bg-gray-600 v:focus:ring-gray-500 v:whitespace-nowrap"
                         @click="hideAll()"
                     >
-                        {{ __('verdant::table.hide_all') }}
+                        Hide all
                     </x-v-button.light>
                 </div>
 
@@ -92,13 +92,13 @@
                     <x-v-button.light
                         type="button"
                         outline
-                        class="v-mt-2 v-w-full v-text-sm v-border-gray-500 dark:v-border-gray-600 v-text-gray-700 dark:v-text-gray-300 hover:v-bg-gray-200 dark:hover:v-bg-gray-600 focus:v-ring-gray-500 v-whitespace-nowrap"
+                        class="v:mt-2 v:w-full v:text-sm v:border-gray-500 v:dark:border-gray-600 v:text-gray-700 v:dark:text-gray-300 v:hover:bg-gray-200 v:dark:hover:bg-gray-600 v:focus:ring-gray-500 v:whitespace-nowrap"
                         aria-haspopup="dialog"
                         aria-controls="{{ $reorderModalId }}"
                         @click="open = false; $dispatch('open-modal', '{{ $reorderModalId }}')"
                     >
-                        <i class="fas fa-arrows-up-down-left-right v-mr-1"></i>
-                        {{ __('verdant::table.change_order') }}
+                        <i class="fas fa-arrows-up-down-left-right v:mr-1"></i>
+                        Change order
                     </x-v-button.light>
                 @endif
             </div>

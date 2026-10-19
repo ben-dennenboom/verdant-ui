@@ -1,8 +1,8 @@
 @props(['value'])
 
-<div class="v-block md:v-flex v-items-center">
-    <span class="v-font-mono v-bg-secondary-100 dark:v-bg-gray-600 v-text-gray-800 dark:v-text-gray-100 v-px-2 v-py-1 v-rounded">{{ $value }}</span>
-    <x-v-button.transparent onclick="copyToClipboard('{{ $value }}')" class="v-p-1" icon="copy"/>
+<div class="v:block v:md:flex v:items-center">
+    <span class="v:font-mono v:bg-secondary-100 v:dark:bg-gray-600 v:text-gray-800 v:dark:text-gray-100 v:px-2 v:py-1 v:rounded">{{ $value }}</span>
+    <x-v-button.transparent onclick="copyToClipboard('{{ $value }}')" class="v:p-1" icon="copy"/>
 </div>
 
 <script>

@@ -11,7 +11,7 @@
     $count = !empty($filter) ? count(array_filter($filter, fn($v) => is_null($v) === false )) : 0;
   @endphp
   @if($count > 0)
-    <span class="v-ml-2">{{ count(array_filter($filter, fn($v) => is_null($v) === false )) }}</span>
+    <span class="v:ml-2">{{ count(array_filter($filter, fn($v) => is_null($v) === false )) }}</span>
   @endif
 </x-v-button.light>
 
@@ -22,18 +22,18 @@
 <div x-data="{ open: false }">
 
   <x-v-modal :id="$id" maxWidth="lg">
-    <form id="{{ $id }}-form" class="v-form v-auto-filter" method="get" action="{{ $route }}">
-      <div class="sm:v-flex sm:v-items-start">
-        <div class="v-w-full">
-          <h3 class="v-text-lg v-font-medium v-leading-6 v-text-gray-900 dark:v-text-gray-100" id="modal-title">
+    <form id="{{ $id }}-form" class="v:form v:auto-filter" method="get" action="{{ $route }}">
+      <div class="v:sm:flex v:sm:items-start">
+        <div class="v:w-full">
+          <h3 class="v:text-lg v:font-medium v:leading-6 v:text-gray-900 v:dark:text-gray-100" id="modal-title">
             {{ $title }}
           </h3>
-          <div class="v-mt-4 v-mb-4 v-space-y-4">
+          <div class="v:mt-4 v:mb-4 v:space-y-4">
             {{ $slot }}
           </div>
         </div>
       </div>
-      <div class="v-mt-5 sm:v-mt-4 v-flex v-justify-between">
+      <div class="v:mt-5 v:sm:mt-4 v:flex v:justify-between">
         <x-v-button.light outline @click="$dispatch('close-modal', '{{ $id }}')">Cancel</x-v-button.light>
 
         <x-v-button.group align="right">

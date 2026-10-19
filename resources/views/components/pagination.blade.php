@@ -44,7 +44,7 @@
                                 @if($link['url'] == null)
                                     <span class="{{ $linkClass }} v-cursor-not-allowed">&laquo;</span>
                                 @else
-                                    <a class="{{ $linkClass }}" :href="{{ $link['url'] }}">&laquo;</a>
+                                    <a class="{{ $linkClass }}" href="{{ $link['url'] }}">&laquo;</a>
                                 @endif
                             </li>
                         @elseif($link === $links->last())

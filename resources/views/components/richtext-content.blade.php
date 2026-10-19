@@ -1,5 +1,5 @@
 @props(['content'])
 
-<div class="richtext-content">
+<div {{ $attributes->merge(['class' => 'richtext-content']) }}>
     {!! $content !!}
 </div>

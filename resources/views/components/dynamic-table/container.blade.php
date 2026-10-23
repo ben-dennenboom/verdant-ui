@@ -101,7 +101,7 @@
     @endif
 >
     @if($showToolbar)
-        <div class="v:flex v:flex-col v:md:flex-row v:items-stretch v:md:items-center v:justify-between v:gap-3 v:px-4 v:py-3 v:border-b v:border-gray-200 v:dark:border-gray-700">
+        <div class="v:flex v:flex-col v:md:flex-row v:items-stretch v:md:items-center v:justify-end v:gap-3 v:px-4 v:py-3 v:border-b v:border-gray-200 v:dark:border-gray-700">
             @if($showSearch)
                 <div class="v:w-full v:md:flex-1 v:md:min-w-0">
                     @include('verdant::components.dynamic-table.management.search-bar', [

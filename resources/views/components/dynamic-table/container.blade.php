@@ -81,6 +81,7 @@
 
 <div
     class="v:rounded v:bg-surface v:border v:border-gray-200 v:dark:border-gray-700 {{ $class }}"
+    x-cloak
     @if($visibilityKey)
         data-columns-store="{{ $storeKey }}"
         x-data="verdantTableColumns({
@@ -98,6 +99,8 @@
             saveUrl: @js($columnVisibilityConfig['saveUrl']),
             csrfToken: @js(csrf_token()),
         })"
+    @else
+        x-data
     @endif
 >
     @if($showToolbar)

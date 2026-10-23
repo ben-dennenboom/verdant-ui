@@ -9,7 +9,7 @@ document.addEventListener('alpine:init', () => {
         csrfToken: config.csrfToken ?? '',
 
         init() {
-            this.$nextTick(() => this.updateVisibleCount());
+            this.updateVisibleCount();
             const el = this.$el.parentElement;
             if (el && typeof ResizeObserver !== 'undefined') {
                 const ro = new ResizeObserver(() => this.updateVisibleCount());

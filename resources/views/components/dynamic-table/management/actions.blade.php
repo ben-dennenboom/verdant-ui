@@ -11,7 +11,12 @@
             @if($i < $maxVisible)
                 @php $disabled = !empty($action['disabled']); @endphp
                 @php $icon = $action['icon'] ?? null; @endphp
-                <div x-show="visibleCount > {{ $i }}" x-transition class="v:inline-flex v:items-center {{ $i >= 0 ? 'v:border-r' : '' }} v:border-gray-200 v:dark:border-gray-600">
+                <div
+                    x-show="visibleCount > {{ $i }}"
+                    x-transition
+                    class="v:inline-flex v:items-center v:border-gray-200 v:dark:border-gray-600"
+                    :class="{ 'v:border-r': visibleCount > {{ $i + 1 }} || hasOverflow }"
+                >
                     @if(!empty($action['form']))
                         <form action="{{ $action['route'] }}" method="POST" class="v:inline-flex v:items-center">
                             @csrf
@@ -20,21 +25,21 @@
                             @endif
                             <button type="submit"
                                     @disabled($disabled)
-                                    class="v:p-1 v:px-2 v:text-sm v:hover:bg-gray-50 {{ $disabled ? 'v:text-gray-300 v:cursor-not-allowed' : 'v:text-gray-700' }}"
+                                    class="v:p-1 v:px-2 v:text-sm v:hover:bg-gray-50 v:overflow-hidden {{ $disabled ? 'v:text-gray-300 v:cursor-not-allowed' : 'v:text-gray-700' }}"
                             >
-                                @if($icon)<i class="fas fa-{{ $icon }} v:mr-2"></i>@endif
+                                @if($icon)<i class="fas fa-{{ $icon }} {{ filled($action['label'] ?? null) ? 'v:mr-2' : 'v:mx-1' }}"></i>@endif
                                 {{ $action['label'] }}
                             </button>
                         </form>
                     @elseif($disabled)
                         <span class="v:p-1 v:px-2 v:text-sm v:text-gray-300 v:cursor-not-allowed">
-                            @if($icon)<i class="fas fa-{{ $icon }} v:mr-2"></i>@endif
+                            @if($icon)<i class="fas fa-{{ $icon }} {{ filled($action['label'] ?? null) ? 'v:mr-2' : 'v:mx-1' }}"></i>@endif
                             {{ $action['label'] }}
                         </span>
                     @else
                         <a href="{{ $action['route'] }}"
                            class="v:p-1 v:px-2 v:text-sm v:text-gray-700 v:hover:bg-gray-50">
-                            @if($icon)<i class="fas fa-{{ $icon }} v:mr-2"></i>@endif
+                            @if($icon)<i class="fas fa-{{ $icon }} {{ filled($action['label'] ?? null) ? 'v:mr-2' : 'v:mx-1' }}"></i>@endif
                             {{ $action['label'] }}
                         </a>
                     @endif
@@ -43,7 +48,7 @@
         @endforeach
 
         <button x-show="hasOverflow"
-                x-transition
+                x-cloak
                 @click="open = !open"
                 class="v:p-1 v:text-sm v:text-gray-700 v:hover:bg-gray-50 v:border-gray-200 v:dark:border-gray-600"
         >
@@ -61,7 +66,7 @@
                 @php $disabled = !empty($action['disabled']); @endphp
                 @php $icon = $action['icon'] ?? null; @endphp
 
-                <div x-show="visibleCount <= {{ $i }}" x-transition>
+                <div x-show="visibleCount <= {{ $i }}">
                     @if(!empty($action['form']))
                         <form action="{{ $action['route'] }}" method="POST">
                             @csrf

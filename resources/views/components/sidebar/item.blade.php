@@ -18,10 +18,10 @@
                 ? 'fa-brands fa-' . substr($icon, 7)
                 : 'fa-solid fa-' . $icon;
         @endphp
-        <i class="{{ $sidebarItemIconClass }} v:flex-none v:w-6"></i>
+        <i class="{{ $sidebarItemIconClass }} v:flex-none v:w-6 v:text-center"></i>
         <span @class(
         [
-            "v:sidebar-label v:flex-1 v:ml-2",
+            "v:sidebar-label v:flex-1 v:ml-2 v:whitespace-nowrap v:overflow-hidden",
             "hidden" => $collapsed
         ])>
             {!! $label !!}

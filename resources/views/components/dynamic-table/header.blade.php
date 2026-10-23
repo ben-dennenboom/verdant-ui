@@ -41,8 +41,8 @@
             };
         @endphp
         <div class="
-            v:px-6 v:py-3 @if($key === 0 && $vm->hasBulkEdit) v:pl-3 @endif v:text-md v:font-semibold v:text-gray-700
-            v:dark:text-gray-300 {{ $alignClass }} {{ $header['class'] ?? '' }}
+            v:px-6 v:min-h-10 v:flex v:items-stretch border-b v:border-gray-100 @if($key === 0 && $vm->hasBulkEdit) v:pl-3 @endif v:text-sm v:font-medium v:text-gray-500
+            v:dark:text-gray-400 v:uppercase {{ $alignClass }} {{ $header['class'] ?? '' }}
         "
             @if(!empty($header['tooltip'])) title="{{ e($header['tooltip']) }}" @endif
             @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
@@ -57,20 +57,22 @@
                 <button
                     type="button"
                     title="{{ !empty($header['tooltip']) ? e($header['tooltip']) : __('verdant::table.click_to_sort') }}"
-                    class="v:inline-flex v:items-center v:gap-1 v:hover:underline"
+                    class="v:group v:inline-flex v:items-center v:uppercase v:gap-1 v:w-full v:py-3"
                     @click="toggle('{{ $header['key'] }}')"
                 >
-                    {{ $header['label'] }}
+                    <span class="v:group-hover:underline">{{ $header['label'] }}</span>
 
                     <template x-if="isActive('{{ $header['key'] }}')">
                         <i
-                            class="v:text-xs fa v:text-blue-500"
+                            class="v:text-xs fa v:text-blue-500 v:hover:no-underline"
                             :class="directionFor('{{ $header['key'] }}') === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down'"
                         ></i>
                     </template>
                 </button>
             @else
-                {{ $header['label'] }}
+                <span class="v:flex v:items-center v:py-3 v:w-full">
+        {{ $header['label'] }}
+    </span>
             @endif
         </div>
     @endforeach
@@ -78,7 +80,7 @@
     <template x-if="hasSorting()">
         <button
             type="button"
-            class="v:absolute v:right-3 v:top-1/2 v:-translate-y-1/2 v:text-red-500"
+            class="v:absolute v:right-3 v:top-1/2 v:-translate-y-1/2 v:text-red-500 v:cursor-pointer"
             title="{{ __('verdant::table.reset_sorting') }}"
             @click.stop="reset"
         >

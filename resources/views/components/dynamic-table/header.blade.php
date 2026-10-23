@@ -41,7 +41,7 @@
             };
         @endphp
         <div class="
-            v:px-6 v:min-h-10 v:flex v:items-stretch @if($key === 0 && $vm->hasBulkEdit) v:pl-3 @endif v:text-sm v:font-medium v:text-gray-500
+            v:px-6 v:min-h-10 v:flex v:items-stretch border-b v:border-gray-100 @if($key === 0 && $vm->hasBulkEdit) v:pl-3 @endif v:text-sm v:font-medium v:text-gray-500
             v:dark:text-gray-400 v:uppercase {{ $alignClass }} {{ $header['class'] ?? '' }}
         "
             @if(!empty($header['tooltip'])) title="{{ e($header['tooltip']) }}" @endif

@@ -28,9 +28,9 @@ final class Filter
     private function __construct(string $key, string $label, string $type)
     {
         $type = strtolower($type);
-        if (!in_array($type, self::TYPES, true)) {
+        if (! in_array($type, self::TYPES, true)) {
             throw new \InvalidArgumentException(
-                'Filter type must be one of: ' . implode(', ', self::TYPES) . ', got: ' . $type
+                'Filter type must be one of: '.implode(', ', self::TYPES).', got: '.$type
             );
         }
         $this->key = $key;
@@ -47,7 +47,7 @@ final class Filter
      * Set options for select type. Array format: value => label or list of ['value' => x, 'label' => y].
      * Callable is invoked in toDefinition() so options can be resolved at build time.
      *
-     * @param array<int|string, mixed>|callable $options
+     * @param  array<int|string, mixed>|callable  $options
      */
     public function options(array|callable $options): self
     {
@@ -99,7 +99,7 @@ final class Filter
     /**
      * Set a callback to apply custom filtering logic.
      *
-     * @param callable(Builder, mixed): void $callback Receives (query, value)
+     * @param  callable(Builder, mixed): void  $callback  Receives (query, value)
      */
     public function applyQuery(callable $callback): self
     {
@@ -160,8 +160,8 @@ final class Filter
      * Apply one filter to the query. Uses a custom query callback when present, otherwise applies
      * a simple where/whereIn against the filter key or query_key.
      *
-     * @param iterable<Filter|array<string, mixed>> $filters
-     * @param \Illuminate\Contracts\Database\Query\Builder $query
+     * @param  iterable<Filter|array<string, mixed>>  $filters
+     * @param  \Illuminate\Contracts\Database\Query\Builder  $query
      */
     public static function apply(string $requestedKey, iterable $filters, $query, mixed $value): void
     {
@@ -170,7 +170,7 @@ final class Filter
         foreach ($filters as $filter) {
             $candidate = $filter instanceof self ? $filter->toDefinition() : (is_array($filter) ? $filter : null);
 
-            if (!is_array($candidate) || ($candidate['key'] ?? null) !== $requestedKey) {
+            if (! is_array($candidate) || ($candidate['key'] ?? null) !== $requestedKey) {
                 continue;
             }
 

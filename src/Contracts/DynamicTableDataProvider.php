@@ -17,21 +17,13 @@ interface DynamicTableDataProvider
      */
     public function rows(): array;
 
-    /**
-     * @return AbstractPaginator|null
-     */
     public function paginator(): ?AbstractPaginator;
 
-    /**
-     * @return DynamicTableSort|null
-     */
     public function sort(): ?DynamicTableSort;
 
     /**
      * Storage key for column visibility preferences (e.g. for localStorage).
      * Return null if this table does not support column visibility.
-     *
-     * @return string|null
      */
     public function columnVisibilityKey(): ?string;
 
@@ -56,8 +48,6 @@ interface DynamicTableDataProvider
      * and shows results in a dropdown; selecting an item navigates to its url.
      * API should return JSON array of objects with at least "url" and "label".
      * Return null to use form-submit search instead.
-     *
-     * @return string|null
      */
     public function searchApiUrl(): ?string;
 
@@ -72,8 +62,6 @@ interface DynamicTableDataProvider
 
     /**
      * Number of actions to show inline before overflow dropdown. Return null to use default (2).
-     *
-     * @return int|null
      */
     public function actionsMaxVisible(): ?int;
 
@@ -93,8 +81,6 @@ interface DynamicTableDataProvider
     /**
      * URL that the bulk-edit form POSTs to.
      * Receives _ids[] (selected row primary keys) plus each field value.
-     *
-     * @return string|null
      */
     public function bulkActionUrl(): ?string;
 
@@ -106,8 +92,6 @@ interface DynamicTableDataProvider
 
     /**
      * URL the column picker POSTs visible-column changes to. Return null for client-only (localStorage).
-     *
-     * @return string|null
      */
     public function preferencesSaveUrl(): ?string;
 

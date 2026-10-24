@@ -2,6 +2,8 @@
 
 namespace Dennenboom\VerdantUI\Tables;
 
+use Illuminate\Contracts\Support\Htmlable;
+
 final class Column
 {
     private string $key;
@@ -69,7 +71,7 @@ final class Column
     /**
      * Set a computed value callback. Use for columns not directly mapped to a model attribute.
      *
-     * @param callable(mixed): mixed $callback Receives the model, returns the value
+     * @param  callable(mixed): mixed  $callback  Receives the model, returns the value
      */
     public function value(callable $callback): self
     {
@@ -81,7 +83,7 @@ final class Column
     /**
      * Set a format callback to transform the raw value.
      *
-     * @param callable(mixed, mixed): (string|int|float|bool|array{value?: mixed, html?: bool, class?: string}) $callback Receives (value, model), returns scalar or array
+     * @param  callable(mixed, mixed): (string|int|float|bool|array{value?: mixed, html?: bool, class?: string})  $callback  Receives (value, model), returns scalar or array
      */
     public function format(callable $callback): self
     {
@@ -93,7 +95,7 @@ final class Column
     /**
      * Set a custom render callback. Fully app-controlled UI (Htmlable / View).
      *
-     * @param callable(mixed, mixed): \Illuminate\Contracts\Support\Htmlable $callback Receives (value, model), returns Htmlable
+     * @param  callable(mixed, mixed): Htmlable  $callback  Receives (value, model), returns Htmlable
      */
     public function render(callable $callback): self
     {
@@ -105,7 +107,7 @@ final class Column
     /**
      * Make the column sortable.
      *
-     * @param bool|string|callable $key true = sort by column key; string = DB column name for ORDER BY; callable = in-memory sort value (fn ($model) => mixed)
+     * @param  bool|string|callable  $key  true = sort by column key; string = DB column name for ORDER BY; callable = in-memory sort value (fn ($model) => mixed)
      */
     public function sortable(bool|string|callable $key = true): self
     {
@@ -123,7 +125,7 @@ final class Column
     /**
      * Set the value to use for in-memory sorting (e.g. when not using DB pagination).
      *
-     * @param callable(mixed): mixed $callback Receives the model, returns the value to compare
+     * @param  callable(mixed): mixed  $callback  Receives the model, returns the value to compare
      */
     public function sortValue(callable $callback): self
     {
@@ -135,7 +137,7 @@ final class Column
     /**
      * Set a callback to apply complex DB sort (joins, raw expressions).
      *
-     * @param callable(Builder, string): void $callback Receives (query, direction 'asc'|'desc')
+     * @param  callable(Builder, string): void  $callback  Receives (query, direction 'asc'|'desc')
      */
     public function sortableQuery(callable $callback): self
     {
@@ -147,7 +149,7 @@ final class Column
     /**
      * Make the column searchable.
      *
-     * @param bool|string $key true = search by column key; string = DB column name for LIKE conditions
+     * @param  bool|string  $key  true = search by column key; string = DB column name for LIKE conditions
      */
     public function searchable(bool|string $key = true): self
     {
@@ -163,7 +165,7 @@ final class Column
     /**
      * Set a callback to apply complex DB search (relations, subqueries).
      *
-     * @param callable(Builder, string): void $callback Receives (query, search term)
+     * @param  callable(Builder, string): void  $callback  Receives (query, search term)
      */
     public function searchableQuery(callable $callback): self
     {
@@ -176,7 +178,7 @@ final class Column
     /**
      * Show this column only when the callback returns true (table-level visibility).
      *
-     * @param callable(mixed): bool $callback Receives context (e.g. first model or auth); return false to hide column
+     * @param  callable(mixed): bool  $callback  Receives context (e.g. first model or auth); return false to hide column
      */
     public function visibleWhen(callable $callback): self
     {
@@ -218,14 +220,14 @@ final class Column
     /**
      * Set text alignment for header and cells ('left', 'center', 'right').
      *
-     * @param 'left'|'center'|'right' $align
+     * @param  'left'|'center'|'right'  $align
      */
     public function align(string $align): self
     {
         $align = strtolower($align);
-        if (!in_array($align, self::ALIGN_VALUES, true)) {
+        if (! in_array($align, self::ALIGN_VALUES, true)) {
             throw new \InvalidArgumentException(
-                'Column align must be one of: ' . implode(', ', self::ALIGN_VALUES) . ', got: ' . $align
+                'Column align must be one of: '.implode(', ', self::ALIGN_VALUES).', got: '.$align
             );
         }
         $this->align = $align;
@@ -332,9 +334,9 @@ final class Column
      *
      * Use when a column is computed (e.g. full_name) but you want to sort by a real DB column (e.g. last_name).
      *
-     * @param string $requestedKey The column key from the sort request (e.g. full_name)
-     * @param iterable<Column|array<string, mixed>> $columns Column objects or key => definition arrays
-     * @return string  The DB column name to use for ORDER BY
+     * @param  string  $requestedKey  The column key from the sort request (e.g. full_name)
+     * @param  iterable<Column|array<string, mixed>>  $columns  Column objects or key => definition arrays
+     * @return string The DB column name to use for ORDER BY
      */
     public static function resolveSortKey(string $requestedKey, iterable $columns): string
     {
@@ -364,10 +366,10 @@ final class Column
     /**
      * Apply sort for one column to the query (server-side). Uses sort_query callback when present, otherwise orderBy with resolveSortKey.
      *
-     * @param string $requestedKey Column key from the sort request
-     * @param iterable<Column|array<string, mixed>> $columns Column objects or key => definition arrays
-     * @param \Illuminate\Contracts\Database\Query\Builder $query
-     * @param 'asc'|'desc' $direction
+     * @param  string  $requestedKey  Column key from the sort request
+     * @param  iterable<Column|array<string, mixed>>  $columns  Column objects or key => definition arrays
+     * @param  \Illuminate\Contracts\Database\Query\Builder  $query
+     * @param  'asc'|'desc'  $direction
      */
     public static function applySort(string $requestedKey, iterable $columns, $query, string $direction): void
     {
@@ -402,8 +404,7 @@ final class Column
     /**
      * Resolve the actual DB column to use for searching when the user searches by a column key.
      *
-     * @param string $requestedKey
-     * @param iterable<Column|array<string, mixed>> $columns
+     * @param  iterable<Column|array<string, mixed>>  $columns
      */
     public static function resolveSearchKey(string $requestedKey, iterable $columns): string
     {
@@ -431,7 +432,7 @@ final class Column
     }
 
     /**
-     * @param iterable<Column|array<string, mixed>> $columns
+     * @param  iterable<Column|array<string, mixed>>  $columns
      * @return array<int, string>
      */
     public static function searchableKeys(iterable $columns): array
@@ -451,7 +452,7 @@ final class Column
                 ? $columnOrDefinition->toDefinition()
                 : (is_array($columnOrDefinition) ? $columnOrDefinition : []);
 
-            if (!empty($definition['searchable']) || isset($definition['search_query'])) {
+            if (! empty($definition['searchable']) || isset($definition['search_query'])) {
                 $keys[] = $key;
             }
         }
@@ -460,7 +461,7 @@ final class Column
     }
 
     /**
-     * @param iterable<Column|array<string, mixed>> $columns
+     * @param  iterable<Column|array<string, mixed>>  $columns
      * @return array<int, string>
      */
     public static function sortableKeys(iterable $columns): array
@@ -480,7 +481,7 @@ final class Column
                 ? $columnOrDefinition->toDefinition()
                 : (is_array($columnOrDefinition) ? $columnOrDefinition : []);
 
-            if (!empty($definition['sortable']) || isset($definition['sort_query'])) {
+            if (! empty($definition['sortable']) || isset($definition['sort_query'])) {
                 $keys[] = $key;
             }
         }
@@ -492,9 +493,8 @@ final class Column
      * Apply search for one column to the query. Uses search_query callback when present, otherwise a LIKE
      * condition with resolveSearchKey().
      *
-     * @param string $requestedKey
-     * @param iterable<Column|array<string, mixed>> $columns
-     * @param \Illuminate\Contracts\Database\Query\Builder $query
+     * @param  iterable<Column|array<string, mixed>>  $columns
+     * @param  \Illuminate\Contracts\Database\Query\Builder  $query
      */
     public static function applySearch(string $requestedKey, iterable $columns, $query, string $search): void
     {
@@ -523,6 +523,6 @@ final class Column
         }
 
         $searchKey = self::resolveSearchKey($requestedKey, $columns);
-        $query->orWhere($searchKey, 'like', '%' . $search . '%');
+        $query->orWhere($searchKey, 'like', '%'.$search.'%');
     }
 }

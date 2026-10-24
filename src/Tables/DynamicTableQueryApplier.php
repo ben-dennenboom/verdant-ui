@@ -2,13 +2,15 @@
 
 namespace Dennenboom\VerdantUI\Tables;
 
+use Illuminate\Contracts\Database\Query\Builder;
+
 final class DynamicTableQueryApplier
 {
     /**
-     * @param \Illuminate\Contracts\Database\Query\Builder $query
-     * @param array<int|string, Column|string|array<string, mixed>> $columns
-     * @param array<int, Filter|array<string, mixed>> $filters
-     * @param array<int, string>|null $searchable
+     * @param  Builder  $query
+     * @param  array<int|string, Column|string|array<string, mixed>>  $columns
+     * @param  array<int, Filter|array<string, mixed>>  $filters
+     * @param  array<int, string>|null  $searchable
      */
     public static function apply(
         $query,
@@ -23,9 +25,9 @@ final class DynamicTableQueryApplier
     }
 
     /**
-     * @param \Illuminate\Contracts\Database\Query\Builder $query
-     * @param array<int|string, Column|string|array<string, mixed>> $columns
-     * @param array<int, string>|null $searchable
+     * @param  Builder  $query
+     * @param  array<int|string, Column|string|array<string, mixed>>  $columns
+     * @param  array<int, string>|null  $searchable
      */
     private static function applySearch(
         $query,
@@ -33,7 +35,7 @@ final class DynamicTableQueryApplier
         array $columns,
         ?array $searchable,
     ): void {
-        if (!$tableQuery->hasSearch()) {
+        if (! $tableQuery->hasSearch()) {
             return;
         }
 
@@ -50,17 +52,18 @@ final class DynamicTableQueryApplier
             foreach ($searchableKeys as $key) {
                 if ($normalizedColumns !== []) {
                     Column::applySearch($key, $normalizedColumns, $builder, $search);
+
                     continue;
                 }
 
-                $builder->orWhere($key, 'like', '%' . $search . '%');
+                $builder->orWhere($key, 'like', '%'.$search.'%');
             }
         });
     }
 
     /**
-     * @param \Illuminate\Contracts\Database\Query\Builder $query
-     * @param array<int, Filter|array<string, mixed>> $filters
+     * @param  Builder  $query
+     * @param  array<int, Filter|array<string, mixed>>  $filters
      */
     private static function applyFilters($query, DynamicTableQuery $tableQuery, array $filters): void
     {
@@ -74,8 +77,8 @@ final class DynamicTableQueryApplier
     }
 
     /**
-     * @param \Illuminate\Contracts\Database\Query\Builder $query
-     * @param array<int|string, Column|string|array<string, mixed>> $columns
+     * @param  Builder  $query
+     * @param  array<int|string, Column|string|array<string, mixed>>  $columns
      */
     private static function applySort($query, DynamicTableQuery $tableQuery, array $columns): void
     {
@@ -84,6 +87,7 @@ final class DynamicTableQueryApplier
 
             if ($columns !== []) {
                 Column::applySort($column['key'], $columns, $query, $direction);
+
                 continue;
             }
 
@@ -92,7 +96,7 @@ final class DynamicTableQueryApplier
     }
 
     /**
-     * @param array<int|string, Column|string|array<string, mixed>> $columns
+     * @param  array<int|string, Column|string|array<string, mixed>>  $columns
      * @return array<string, string|array<string, mixed>>
      */
     private static function normalizeColumns(array $columns): array
@@ -102,6 +106,7 @@ final class DynamicTableQueryApplier
         foreach ($columns as $key => $column) {
             if ($column instanceof Column) {
                 $normalized[$column->getKey()] = $column->toDefinition();
+
                 continue;
             }
 

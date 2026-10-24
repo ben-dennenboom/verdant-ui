@@ -44,9 +44,9 @@ class VatNumberCheckController
             ->json([
                 'data' => [
                     'countryCode' => $properties['countryCode'] ?? null,
-                    'vatNumber'   => $properties['vatNumber'] ?? null,
-                    'name'        => $this->disclosed($properties['name'] ?? null),
-                    'address'     => $this->disclosed($properties['address'] ?? null),
+                    'vatNumber' => $properties['vatNumber'] ?? null,
+                    'name' => $this->disclosed($properties['name'] ?? null),
+                    'address' => $this->disclosed($properties['address'] ?? null),
                 ],
             ], 200);
     }

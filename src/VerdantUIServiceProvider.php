@@ -2,6 +2,8 @@
 
 namespace Dennenboom\VerdantUI;
 
+use Illuminate\Foundation\Events\LocaleUpdated;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
@@ -13,16 +15,16 @@ class VerdantUIServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/verdant.php',
+            __DIR__.'/../config/verdant.php',
             'verdant'
         );
     }
 
     public function boot(): void
     {
-        $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'verdant');
-        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'verdant');
+        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'verdant');
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'verdant');
         $this->keepEnglishTextsUnlessTranslated();
 
         $this->registerComponents();
@@ -34,12 +36,12 @@ class VerdantUIServiceProvider extends ServiceProvider
     protected function registerComponents(): void
     {
         $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade) {
-            $componentsPath = __DIR__ . '/../resources/views/components';
+            $componentsPath = __DIR__.'/../resources/views/components';
 
             $componentFiles = $this->findComponentFiles($componentsPath);
 
             foreach ($componentFiles as $componentFile) {
-                $relPath = str_replace($componentsPath . DIRECTORY_SEPARATOR, '', $componentFile);
+                $relPath = str_replace($componentsPath.DIRECTORY_SEPARATOR, '', $componentFile);
 
                 $name = str_replace([DIRECTORY_SEPARATOR, '.blade.php'], ['.', ''], $relPath);
 
@@ -76,35 +78,35 @@ class VerdantUIServiceProvider extends ServiceProvider
     {
         $this->publishes(
             [
-                __DIR__ . '/../resources/views' => resource_path('views/vendor/verdant'),
+                __DIR__.'/../resources/views' => resource_path('views/vendor/verdant'),
             ],
             'verdant-views'
         );
 
         $this->publishes(
             [
-                __DIR__ . '/../public/build/css' => public_path('vendor/verdant/css'),
-                __DIR__ . '/../public/build/js' => public_path('vendor/verdant/js'),
-                __DIR__ . '/../public/build/vendor' => public_path('vendor/verdant/vendor'),
+                __DIR__.'/../public/build/css' => public_path('vendor/verdant/css'),
+                __DIR__.'/../public/build/js' => public_path('vendor/verdant/js'),
+                __DIR__.'/../public/build/vendor' => public_path('vendor/verdant/vendor'),
             ],
             'verdant-assets'
         );
 
         $this->publishes(
             [
-                __DIR__ . '/../config/verdant.php' => config_path('verdant.php'),
+                __DIR__.'/../config/verdant.php' => config_path('verdant.php'),
             ],
             'verdant-config'
         );
 
         $this->publishes(
             [
-                __DIR__ . '/../package.json'       => base_path('package.verdant.json'),
-                __DIR__ . '/../vite.config.js'     => base_path('vite.verdant.config.js'),
-                __DIR__ . '/../verdant-vite.js'   => base_path('verdant-vite.js'),
-                __DIR__ . '/../tailwind.config.js' => base_path('tailwind.verdant.config.js'),
-                __DIR__ . '/../resources/js'       => resource_path('js/vendor/verdant'),
-                __DIR__ . '/../resources/css'      => resource_path('css/vendor/verdant'),
+                __DIR__.'/../package.json' => base_path('package.verdant.json'),
+                __DIR__.'/../vite.config.js' => base_path('vite.verdant.config.js'),
+                __DIR__.'/../verdant-vite.js' => base_path('verdant-vite.js'),
+                __DIR__.'/../tailwind.config.js' => base_path('tailwind.verdant.config.js'),
+                __DIR__.'/../resources/js' => resource_path('js/vendor/verdant'),
+                __DIR__.'/../resources/css' => resource_path('css/vendor/verdant'),
             ],
             'verdant-source'
         );
@@ -117,14 +119,14 @@ class VerdantUIServiceProvider extends ServiceProvider
                 return;
             }
 
-            $english = fn () => collect(File::files(__DIR__ . '/../lang/en'))
+            $english = fn () => collect(File::files(__DIR__.'/../lang/en'))
                 ->mapWithKeys(fn ($file) => [$file->getFilenameWithoutExtension() => require $file->getPathname()])
                 ->all();
 
             $apply = function (string $locale) use ($english) {
                 foreach ($english() as $group => $lines) {
                     $this->app['translator']->addLines(
-                        collect(\Illuminate\Support\Arr::dot($lines))->mapWithKeys(fn ($line, $key) => ["{$group}.{$key}" => $line])->all(),
+                        collect(Arr::dot($lines))->mapWithKeys(fn ($line, $key) => ["{$group}.{$key}" => $line])->all(),
                         $locale,
                         'verdant',
                     );
@@ -133,7 +135,7 @@ class VerdantUIServiceProvider extends ServiceProvider
 
             $apply($this->app->getLocale());
 
-            $this->app['events']->listen(\Illuminate\Foundation\Events\LocaleUpdated::class, fn ($event) => $apply($event->locale));
+            $this->app['events']->listen(LocaleUpdated::class, fn ($event) => $apply($event->locale));
         });
     }
 }

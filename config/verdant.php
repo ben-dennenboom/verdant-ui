@@ -8,30 +8,30 @@ return [
 
     'prefix' => [
         'component' => 'v-',
-        'css'       => 'v-',
+        'css' => 'v-',
     ],
 
     'theme' => [
         'colors' => [
-            'primary'   => [
+            'primary' => [
                 'default' => '#E9500E',
             ],
             'secondary' => [
                 'default' => '#2d3441',
             ],
 
-            'v-bg-primary'   => '#ffffff',
+            'v-bg-primary' => '#ffffff',
             'v-bg-secondary' => '#f9fafb',
-            'v-bg-floating'  => '#ffffff',
+            'v-bg-floating' => '#ffffff',
         ],
 
         'dark_colors' => [
-            'primary'   => '#E9500E',
+            'primary' => '#E9500E',
             'secondary' => '#2d3441',
 
-            'v-bg-primary'   => '#1f2937',
+            'v-bg-primary' => '#1f2937',
             'v-bg-secondary' => '#111827',
-            'v-bg-floating'  => '#1f2937',
+            'v-bg-floating' => '#1f2937',
         ],
     ],
 
@@ -46,10 +46,10 @@ return [
 
     'components' => [
         'buttons' => true,
-        'forms'   => true,
-        'tables'  => true,
-        'modals'  => true,
-        'layout'  => true,
+        'forms' => true,
+        'tables' => true,
+        'modals' => true,
+        'layout' => true,
     ],
 
     'sidebar' => [

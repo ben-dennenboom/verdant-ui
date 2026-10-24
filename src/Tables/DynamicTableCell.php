@@ -8,9 +8,13 @@ use Illuminate\Support\Facades\Route;
 final class DynamicTableCell
 {
     public mixed $value;
+
     public bool $isActions;
+
     public bool $html = false;
+
     public string $class = '';
+
     public array $actions = [];
 
     public function __construct(mixed $value, bool $isActions, array $row)
@@ -55,12 +59,12 @@ final class DynamicTableCell
         }
 
         $this->value = $value;
-        $this->html = $value instanceof \Illuminate\Contracts\Support\Htmlable;
+        $this->html = $value instanceof Htmlable;
     }
 
     private function resolveActions(mixed $value, array $row): array
     {
-        if (!is_array($value)) {
+        if (! is_array($value)) {
             return [];
         }
 

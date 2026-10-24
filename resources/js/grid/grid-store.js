@@ -17,7 +17,7 @@ document.addEventListener('alpine:init', () => {
                     hasScroll: false,
                     isAtStart: true,
                     isAtEnd: false,
-                    tileView: false
+                    tileView: false,
                 };
             }
             return this.states[gridId];
@@ -33,6 +33,6 @@ document.addEventListener('alpine:init', () => {
                 this.states[gridId] = {};
             }
             Object.assign(this.states[gridId], state);
-        }
+        },
     });
 });

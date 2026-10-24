@@ -1,6 +1,5 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('vatNumberChecker', (config = {}) => ({
-
         state: 'idle',
         message: '',
         sequence: 0,

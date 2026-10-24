@@ -15,7 +15,7 @@
  * with the direct relationship between cells and the parent grid.
  */
 .v\:grid-header-wrapper,
-.v\:grid-body-wrapper{
+.v\:grid-body-wrapper {
     display: contents;
 }
 

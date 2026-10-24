@@ -5,20 +5,18 @@ document.addEventListener('alpine:init', () => {
         columns: initial.columns ?? [],
 
         isActive(key) {
-            return this.columns.some(c => c.key === key);
+            return this.columns.some((c) => c.key === key);
         },
 
         directionFor(key) {
-            return this.columns.find(c => c.key === key)?.direction ?? null;
+            return this.columns.find((c) => c.key === key)?.direction ?? null;
         },
 
         toggle(key) {
             const existing = [...this.columns];
-            const idx = existing.findIndex(c => c.key === key);
+            const idx = existing.findIndex((c) => c.key === key);
 
-            const nextDir = idx === -1
-                ? 'asc'
-                : existing[idx].direction === 'asc' ? 'desc' : 'asc';
+            const nextDir = idx === -1 ? 'asc' : existing[idx].direction === 'asc' ? 'desc' : 'asc';
 
             if (idx !== -1) {
                 existing.splice(idx, 1);
@@ -34,8 +32,8 @@ document.addEventListener('alpine:init', () => {
             const params = new URLSearchParams(window.location.search);
 
             if (this.columns.length) {
-                params.set('sort', this.columns.map(c => c.key).join(','));
-                params.set('direction', this.columns.map(c => c.direction).join(','));
+                params.set('sort', this.columns.map((c) => c.key).join(','));
+                params.set('direction', this.columns.map((c) => c.direction).join(','));
             } else {
                 params.delete('sort');
                 params.delete('direction');
@@ -45,12 +43,12 @@ document.addEventListener('alpine:init', () => {
         },
 
         hasSorting() {
-            return this.columns.length > 0
+            return this.columns.length > 0;
         },
 
         reset() {
             this.columns = [];
             this.navigate();
         },
-    }))
-})
+    }));
+});

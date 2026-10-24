@@ -7,7 +7,10 @@ function verdant() {
         closeBundle() {
             const out = path.resolve('public/build');
             const copies = [
-                ['node_modules/@fortawesome/fontawesome-free/css/all.min.css', 'vendor/fontawesome/css/all.min.css'],
+                [
+                    'node_modules/@fortawesome/fontawesome-free/css/all.min.css',
+                    'vendor/fontawesome/css/all.min.css',
+                ],
                 ['node_modules/alpinejs/dist/cdn.min.js', 'vendor/alpine/alpine.min.js'],
                 ['node_modules/cropperjs/dist/cropper.min.css', 'css/cropper.min.css'],
                 ['node_modules/cropperjs/dist/cropper.min.js', 'js/cropper.min.js'],
@@ -43,7 +46,7 @@ verdant.files = function () {
             if (fs.existsSync(path.join(dirPath, 'index.js'))) {
                 files[item.name] = path.join(dirPath, 'index.js');
             } else {
-                for (const file of fs.readdirSync(dirPath).filter(f => f.endsWith('.js'))) {
+                for (const file of fs.readdirSync(dirPath).filter((f) => f.endsWith('.js'))) {
                     files[`${item.name}/${file.slice(0, -3)}`] = path.join(dirPath, file);
                 }
             }

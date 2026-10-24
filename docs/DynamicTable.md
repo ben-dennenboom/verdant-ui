@@ -21,22 +21,22 @@ $columns = [
 
 ### Column methods
 
-| Method | Description |
-|--------|-------------|
-| `Column::make(string $key, string $label)` | Create a column with key and header label |
-| `->default()` | Include in default visible columns when column visibility is enabled; use with `withColumnVisibility($key, null)` to derive defaults from columns |
-| `->value(callable)` | Computed value: `fn ($model) => mixed` – use when the column is not a model attribute |
-| `->format(callable)` | Format value: `fn ($value, $model) => scalar\|array` – can return `['html' => true, 'value' => '...']` for trusted HTML |
-| `->render(callable)` | Custom render: `fn ($value, $model) => Htmlable` – fully app-controlled UI (View, HtmlString, etc.) |
-| `->sortable(bool\|string\|callable)` | `true` = sort by column key; string = DB column for ORDER BY; callable = in-memory sort value `fn ($model) => mixed` |
-| `->sortValue(callable)` | Value used for in-memory sorting when not using DB pagination: `fn ($model) => mixed` |
-| `->sortableQuery(callable)` | Complex DB sort (joins, raw): `fn ($query, $direction) => void` – applied via `Column::applySort()` |
-| `->visibleWhen(callable)` | Table-level visibility: `fn ($context) => bool` – pass context as 4th arg to `fromCollection($items, $columns, $actions, $context)` |
-| `->pinned(bool)` | Column always visible and cannot be hidden in the column picker (default `true` when called) |
-| `->width(string)` | Column width hint (e.g. `'8rem'`, `'minmax(100px, 1fr)'`) |
-| `->align(string)` | Text alignment: `'left'`, `'center'`, or `'right'` |
-| `->tooltip(string)` | Header tooltip (title attribute) |
-| `->class(string)` | Optional CSS class for the header cell |
+| Method                                     | Description                                                                                                                                       |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Column::make(string $key, string $label)` | Create a column with key and header label                                                                                                         |
+| `->default()`                              | Include in default visible columns when column visibility is enabled; use with `withColumnVisibility($key, null)` to derive defaults from columns |
+| `->value(callable)`                        | Computed value: `fn ($model) => mixed` – use when the column is not a model attribute                                                             |
+| `->format(callable)`                       | Format value: `fn ($value, $model) => scalar\|array` – can return `['html' => true, 'value' => '...']` for trusted HTML                           |
+| `->render(callable)`                       | Custom render: `fn ($value, $model) => Htmlable` – fully app-controlled UI (View, HtmlString, etc.)                                               |
+| `->sortable(bool\|string\|callable)`       | `true` = sort by column key; string = DB column for ORDER BY; callable = in-memory sort value `fn ($model) => mixed`                              |
+| `->sortValue(callable)`                    | Value used for in-memory sorting when not using DB pagination: `fn ($model) => mixed`                                                             |
+| `->sortableQuery(callable)`                | Complex DB sort (joins, raw): `fn ($query, $direction) => void` – applied via `Column::applySort()`                                               |
+| `->visibleWhen(callable)`                  | Table-level visibility: `fn ($context) => bool` – pass context as 4th arg to `fromCollection($items, $columns, $actions, $context)`               |
+| `->pinned(bool)`                           | Column always visible and cannot be hidden in the column picker (default `true` when called)                                                      |
+| `->width(string)`                          | Column width hint (e.g. `'8rem'`, `'minmax(100px, 1fr)'`)                                                                                         |
+| `->align(string)`                          | Text alignment: `'left'`, `'center'`, or `'right'`                                                                                                |
+| `->tooltip(string)`                        | Header tooltip (title attribute)                                                                                                                  |
+| `->class(string)`                          | Optional CSS class for the header cell                                                                                                            |
 
 ### Default visible columns from Column::default()
 
@@ -270,14 +270,14 @@ $table = DynamicTableData::fromCollection($users, $columns, $actions, auth()->us
 
 ### 10. Blade component props
 
-| Prop | Description |
-|------|-------------|
-| `data` | `DynamicTableDataProvider` instance or array with `headers`, `rows`, and optionally `filters`, `column_visibility_key`, `default_visible_columns`, `searchable_columns`, `search_api_url` |
-| `headers` | Fallback array of headers when `data` is not provided |
-| `rows` | Fallback array of rows when `data` is not provided |
-| `class` | Optional CSS class on the container |
-| `emptyText` | Text shown when there are no rows (default: "No data available.") |
-| `columnVisibilityKey` | Override the storage key for column visibility (when using array `data`) |
+| Prop                  | Description                                                                                                                                                                               |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data`                | `DynamicTableDataProvider` instance or array with `headers`, `rows`, and optionally `filters`, `column_visibility_key`, `default_visible_columns`, `searchable_columns`, `search_api_url` |
+| `headers`             | Fallback array of headers when `data` is not provided                                                                                                                                     |
+| `rows`                | Fallback array of rows when `data` is not provided                                                                                                                                        |
+| `class`               | Optional CSS class on the container                                                                                                                                                       |
+| `emptyText`           | Text shown when there are no rows (default: "No data available.")                                                                                                                         |
+| `columnVisibilityKey` | Override the storage key for column visibility (when using array `data`)                                                                                                                  |
 
 ---
 
@@ -310,13 +310,13 @@ $table = DynamicTableData::fromCollection($users, $columns, $actions)
 
 **Filter methods:**
 
-| Method | Description |
-|--------|-------------|
-| `Filter::make(string $key, string $label, string $type)` | Create a filter; `$type` is one of `text`, `number`, `date`, `checkbox`, `select` |
-| `->options(array\|callable)` | For select: array of `['value' => x, 'label' => y]` or `value => label`; callable is invoked at build time |
-| `->placeholder(string)` | Placeholder for text/number inputs |
-| `->default(mixed)` | Default value when no request value |
-| `->multiple(bool)` | For select: allow multiple values (default `true` when called) |
+| Method                                                   | Description                                                                                                |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `Filter::make(string $key, string $label, string $type)` | Create a filter; `$type` is one of `text`, `number`, `date`, `checkbox`, `select`                          |
+| `->options(array\|callable)`                             | For select: array of `['value' => x, 'label' => y]` or `value => label`; callable is invoked at build time |
+| `->placeholder(string)`                                  | Placeholder for text/number inputs                                                                         |
+| `->default(mixed)`                                       | Default value when no request value                                                                        |
+| `->multiple(bool)`                                       | For select: allow multiple values (default `true` when called)                                             |
 
 The form submits via GET to the current URL. Your controller or data provider should read the same parameter names from the request and apply them when building the table data.
 
@@ -566,14 +566,14 @@ UsersTable::make($users, context: auth()->user());
 
 **BaseTable hook methods:**
 
-| Method | Description |
-|--------|-------------|
-| `columns(): array` | **(required)** Column DTOs or legacy key => definition array |
-| `actions(): ?callable` | Row actions; receives each model, returns action array or `render` closure |
-| `rowOpenUrl(): ?callable` | URL opened on row double-click; receives the model, return `null` to skip |
-| `bulkFields(): array` | `BulkField` instances; non-empty enables the bulk-edit bar |
-| `bulkActionUrl(): ?string` | POST URL for the bulk-edit form; receives `_ids[]` + each field value |
-| `actionsMaxVisible(): int` | Inline actions before overflow dropdown (default `2`) |
+| Method                     | Description                                                                |
+| -------------------------- | -------------------------------------------------------------------------- |
+| `columns(): array`         | **(required)** Column DTOs or legacy key => definition array               |
+| `actions(): ?callable`     | Row actions; receives each model, returns action array or `render` closure |
+| `rowOpenUrl(): ?callable`  | URL opened on row double-click; receives the model, return `null` to skip  |
+| `bulkFields(): array`      | `BulkField` instances; non-empty enables the bulk-edit bar                 |
+| `bulkActionUrl(): ?string` | POST URL for the bulk-edit form; receives `_ids[]` + each field value      |
+| `actionsMaxVisible(): int` | Inline actions before overflow dropdown (default `2`)                      |
 
 ---
 
@@ -610,12 +610,12 @@ $table = DynamicTableData::fromCollection($users, $columns, $actions)
 
 **BulkField methods:**
 
-| Method | Description |
-|--------|-------------|
-| `BulkField::make(string $key, string $label, string $type)` | Create a field; `$type` is one of `text`, `number`, `date`, `checkbox`, `select` |
-| `->options(array\|callable)` | For select: array of `['value' => x, 'label' => y]` or `value => label`; callable resolved at build time |
-| `->placeholder(string)` | Placeholder for text/number inputs |
-| `->multiple(bool)` | For select: allow multiple values; field name becomes `key[]` (default `true` when called) |
+| Method                                                      | Description                                                                                              |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `BulkField::make(string $key, string $label, string $type)` | Create a field; `$type` is one of `text`, `number`, `date`, `checkbox`, `select`                         |
+| `->options(array\|callable)`                                | For select: array of `['value' => x, 'label' => y]` or `value => label`; callable resolved at build time |
+| `->placeholder(string)`                                     | Placeholder for text/number inputs                                                                       |
+| `->multiple(bool)`                                          | For select: allow multiple values; field name becomes `key[]` (default `true` when called)               |
 
 ### `DynamicTableData::withBulkEdit()`
 
@@ -711,7 +711,7 @@ interface DynamicTablePreferencesStore
 }
 ```
 
-`$key` only identifies the *table* (the same string passed to `withColumnVisibility()`) — your implementation is responsible for scoping storage to the current user (e.g. `Auth::id()`), the same way you'd scope a cache or session store. `put()` receives the full preferences array to store each time (already merged with whatever existed); treat it as a replace, not a patch.
+`$key` only identifies the _table_ (the same string passed to `withColumnVisibility()`) — your implementation is responsible for scoping storage to the current user (e.g. `Auth::id()`), the same way you'd scope a cache or session store. `put()` receives the full preferences array to store each time (already merged with whatever existed); treat it as a replace, not a patch.
 
 A minimal database-backed implementation, mirroring a `user_table_preferences` table keyed by user + table:
 

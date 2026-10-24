@@ -31,47 +31,47 @@ The sidebar takes the full height of its parent, so give its container a height.
 
 ## What's Included by Default
 
-| Part         | Shown when                                                         |
-|--------------|--------------------------------------------------------------------|
-| Logo         | Always. "Verdant", or "V" when collapsed                           |
-| Dashboard    | A `GET /` route exists                                             |
-| User button  | A user is logged in (`auth()->user()`), or `user-name` is passed   |
-| Profile      | One of `verdant.sidebar.profile_routes` exists                     |
-| Settings     | One of `verdant.sidebar.settings_routes` exists                    |
-| Logout       | One of `verdant.sidebar.logout_routes` exists (POSTs with CSRF)    |
+| Part        | Shown when                                                       |
+| ----------- | ---------------------------------------------------------------- |
+| Logo        | Always. "Verdant", or "V" when collapsed                         |
+| Dashboard   | A `GET /` route exists                                           |
+| User button | A user is logged in (`auth()->user()`), or `user-name` is passed |
+| Profile     | One of `verdant.sidebar.profile_routes` exists                   |
+| Settings    | One of `verdant.sidebar.settings_routes` exists                  |
+| Logout      | One of `verdant.sidebar.logout_routes` exists (POSTs with CSRF)  |
 
 The user's image is read from the first filled attribute in `verdant.sidebar.user_image_attributes` (`profile_photo_url`, `avatar_url`, `avatar`). Without an image, their initials are shown.
 
 ## Props
 
-| Prop             | Default                       | Description                                                   |
-|------------------|-------------------------------|---------------------------------------------------------------|
-| `brand`          | `config('verdant.sidebar.brand')` | Text logo; its first letter is used when collapsed        |
-| `collapsed`      | `false`                       | Initial collapsed state                                       |
-| `collapsible`    | `true`                        | Show the collapse toggle                                      |
-| `collapse-icon`  | `'angles-left'`               | Toggle icon while expanded (Font Awesome name, `brands:` prefix supported) |
-| `expand-icon`    | `'angles-right'`              | Toggle icon while collapsed                                   |
-| `persist`        | `'verdant-sidebar-collapsed'` | localStorage key to remember the collapsed state. `false` disables |
-| `dashboard-url`  | auto                          | URL of the dashboard link, `false` hides it                   |
-| `dashboard-label`| `__('Dashboard')`             | Label of the dashboard link                                   |
-| `dashboard-icon` | `'tachometer-alt'`            | Icon of the dashboard link                                    |
-| `user`           | `auth()->user()`              | The user shown at the bottom                                  |
-| `user-name`      | `$user->name`                 | Name next to the avatar                                       |
-| `user-image`     | auto                          | Avatar URL                                                    |
-| `profile-url`    | auto                          | `false` hides it                                              |
-| `settings-url`   | auto                          | `false` hides it                                              |
-| `logout-url`     | auto                          | `false` hides it                                              |
-| `logout-method`  | auto (`post` unless the route is GET-only) | HTTP method used for logout                      |
+| Prop              | Default                                    | Description                                                                |
+| ----------------- | ------------------------------------------ | -------------------------------------------------------------------------- |
+| `brand`           | `config('verdant.sidebar.brand')`          | Text logo; its first letter is used when collapsed                         |
+| `collapsed`       | `false`                                    | Initial collapsed state                                                    |
+| `collapsible`     | `true`                                     | Show the collapse toggle                                                   |
+| `collapse-icon`   | `'angles-left'`                            | Toggle icon while expanded (Font Awesome name, `brands:` prefix supported) |
+| `expand-icon`     | `'angles-right'`                           | Toggle icon while collapsed                                                |
+| `persist`         | `'verdant-sidebar-collapsed'`              | localStorage key to remember the collapsed state. `false` disables         |
+| `dashboard-url`   | auto                                       | URL of the dashboard link, `false` hides it                                |
+| `dashboard-label` | `__('Dashboard')`                          | Label of the dashboard link                                                |
+| `dashboard-icon`  | `'tachometer-alt'`                         | Icon of the dashboard link                                                 |
+| `user`            | `auth()->user()`                           | The user shown at the bottom                                               |
+| `user-name`       | `$user->name`                              | Name next to the avatar                                                    |
+| `user-image`      | auto                                       | Avatar URL                                                                 |
+| `profile-url`     | auto                                       | `false` hides it                                                           |
+| `settings-url`    | auto                                       | `false` hides it                                                           |
+| `logout-url`      | auto                                       | `false` hides it                                                           |
+| `logout-method`   | auto (`post` unless the route is GET-only) | HTTP method used for logout                                                |
 
 ## Slots
 
-| Slot             | Replaces                                                   |
-|------------------|------------------------------------------------------------|
-| default          | Navigation items, rendered below the dashboard link        |
-| `logo`           | The expanded logo                                          |
-| `logoCollapsed`  | The collapsed logo                                         |
-| `menu`           | Extra entries in the user menu, between Settings and Logout |
-| `footer`         | The whole bottom area (user button and menu)               |
+| Slot            | Replaces                                                    |
+| --------------- | ----------------------------------------------------------- |
+| default         | Navigation items, rendered below the dashboard link         |
+| `logo`          | The expanded logo                                           |
+| `logoCollapsed` | The collapsed logo                                          |
+| `menu`          | Extra entries in the user menu, between Settings and Logout |
+| `footer`        | The whole bottom area (user button and menu)                |
 
 ## Examples
 

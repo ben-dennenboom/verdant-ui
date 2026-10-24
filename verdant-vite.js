@@ -11,7 +11,6 @@ function verdant() {
                     'node_modules/@fortawesome/fontawesome-free/css/all.min.css',
                     'vendor/fontawesome/css/all.min.css',
                 ],
-                ['node_modules/alpinejs/dist/cdn.min.js', 'vendor/alpine/alpine.min.js'],
                 ['node_modules/cropperjs/dist/cropper.min.css', 'css/cropper.min.css'],
                 ['node_modules/cropperjs/dist/cropper.min.js', 'js/cropper.min.js'],
             ];

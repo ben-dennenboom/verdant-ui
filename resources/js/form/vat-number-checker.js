@@ -65,7 +65,7 @@ document.addEventListener('alpine:init', () => {
 
             try {
                 payload = await response.json();
-            } catch (error) {
+            } catch {
                 this.setState('error');
 
                 return;

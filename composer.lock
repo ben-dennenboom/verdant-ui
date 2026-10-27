@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f846d256789fdfeeeee1d183860cc144",
+    "content-hash": "9359c024e7d92d4d1947e2239d346854",
     "packages": [
         {
             "name": "burtds/laravel-vatnumber-checker",

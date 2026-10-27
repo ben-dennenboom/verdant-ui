@@ -42,7 +42,7 @@ document.addEventListener('alpine:init', () => {
             return document.queryCommandState(command);
         },
 
-        handleTab(e) {
+        handleTab() {
             if (this.isActive('insertUnorderedList') || this.isActive('insertOrderedList')) {
                 document.execCommand('indent', false, null);
             } else {

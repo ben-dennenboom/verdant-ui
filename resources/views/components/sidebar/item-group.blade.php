@@ -36,7 +36,7 @@
         </svg>
     </button>
 
-    <ul x-show="open"
+    <ul x-cloak x-show="open"
         class="v:sidebar-children v:ml-6 v:mt-1 v:list-none v:grid v:gap-1">
         {{ $slot }}
     </ul>

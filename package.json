@@ -9,7 +9,7 @@
         "update": "npx --yes --package=vite-plus@latest vp migrate && ncu --interactive --reject vite,vite-plus --install never && npm update"
     },
     "devDependencies": {
-        "@fortawesome/fontawesome-free": "^6.7.2",
+        "@fortawesome/fontawesome-free": "^7.3.1",
         "@tailwindcss/forms": "^0.5.11",
         "@tailwindcss/vite": "^4.3.3",
         "alpinejs": "^3.17.5",

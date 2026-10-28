@@ -50,7 +50,7 @@
         <button x-show="hasOverflow"
                 x-cloak
                 @click="open = !open"
-                class="v:p-1 v:text-sm v:text-gray-700 v:hover:bg-gray-50 v:border-gray-200 v:dark:border-gray-600"
+                class="v:py-1 v:text-sm v:text-gray-700 v:hover:bg-gray-50 v:border-gray-200 v:dark:border-gray-600"
         >
             <i class="fa-solid fa-ellipsis-vertical"></i>
         </button>
@@ -58,6 +58,7 @@
 
     @if(count($actions) > 0)
         <div x-show="open"
+             x-cloak
              @click.away="open = false"
              x-transition
              class="v:absolute v:right-0 v:top-full v:mt-1 v:bg-floating v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-600 v:z-50 v:shadow-lg v:min-w-[180px] v:py-1"

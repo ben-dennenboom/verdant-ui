@@ -29,7 +29,12 @@
     $pinnedColumns = $pinnedFromHeaders !== [] ? $pinnedFromHeaders : ['actions'];
     $storeKey = $visibilityKey ? 'vtd_' . preg_replace('/[^a-zA-Z0-9_]/', '_', $visibilityKey) : null;
     $columnOrderEnabled = $vm->columnOrderEnabled && $visibilityKey !== null;
-    $columnVisibility = $visibilityKey ? ['enabled' => true, 'storeKey' => $storeKey, 'orderEnabled' => $columnOrderEnabled] : null;
+    $columnVisibility = $visibilityKey ? [
+        'enabled' => true,
+        'storeKey' => $storeKey,
+        'orderEnabled' => $columnOrderEnabled,
+        'initial' => $vm->initialColumnState($pinnedColumns, $columnOrderEnabled),
+    ] : null;
     $columnMeta = collect($vm->headers)->map(function ($header, $key) use ($vm, $pinnedColumns) {
         $label = is_array($header) ? ($header['label'] ?? $key) : $header;
         $columnKey = $vm->columnKeyForIndex($key);
@@ -46,11 +51,21 @@
         'allKeys' => $allKeys,
         'pinned' => $pinnedColumns,
         'defaultVisible' => $vm->defaultVisibleColumns,
-        'storedVisible' => $vm->storedVisibleColumns,
+        'initialVisible' => (object) $columnVisibility['initial']['visible'],
+        'initialOrder' => $columnVisibility['initial']['order'],
         'columns' => $columnMeta,
         'orderEnabled' => $columnOrderEnabled,
-        'defaultOrder' => $vm->defaultColumnOrder,
         'saveUrl' => $vm->preferencesSaveUrl,
+    ] : null;
+    $localColumnConfig = $visibilityKey && !$vm->preferencesSaveUrl ? [
+        'storageKey' => $columnVisibilityConfig['storageKey'],
+        'orderStorageKey' => $columnOrderEnabled ? $columnVisibilityConfig['orderStorageKey'] : null,
+        'allKeys' => $allKeys,
+        'pinned' => $pinnedColumns,
+        'orderEnabled' => $columnOrderEnabled,
+        'initialVisible' => $columnVisibilityConfig['initialVisible'],
+        'initialOrder' => $columnVisibilityConfig['initialOrder'],
+        'widths' => (object) array_combine($allKeys, $vm->columnGridWidths),
     ] : null;
     $showSearch = !empty($vm->searchableColumns);
     $showFilter = !empty($vm->filterColumns);
@@ -75,13 +90,50 @@
     });
 </script>
 
+@once
+    <script>
+        window.verdantColumnLayout = {
+            reconcileOrder(candidate, fallback) {
+                const valid = candidate.filter((k) => fallback.includes(k));
+
+                return [...valid, ...fallback.filter((k) => !valid.includes(k))];
+            },
+            effectiveOrder(allKeys, pinned, order, orderEnabled) {
+                if (!orderEnabled) return allKeys;
+                const queue = [...order];
+
+                return allKeys.map((k) => (pinned.includes(k) ? k : queue.shift()));
+            },
+            gridTemplate(effectiveOrder, visible, widths) {
+                return effectiveOrder
+                    .filter((k) => visible[k] !== false)
+                    .map((k) => widths[k] || 'minmax(0, 1fr)')
+                    .join(' ');
+            },
+            readStored({ storageKey, orderStorageKey, initialVisible, initialOrder }) {
+                try {
+                    const visible = JSON.parse(localStorage.getItem(storageKey));
+                    const order = orderStorageKey ? JSON.parse(localStorage.getItem(orderStorageKey)) : null;
+                    if (!visible && !order) return null;
+
+                    return {
+                        visible: { ...initialVisible, ...visible },
+                        order: order ? this.reconcileOrder(order, initialOrder) : [...initialOrder],
+                    };
+                } catch {
+                    return null;
+                }
+            },
+        };
+    </script>
+@endonce
+
 @if($hasBulkEdit)
 <div x-data="verdantTableBulk({ allRowKeys: @js($vm->allRowKeys), storeKey: @js($bulkStoreKey) })">
 @endif
 
 <div
     class="v:rounded v:bg-surface v:border v:border-gray-200 v:dark:border-gray-700 {{ $class }}"
-    x-cloak
     @if($visibilityKey)
         data-columns-store="{{ $storeKey }}"
         x-data="verdantTableColumns({
@@ -92,10 +144,10 @@
             columnWidths: @js($vm->columnGridWidths),
             pinned: @js($columnVisibilityConfig['pinned']),
             defaultVisible: @js($columnVisibilityConfig['defaultVisible']),
-            storedVisible: @js($columnVisibilityConfig['storedVisible']),
+            initialVisible: @js($columnVisibilityConfig['initialVisible']),
+            initialOrder: @js($columnVisibilityConfig['initialOrder']),
             columns: @js($columnVisibilityConfig['columns']),
             orderEnabled: @js($columnVisibilityConfig['orderEnabled']),
-            defaultOrder: @js($columnVisibilityConfig['defaultOrder']),
             saveUrl: @js($columnVisibilityConfig['saveUrl']),
             csrfToken: @js(csrf_token()),
         })"
@@ -161,6 +213,30 @@
 
     @include('verdant::components.dynamic-table.pagination')
 </div>
+
+@if($localColumnConfig)
+    <script>
+        (() => {
+            const config = @js($localColumnConfig);
+            const layout = window.verdantColumnLayout;
+            const stored = layout.readStored(config);
+            if (!stored) return;
+
+            const table = document.currentScript.previousElementSibling;
+            const order = layout.effectiveOrder(config.allKeys, config.pinned, stored.order, config.orderEnabled);
+            const grid = layout.gridTemplate(order, stored.visible, config.widths);
+
+            table.querySelectorAll('[data-grid-prefix]').forEach((el) => {
+                el.style.gridTemplateColumns = el.dataset.gridPrefix + grid;
+            });
+
+            table.querySelectorAll('[data-column-key]').forEach((el) => {
+                el.style.display = stored.visible[el.dataset.columnKey] === false ? 'none' : '';
+                if (config.orderEnabled) el.style.order = order.indexOf(el.dataset.columnKey);
+            });
+        })();
+    </script>
+@endif
 
 @if($hasBulkEdit)
     @include('verdant::components.dynamic-table.bulk-bar', ['vm' => $vm, 'bulkStoreKey' => $bulkStoreKey])

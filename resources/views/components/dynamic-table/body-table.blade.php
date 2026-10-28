@@ -2,6 +2,7 @@
     $bulkPrefix = $vm->hasBulkEdit ? '3rem ' : '';
     $rowIx = !$vm->hasBulkEdit && ($vm->rowInteractionEnabled ?? false);
     $bsk = $bulkStoreKey ?? null; // shorthand for use inside Alpine expressions
+    $initial = $columnVisibility['initial'] ?? null;
 @endphp
 
 @if($rowIx)
@@ -50,6 +51,7 @@
             class="v:grid v:items-center {{ $rowBgClass }}{{ $boldClass }}"
         @endif
         @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
+            style="grid-template-columns: {{ $bulkPrefix }}{{ $initial['gridTemplateColumns'] }};"
             :style="'grid-template-columns: {{ $bulkPrefix }}' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"
         @else
             @if($vm->gridTemplateColumns !== '')
@@ -71,6 +73,7 @@
                     <input
                         type="checkbox"
                         x-show="rowHovered || $store[@js($bsk)].selected.length > 0"
+                        x-cloak
                         :checked="$store[@js($bsk)].isSelected(@js($row->rowKey))"
                         @change="$store[@js($bsk)].toggle(@js($row->rowKey))"
                         class="v:rounded v:border-gray-300 v:dark:border-gray-600 v:text-primary-600 v:focus:ring-primary-500 v:bg-white v:dark:bg-gray-700 v:cursor-pointer"
@@ -96,8 +99,10 @@
                 @if(($rowIx || $vm->hasBulkEdit) && $cell->isActions) @click.stop @dblclick.stop @endif
                 @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
                     @if(!empty($columnVisibility['orderEnabled']))
+                        style="{{ $initial['visible'][$columnKey] ? '' : 'display:none;' }}order:{{ $initial['orderIndex'][$columnKey] }}"
                         :style="(isVisible('{{ $columnKey }}') ? '' : 'display:none;') + 'order:' + orderIndex('{{ $columnKey }}')"
                     @else
+                        @unless($initial['visible'][$columnKey]) style="display:none;" @endunless
                         x-show="isVisible('{{ $columnKey }}')"
                     @endif
                 @endif

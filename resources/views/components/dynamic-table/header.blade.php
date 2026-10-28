@@ -9,6 +9,7 @@
     class="v:grid v:bg-gray-50 v:dark:bg-gray-700 v:relative"
     @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
         style="grid-template-columns: {{ $bulkPrefix }}{{ $initial['gridTemplateColumns'] }};"
+        data-grid-prefix="{{ $bulkPrefix }}"
         :style="'grid-template-columns: {{ $bulkPrefix }}' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"
     @else
         @if($vm->gridTemplateColumns !== '')
@@ -49,6 +50,7 @@
         "
             @if(!empty($header['tooltip'])) title="{{ e($header['tooltip']) }}" @endif
             @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
+                data-column-key="{{ $columnKey }}"
                 @if(!empty($columnVisibility['orderEnabled']))
                     style="{{ $initial['visible'][$columnKey] ? '' : 'display:none;' }}order:{{ $initial['orderIndex'][$columnKey] }}"
                     :style="(Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}') ? '' : 'display:none;') + 'order:' + Alpine.store('{{ $columnVisibility['storeKey'] }}').orderIndex('{{ $columnKey }}')"

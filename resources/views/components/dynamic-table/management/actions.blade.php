@@ -3,7 +3,7 @@
     'maxVisible' => 2,
 ])
 
-<div x-data='verdantTableActions(@json(["actions" => $actions, "maxVisible" => $maxVisible, "csrfToken" => csrf_token()]))'
+<div x-cloak x-data='verdantTableActions(@json(["actions" => $actions, "maxVisible" => $maxVisible, "csrfToken" => csrf_token()]))'
      class="v:relative v:flex v:items-center"
 >
     <div class="v:flex v:items-center v:gap-0 v:border v:border-gray-200 v:dark:border-gray-600 v:rounded-lg">

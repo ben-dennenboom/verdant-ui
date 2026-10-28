@@ -52,6 +52,7 @@
         @endif
         @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
             style="grid-template-columns: {{ $bulkPrefix }}{{ $initial['gridTemplateColumns'] }};"
+            data-grid-prefix="{{ $bulkPrefix }}"
             :style="'grid-template-columns: {{ $bulkPrefix }}' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"
         @else
             @if($vm->gridTemplateColumns !== '')
@@ -98,6 +99,7 @@
             "
                 @if(($rowIx || $vm->hasBulkEdit) && $cell->isActions) @click.stop @dblclick.stop @endif
                 @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
+                    data-column-key="{{ $columnKey }}"
                     @if(!empty($columnVisibility['orderEnabled']))
                         style="{{ $initial['visible'][$columnKey] ? '' : 'display:none;' }}order:{{ $initial['orderIndex'][$columnKey] }}"
                         :style="(isVisible('{{ $columnKey }}') ? '' : 'display:none;') + 'order:' + orderIndex('{{ $columnKey }}')"

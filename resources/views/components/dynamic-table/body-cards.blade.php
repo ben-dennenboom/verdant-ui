@@ -67,8 +67,8 @@
         {{-- Primary title (first two non-action columns) --}}
         <div class="v:font-semibold v:text-gray-900 v:dark:text-gray-100">
             @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
-                @if(isset($row->cells[0]))<span x-show="isVisible('{{ $vm->columnKeyForIndex(0) }}')" @unless($initial['visible'][$vm->columnKeyForIndex(0)]) style="display:none;" @endunless>{{ $row->cells[0]->value ?? '' }}</span>@endif
-                @if(isset($row->cells[1]))<span x-show="isVisible('{{ $vm->columnKeyForIndex(1) }}')" @unless($initial['visible'][$vm->columnKeyForIndex(1)]) style="display:none;" @endunless>{{ $row->cells[1]->value ?? '' }}</span>@endif
+                @if(isset($row->cells[0]))<span data-column-key="{{ $vm->columnKeyForIndex(0) }}" x-show="isVisible('{{ $vm->columnKeyForIndex(0) }}')" @unless($initial['visible'][$vm->columnKeyForIndex(0)]) style="display:none;" @endunless>{{ $row->cells[0]->value ?? '' }}</span>@endif
+                @if(isset($row->cells[1]))<span data-column-key="{{ $vm->columnKeyForIndex(1) }}" x-show="isVisible('{{ $vm->columnKeyForIndex(1) }}')" @unless($initial['visible'][$vm->columnKeyForIndex(1)]) style="display:none;" @endunless>{{ $row->cells[1]->value ?? '' }}</span>@endif
             @else
                 {{ isset($row->cells[0]) ? ($row->cells[0]->value ?? '') : '' }}
                 {{ isset($row->cells[1]) ? ($row->cells[1]->value ?? '') : '' }}
@@ -86,6 +86,7 @@
                 @endphp
                 <div class="v:flex v:justify-between v:gap-4"
                     @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
+                        data-column-key="{{ $columnKey }}"
                         @if(!empty($columnVisibility['orderEnabled']))
                             style="{{ $initial['visible'][$columnKey] ? '' : 'display:none;' }}order:{{ $initial['orderIndex'][$columnKey] }}"
                             :style="(isVisible('{{ $columnKey }}') ? '' : 'display:none;') + 'order:' + orderIndex('{{ $columnKey }}')"

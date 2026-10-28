@@ -58,7 +58,7 @@
 
         <button x-cloak x-show="hasOverflow"
                 @click="open = !open"
-                class="v:p-1 v:text-sm v:text-gray-700 v:hover:bg-gray-50 v:border-gray-200 v:dark:border-gray-600"
+                class="v:py-1 v:text-sm v:text-gray-700 v:hover:bg-gray-50 v:border-gray-200 v:dark:border-gray-600"
         >
             <i class="fa-solid fa-ellipsis-vertical"></i>
         </button>

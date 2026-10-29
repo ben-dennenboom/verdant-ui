@@ -24,9 +24,9 @@
             <i class="{{ $submenuItemIconClass }}"></i>
         @endif
         <span class="v:flex-1 v:truncate">{!! $label !!}</span>
-        @if($count)
+        @isset($count)
             <span class="{{ $submenuItemCountClass }}">{{ $count }}</span>
-        @endif
+        @endisset
     </a>
 @else
     <form method="POST" action="{{ $href }}">
@@ -39,9 +39,9 @@
                 <i class="{{ $submenuItemIconClass }}"></i>
             @endif
             <span class="v:flex-1 v:truncate">{!! $label !!}</span>
-            @if($count)
+            @isset($count)
                 <span class="{{ $submenuItemCountClass }}">{{ $count }}</span>
-            @endif
+            @endisset
         </button>
     </form>
 @endif

@@ -49,24 +49,10 @@
     $hasSubmenu = $hasSubmenuLinks || $logoutUrl;
 @endphp
 
-<aside x-data="{
-           collapsed: @js((bool) $collapsed),
-           init() {
-               @if($collapsible && $persist)
-                   try {
-                       const storedCollapsed = localStorage.getItem(@js($persist));
-
-                       if (storedCollapsed !== null) {
-                           this.collapsed = storedCollapsed === 'true';
-                       }
-                   } catch (e) {}
-
-                   this.$watch('collapsed', value => {
-                       try { localStorage.setItem(@js($persist), value); } catch (e) {}
-                   });
-               @endif
-           }
-       }"
+<aside x-data="{ collapsed: $el.dataset.collapsed === 'true' }"
+       @if($collapsible && $persist)
+           x-init="$watch('collapsed', value => { try { localStorage.setItem(@js($persist), value) } catch {} })"
+       @endif
        @v-sidebar-expand="collapsed = false"
        data-collapsed="{{ $collapsed ? 'true' : 'false' }}"
        :data-collapsed="collapsed"
@@ -171,3 +157,15 @@
         </div>
     @endif
 </aside>
+
+@if($collapsible && $persist)
+    <script>
+        try {
+            const collapsed = localStorage.getItem(@js($persist));
+
+            if (collapsed !== null) {
+                document.currentScript.previousElementSibling.dataset.collapsed = collapsed === 'true';
+            }
+        } catch {}
+    </script>
+@endif

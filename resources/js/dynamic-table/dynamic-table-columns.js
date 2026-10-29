@@ -142,7 +142,7 @@ document.addEventListener('alpine:init', () => {
                     } else {
                         this.applyDefaults();
                     }
-                } catch (e) {
+                } catch {
                     this.applyDefaults();
                 }
             }
@@ -196,7 +196,7 @@ document.addEventListener('alpine:init', () => {
                 this.order = stored
                     ? this.reconcileOrder(JSON.parse(stored), defaultOrder)
                     : defaultOrder;
-            } catch (e) {
+            } catch {
                 this.order = defaultOrder;
             }
         },
@@ -220,7 +220,7 @@ document.addEventListener('alpine:init', () => {
             try {
                 if (this.orderStorageKey)
                     localStorage.setItem(this.orderStorageKey, JSON.stringify(this.order));
-            } catch (e) {}
+            } catch {}
 
             this.syncVisibleCount();
             this.persistToServer();
@@ -295,7 +295,7 @@ document.addEventListener('alpine:init', () => {
         persist() {
             try {
                 localStorage.setItem(this.storageKey, JSON.stringify(this.visible));
-            } catch (e) {}
+            } catch {}
 
             this.syncVisibleCount();
             this.persistToServer();

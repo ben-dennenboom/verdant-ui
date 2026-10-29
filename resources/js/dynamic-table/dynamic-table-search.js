@@ -45,7 +45,7 @@ document.addEventListener('alpine:init', () => {
                 const data = await res.json();
                 this.results = Array.isArray(data) ? data : (data.data ?? data.results ?? []);
                 this.focusedIndex = 0;
-            } catch (e) {
+            } catch {
                 this.results = [];
             } finally {
                 this.loading = false;

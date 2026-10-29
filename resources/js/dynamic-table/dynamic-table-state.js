@@ -15,7 +15,7 @@ window.verdantTableState = function (config) {
                 referrer.origin === window.location.origin &&
                 referrer.pathname === window.location.pathname
             );
-        } catch (e) {
+        } catch {
             return false;
         }
     }
@@ -24,7 +24,7 @@ window.verdantTableState = function (config) {
         let stored;
         try {
             stored = JSON.parse(localStorage.getItem(storageKey) ?? 'null');
-        } catch (e) {
+        } catch {
             stored = null;
         }
 
@@ -67,7 +67,7 @@ window.verdantTableState = function (config) {
 
         try {
             localStorage.setItem(storageKey, JSON.stringify(state));
-        } catch (e) {}
+        } catch {}
     }
 
     const params = new URLSearchParams(window.location.search);

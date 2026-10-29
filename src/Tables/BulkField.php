@@ -22,9 +22,9 @@ final class BulkField
     private function __construct(string $key, string $label, string $type)
     {
         $type = strtolower($type);
-        if (!in_array($type, self::TYPES, true)) {
+        if (! in_array($type, self::TYPES, true)) {
             throw new \InvalidArgumentException(
-                'BulkField type must be one of: ' . implode(', ', self::TYPES) . ', got: ' . $type
+                'BulkField type must be one of: '.implode(', ', self::TYPES).', got: '.$type
             );
         }
         $this->key = $key;
@@ -41,7 +41,7 @@ final class BulkField
      * Set options for select type. Array format: value => label or [['value' => x, 'label' => y]].
      * Callable is invoked in toDefinition() so options can be resolved at build time.
      *
-     * @param array<int|string, mixed>|callable $options
+     * @param  array<int|string, mixed>|callable  $options
      */
     public function options(array|callable $options): self
     {
@@ -81,9 +81,9 @@ final class BulkField
     public function toDefinition(): array
     {
         $definition = [
-            'key'   => $this->key,
+            'key' => $this->key,
             'label' => $this->label,
-            'type'  => $this->type,
+            'type' => $this->type,
         ];
 
         if ($this->placeholder !== null) {
@@ -103,7 +103,7 @@ final class BulkField
     }
 
     /**
-     * @param array<int|string, mixed> $options
+     * @param  array<int|string, mixed>  $options
      * @return array<int, array{value: string|int|float, label: string}>
      */
     private function normalizeOptions(array $options): array

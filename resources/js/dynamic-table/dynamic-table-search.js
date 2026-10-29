@@ -33,7 +33,10 @@ document.addEventListener('alpine:init', () => {
                 const url = new URL(this.apiUrl, window.location.origin);
                 url.searchParams.set(this.queryParam, this.query.trim());
                 const res = await fetch(url.toString(), {
-                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                    headers: {
+                        Accept: 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
                 });
                 if (!res.ok) {
                     this.results = [];

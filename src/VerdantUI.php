@@ -17,8 +17,8 @@ class VerdantUI
 
         $fontawesome = $includeFontawesome
             ? "<link rel=\"preload\" href=\"{$fontAwesomeSolidPath}\" as=\"font\" type=\"font/woff2\" crossorigin>"
-              . "<link rel=\"stylesheet\" href=\"{$fontAwesomePath}\">"
-            : "";
+              ."<link rel=\"stylesheet\" href=\"{$fontAwesomePath}\">"
+            : '';
         $customColors = self::getCustomColorsCSS();
 
         return <<<HTML
@@ -58,12 +58,12 @@ class VerdantUI
 
         $css = '';
 
-        if (!empty($colors)) {
-            $css .= ':root {' . self::buildColorVariables($colors) . '}';
+        if (! empty($colors)) {
+            $css .= ':root {'.self::buildColorVariables($colors).'}';
         }
 
-        if (!empty($darkColors)) {
-            $css .= '[data-theme="dark"] {' . self::buildColorVariables($darkColors) . '}';
+        if (! empty($darkColors)) {
+            $css .= '[data-theme="dark"] {'.self::buildColorVariables($darkColors).'}';
         }
 
         return $css;
@@ -82,7 +82,7 @@ class VerdantUI
                 $rgb = self::hexToRgb($shades);
                 $css .= "{$varPrefix}: rgb({$rgb});";
 
-                if (!str_starts_with($colorName, 'v-')) {
+                if (! str_starts_with($colorName, 'v-')) {
                     $generatedShades = self::generateColorShades($shades);
                     foreach ($generatedShades as $shade => $rgb) {
                         $css .= "{$varPrefix}-{$shade}: rgb({$rgb});";
@@ -92,16 +92,16 @@ class VerdantUI
                 continue;
             }
 
-            if (!is_array($shades)) {
+            if (! is_array($shades)) {
                 continue;
             }
 
             $hasAllShades = count(
-                    array_intersect(
-                        array_keys($shades),
-                        ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900']
-                    )
-                ) >= 5;
+                array_intersect(
+                    array_keys($shades),
+                    ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900']
+                )
+            ) >= 5;
 
             foreach ($shades as $shade => $color) {
                 $rgb = self::hexToRgb($color);
@@ -113,14 +113,14 @@ class VerdantUI
                 }
             }
 
-            if (!$hasAllShades && !str_starts_with($colorName, 'v-')) {
+            if (! $hasAllShades && ! str_starts_with($colorName, 'v-')) {
                 $baseColor = $shades['default'] ?? $shades['500'] ?? null;
 
                 if ($baseColor) {
                     $generatedShades = self::generateColorShades($baseColor);
 
                     foreach ($generatedShades as $shade => $rgb) {
-                        if (!isset($shades[$shade]) && $shade !== 'default') {
+                        if (! isset($shades[$shade]) && $shade !== 'default') {
                             $css .= "{$varPrefix}-{$shade}: rgb({$rgb});";
                         }
                     }
@@ -136,7 +136,7 @@ class VerdantUI
         $hex = ltrim($hex, '#');
 
         if (strlen($hex) === 3) {
-            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
         }
 
         $r = hexdec(substr($hex, 0, 2));
@@ -151,7 +151,7 @@ class VerdantUI
         $hex = ltrim($hex, '#');
 
         if (strlen($hex) === 3) {
-            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
         }
 
         $r = hexdec(substr($hex, 0, 2));
@@ -174,18 +174,18 @@ class VerdantUI
 
     private static function lighten(int $r, int $g, int $b, float $amount): string
     {
-        $newR = (int)round($r + (255 - $r) * $amount);
-        $newG = (int)round($g + (255 - $g) * $amount);
-        $newB = (int)round($b + (255 - $b) * $amount);
+        $newR = (int) round($r + (255 - $r) * $amount);
+        $newG = (int) round($g + (255 - $g) * $amount);
+        $newB = (int) round($b + (255 - $b) * $amount);
 
         return "{$newR} {$newG} {$newB}";
     }
 
     private static function darken(int $r, int $g, int $b, float $amount): string
     {
-        $newR = (int)round($r * (1 - $amount));
-        $newG = (int)round($g * (1 - $amount));
-        $newB = (int)round($b * (1 - $amount));
+        $newR = (int) round($r * (1 - $amount));
+        $newG = (int) round($g * (1 - $amount));
+        $newB = (int) round($b * (1 - $amount));
 
         return "{$newR} {$newG} {$newB}";
     }
@@ -204,7 +204,7 @@ class VerdantUI
                     return '';
                 }
 
-                return str_starts_with($class, $prefix) ? $class : $prefix . $class;
+                return str_starts_with($class, $prefix) ? $class : $prefix.$class;
             })
             ->filter()
             ->implode(' ');

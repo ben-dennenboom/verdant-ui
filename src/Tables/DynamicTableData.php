@@ -20,19 +20,10 @@ class DynamicTableData implements DynamicTableDataProvider
      */
     protected array $rows;
 
-    /**
-     * @var AbstractPaginator|null
-     */
     protected ?AbstractPaginator $paginator = null;
 
-    /**
-     * @var DynamicTableSort|null
-     */
     protected ?DynamicTableSort $sort = null;
 
-    /**
-     * @var string|null
-     */
     protected ?string $columnVisibilityKey = null;
 
     /**
@@ -45,9 +36,6 @@ class DynamicTableData implements DynamicTableDataProvider
      */
     protected ?array $searchableColumns = null;
 
-    /**
-     * @var string|null
-     */
     protected ?string $searchApiUrl = null;
 
     /**
@@ -64,8 +52,6 @@ class DynamicTableData implements DynamicTableDataProvider
 
     /**
      * Number of actions to show inline before overflow dropdown. Null = use default (2).
-     *
-     * @var int|null
      */
     protected ?int $actionsMaxVisible = null;
 
@@ -97,8 +83,8 @@ class DynamicTableData implements DynamicTableDataProvider
     protected ?Collection $rowOpenSourceCollection = null;
 
     /**
-     * @param array<int, string|array<string, mixed>> $headers
-     * @param array<int, array<string, mixed>|array<int, mixed>> $rows
+     * @param  array<int, string|array<string, mixed>>  $headers
+     * @param  array<int, array<string, mixed>|array<int, mixed>>  $rows
      */
     public function __construct(array $headers, array $rows)
     {
@@ -107,8 +93,8 @@ class DynamicTableData implements DynamicTableDataProvider
     }
 
     /**
-     * @param array<int, string|array<string, mixed>> $headers
-     * @param array<int, array<string, mixed>|array<int, mixed>> $rows
+     * @param  array<int, string|array<string, mixed>>  $headers
+     * @param  array<int, array<string, mixed>|array<int, mixed>>  $rows
      */
     public static function from(array $headers, array $rows): self
     {
@@ -158,12 +144,12 @@ class DynamicTableData implements DynamicTableDataProvider
             $headers[] = is_array($definition) ?
                 array_merge(
                     [
-                        'key'   => $key,
+                        'key' => $key,
                         'label' => $definition['label'],
                     ],
                     array_intersect_key($definition, $headerKeys)
                 ) : [
-                    'key'   => $key,
+                    'key' => $key,
                     'label' => $definition,
                 ];
         }
@@ -198,7 +184,7 @@ class DynamicTableData implements DynamicTableDataProvider
                 $row[$key] = $value;
 
                 if (is_array($definition)) {
-                    $sortKey = '_sort_' . $key;
+                    $sortKey = '_sort_'.$key;
                     if (isset($definition['sort_value']) && is_callable($definition['sort_value'])) {
                         $row[$sortKey] = ($definition['sort_value'])($model);
                     } elseif (isset($definition['sort_key']) && is_string($definition['sort_key'])) {
@@ -259,9 +245,6 @@ class DynamicTableData implements DynamicTableDataProvider
         return $this->rows;
     }
 
-    /**
-     * @return AbstractPaginator|null
-     */
     public function paginator(): ?AbstractPaginator
     {
         return $this->paginator;
@@ -326,15 +309,15 @@ class DynamicTableData implements DynamicTableDataProvider
     }
 
     /**
-     * @param array<BulkField> $fields
+     * @param  array<BulkField>  $fields
      */
     public function withBulkEdit(array $fields, ?string $actionUrl = null): self
     {
         $this->bulkFieldDefinitions = [];
         foreach ($fields as $field) {
-            if (!$field instanceof BulkField) {
+            if (! $field instanceof BulkField) {
                 throw new \InvalidArgumentException(
-                    'Each bulk field must be a ' . BulkField::class . ' instance. Got: ' . (is_object($field) ? $field::class : gettype($field))
+                    'Each bulk field must be a '.BulkField::class.' instance. Got: '.(is_object($field) ? $field::class : gettype($field))
                 );
             }
             $this->bulkFieldDefinitions[] = $field->toDefinition();
@@ -532,7 +515,7 @@ class DynamicTableData implements DynamicTableDataProvider
     }
 
     /**
-     * @param array<Filter> $filters
+     * @param  array<Filter>  $filters
      */
     public function withFilters(array $filters): self
     {
@@ -540,7 +523,7 @@ class DynamicTableData implements DynamicTableDataProvider
         foreach ($filters as $filter) {
             if (! $filter instanceof Filter) {
                 throw new \InvalidArgumentException(
-                    'Each filter must be a ' . Filter::class . ' instance. Got: ' . (is_object($filter) ? $filter::class : gettype($filter))
+                    'Each filter must be a '.Filter::class.' instance. Got: '.(is_object($filter) ? $filter::class : gettype($filter))
                 );
             }
             $this->filters[] = $filter->toDefinition();
@@ -598,7 +581,7 @@ class DynamicTableData implements DynamicTableDataProvider
         if (count($sort->columns)) {
             usort($this->rows, function ($a, $b) use ($sort) {
                 foreach ($sort->columns as $col) {
-                    $sortKey = '_sort_' . $col['key'];
+                    $sortKey = '_sort_'.$col['key'];
                     $av = array_key_exists($sortKey, $a) ? $a[$sortKey] : data_get($a, $col['key']);
                     $bv = array_key_exists($sortKey, $b) ? $b[$sortKey] : data_get($b, $col['key']);
 
@@ -606,8 +589,12 @@ class DynamicTableData implements DynamicTableDataProvider
                         continue;
                     }
 
-                    if (is_null($av)) return 1;
-                    if (is_null($bv)) return -1;
+                    if (is_null($av)) {
+                        return 1;
+                    }
+                    if (is_null($bv)) {
+                        return -1;
+                    }
 
                     $cmp = $av <=> $bv;
 
@@ -629,7 +616,7 @@ class DynamicTableData implements DynamicTableDataProvider
      * @param  iterable<mixed>  $items
      * @param  array<int|string, Column|string|array<string, mixed>>  $columns
      * @param  bool  $withHeaderRow  When true, the first row is column_key => label for use as CSV/Excel header
-     * @return array<int, array<string, mixed>>  List of associative rows; if $withHeaderRow, first element is the header row
+     * @return array<int, array<string, mixed>> List of associative rows; if $withHeaderRow, first element is the header row
      */
     public static function exportFromCollection(iterable $items, array $columns, bool $withHeaderRow = false): array
     {
@@ -717,6 +704,7 @@ class DynamicTableData implements DynamicTableDataProvider
         foreach ($columns as $key => $definition) {
             if (! is_array($definition) || ! isset($definition['visible_when']) || ! is_callable($definition['visible_when'])) {
                 $filtered[$key] = $definition;
+
                 continue;
             }
             if (($definition['visible_when'])($context)) {
@@ -730,7 +718,7 @@ class DynamicTableData implements DynamicTableDataProvider
     /**
      * Pre-check route existence for all actions to avoid per-row Route::has() calls.
      *
-     * @param array<int, array<string, mixed>> $rows
+     * @param  array<int, array<string, mixed>>  $rows
      * @return array<int, array<string, mixed>>
      */
     private static function cacheRouteExistence(array $rows): array

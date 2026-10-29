@@ -39,7 +39,7 @@ abstract class BaseTable
         }
 
         $bulkFields = static::bulkFields();
-        if (!empty($bulkFields)) {
+        if (! empty($bulkFields)) {
             $data->withBulkEdit($bulkFields, static::bulkActionUrl());
         }
 
@@ -55,8 +55,6 @@ abstract class BaseTable
 
     /**
      * Define row actions (callable receiving the model, returning action array or render).
-     *
-     * @return callable|null
      */
     protected static function actions(): ?callable
     {

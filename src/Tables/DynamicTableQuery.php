@@ -7,7 +7,7 @@ use Dennenboom\VerdantUI\Contracts\DynamicTablePreferencesStore;
 final class DynamicTableQuery
 {
     /**
-     * @param array<string, mixed> $filters
+     * @param  array<string, mixed>  $filters
      */
     public function __construct(
         public readonly string $search,
@@ -15,12 +15,11 @@ final class DynamicTableQuery
         public readonly DynamicTableSort $sort,
         public readonly ?int $perPage = null,
         public readonly bool $hasExplicitState = false,
-    ) {
-    }
+    ) {}
 
     /**
-     * @param iterable<Filter|array<string, mixed>> $filters
-     * @param array<string>|null $allowedSortKeys
+     * @param  iterable<Filter|array<string, mixed>>  $filters
+     * @param  array<string>|null  $allowedSortKeys
      */
     public static function fromRequest(
         iterable $filters = [],
@@ -30,7 +29,7 @@ final class DynamicTableQuery
         $filterDefinitions = self::normalizeFilters($filters);
 
         return new self(
-            search: trim((string)request('search', '')),
+            search: trim((string) request('search', '')),
             filters: self::resolveFilterValues($filterDefinitions),
             sort: DynamicTableSort::fromRequest($allowedSortKeys),
             perPage: self::resolvePerPage($defaultPerPage),
@@ -39,7 +38,7 @@ final class DynamicTableQuery
     }
 
     /**
-     * @param iterable<Filter|array<string, mixed>> $filters
+     * @param  iterable<Filter|array<string, mixed>>  $filters
      */
     public static function restoreFromStore(DynamicTablePreferencesStore $store, string $key, iterable $filters = []): void
     {
@@ -51,22 +50,22 @@ final class DynamicTableQuery
 
         $stored = $store->get($key);
 
-        if (!is_array($stored) || $stored === []) {
+        if (! is_array($stored) || $stored === []) {
             return;
         }
 
         $merge = [];
 
-        if (!empty($stored['search']) && is_string($stored['search'])) {
+        if (! empty($stored['search']) && is_string($stored['search'])) {
             $merge['search'] = $stored['search'];
         }
 
-        if (!empty($stored['sort']) && is_array($stored['sort'])) {
+        if (! empty($stored['sort']) && is_array($stored['sort'])) {
             $merge['sort'] = implode(',', array_column($stored['sort'], 'key'));
             $merge['direction'] = implode(',', array_column($stored['sort'], 'direction'));
         }
 
-        if (!empty($stored['filters']) && is_array($stored['filters'])) {
+        if (! empty($stored['filters']) && is_array($stored['filters'])) {
             foreach ($stored['filters'] as $filterKey => $value) {
                 $merge[$filterKey] = $value;
             }
@@ -79,7 +78,7 @@ final class DynamicTableQuery
 
     public function saveTo(DynamicTablePreferencesStore $store, string $key): void
     {
-        if (!$this->hasExplicitState) {
+        if (! $this->hasExplicitState) {
             return;
         }
 
@@ -93,7 +92,7 @@ final class DynamicTableQuery
     }
 
     /**
-     * @param array<int, array<string, mixed>> $filterDefinitions
+     * @param  array<int, array<string, mixed>>  $filterDefinitions
      */
     private static function hasExplicitRequestState(array $filterDefinitions): bool
     {
@@ -136,7 +135,7 @@ final class DynamicTableQuery
     }
 
     /**
-     * @param iterable<Filter|array<string, mixed>> $filters
+     * @param  iterable<Filter|array<string, mixed>>  $filters
      * @return array<int, array<string, mixed>>
      */
     private static function normalizeFilters(iterable $filters): array
@@ -148,7 +147,7 @@ final class DynamicTableQuery
                 ? $filter->toDefinition()
                 : (is_array($filter) ? $filter : null);
 
-            if (!is_array($definition) || !isset($definition['key'])) {
+            if (! is_array($definition) || ! isset($definition['key'])) {
                 continue;
             }
 
@@ -159,7 +158,7 @@ final class DynamicTableQuery
     }
 
     /**
-     * @param array<int, array<string, mixed>> $filters
+     * @param  array<int, array<string, mixed>>  $filters
      * @return array<string, mixed>
      */
     private static function resolveFilterValues(array $filters): array
@@ -170,11 +169,11 @@ final class DynamicTableQuery
         foreach ($filters as $filter) {
             $key = $filter['key'] ?? null;
 
-            if (!is_string($key) || !request()->has($key)) {
+            if (! is_string($key) || ! request()->has($key)) {
                 continue;
             }
 
-            $value = self::normalizeFilterValue(request()->get($key), !empty($filter['multiple']));
+            $value = self::normalizeFilterValue(request()->get($key), ! empty($filter['multiple']));
 
             if ($value === null) {
                 continue;
@@ -191,11 +190,11 @@ final class DynamicTableQuery
         foreach ($filters as $filter) {
             $key = $filter['key'] ?? null;
 
-            if (!is_string($key) || !array_key_exists('default', $filter)) {
+            if (! is_string($key) || ! array_key_exists('default', $filter)) {
                 continue;
             }
 
-            $value = self::normalizeFilterValue($filter['default'], !empty($filter['multiple']));
+            $value = self::normalizeFilterValue($filter['default'], ! empty($filter['multiple']));
 
             if ($value === null) {
                 continue;
@@ -215,7 +214,7 @@ final class DynamicTableQuery
             return $defaultPerPage;
         }
 
-        $perPage = (int)$value;
+        $perPage = (int) $value;
 
         return $perPage > 0 ? $perPage : $defaultPerPage;
     }
@@ -223,7 +222,7 @@ final class DynamicTableQuery
     private static function normalizeFilterValue(mixed $value, bool $multiple): mixed
     {
         if ($multiple || is_array($value)) {
-            $value = array_values(array_filter((array)$value, static fn($item) => filled($item)));
+            $value = array_values(array_filter((array) $value, static fn ($item) => filled($item)));
 
             return $value === [] ? null : $value;
         }

@@ -25,7 +25,9 @@
     padding: 1rem 1.5rem; /* Optimized padding for better balance */
     border-radius: 0.75rem;
     z-index: 50 !important; /* Ensure it stays above all grid content */
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    transition:
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
 }
 
 /* Dark mode support for the main toolbar */
@@ -53,7 +55,9 @@
  */
 .v\:column-manager-dropdown {
     padding: 1.5rem !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
     border: 1px solid rgba(0, 0, 0, 0.05) !important;
     border-radius: 0.75rem;
 }

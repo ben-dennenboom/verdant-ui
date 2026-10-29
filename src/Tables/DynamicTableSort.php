@@ -61,6 +61,7 @@ final class DynamicTableSort
             if ($c['key'] === $key) {
                 $c['direction'] = $c['direction'] === 'asc' ? 'desc' : 'asc';
             }
+
             return $c;
         })->all();
     }

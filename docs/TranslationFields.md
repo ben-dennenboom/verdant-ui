@@ -16,11 +16,11 @@ For a working example, see [demo/resources/views/demo/forms.blade.php](demo/reso
 
 Pass a `label` and a `languages` array. Each language object has:
 
-| Key     | Type         | Description                                              |
-|---------|--------------|----------------------------------------------------------|
+| Key     | Type         | Description                                                              |
+| ------- | ------------ | ------------------------------------------------------------------------ |
 | `name`  | string       | Form field name (e.g. `report_introduction_en` or `name[en]` for Spatie) |
-| `label` | string       | Tab label, often with flag emoji (e.g. `🇬🇧 English`)    |
-| `value` | string\|null | Current value (for images: URL or path to existing image) |
+| `label` | string       | Tab label, often with flag emoji (e.g. `🇬🇧 English`)                     |
+| `value` | string\|null | Current value (for images: URL or path to existing image)                |
 
 ## Tab Styling
 
@@ -127,15 +127,15 @@ Ensure your `Language` model has `code` and an `enum()` method returning an enum
 
 ## Props
 
-| Prop        | Type    | Default  | Component              | Description                         |
-|-------------|---------|----------|------------------------|-------------------------------------|
-| `label`     | string  | `''`     | all                    | Main label above the tabs           |
-| `languages` | array   | `[]`     | all                    | Array of language objects           |
-| `type`      | string  | `'text'` | translation-input      | HTML input type (text, email, etc.) |
-| `required`  | boolean | `false`  | all                    | Mark first language as required     |
-| `disableCrop` | boolean | `false` | translation-image      | Skip crop step; use image as-is     |
-| `aspectRatio` | string | `null`  | translation-image      | Crop ratio (e.g. `1:1`, `16:9`)     |
-| `uploadUrl` | string  | `null`  | translation-image      | Server URL for image upload         |
-| `minWidth`, `minHeight` | int | `0` | translation-image | Min dimensions (px)              |
-| `maxWidth`, `maxHeight` | int | `5000` | translation-image | Max dimensions (px)             |
-| `maxScale`  | int     | `512`   | translation-image      | Max output size when scaling        |
+| Prop                    | Type    | Default  | Component         | Description                         |
+| ----------------------- | ------- | -------- | ----------------- | ----------------------------------- |
+| `label`                 | string  | `''`     | all               | Main label above the tabs           |
+| `languages`             | array   | `[]`     | all               | Array of language objects           |
+| `type`                  | string  | `'text'` | translation-input | HTML input type (text, email, etc.) |
+| `required`              | boolean | `false`  | all               | Mark first language as required     |
+| `disableCrop`           | boolean | `false`  | translation-image | Skip crop step; use image as-is     |
+| `aspectRatio`           | string  | `null`   | translation-image | Crop ratio (e.g. `1:1`, `16:9`)     |
+| `uploadUrl`             | string  | `null`   | translation-image | Server URL for image upload         |
+| `minWidth`, `minHeight` | int     | `0`      | translation-image | Min dimensions (px)                 |
+| `maxWidth`, `maxHeight` | int     | `5000`   | translation-image | Max dimensions (px)                 |
+| `maxScale`              | int     | `512`    | translation-image | Max output size when scaling        |

@@ -13,7 +13,10 @@
         "php": "^8.1",
         "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
         "illuminate/pagination": "^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
-        "burtds/laravel-vatnumber-checker": "*"
+        "burtds/laravel-vatnumber-checker": "^1.0.11"
+    },
+    "require-dev": {
+        "laravel/pint": "^v1.32.1"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +31,7 @@
         }
     },
     "scripts": {
+        "format": "pint",
         "post-install-cmd": [
             "npm install",
             "npm run build"

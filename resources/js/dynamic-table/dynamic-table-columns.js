@@ -190,8 +190,12 @@ document.addEventListener('alpine:init', () => {
             }
 
             try {
-                const stored = this.orderStorageKey ? localStorage.getItem(this.orderStorageKey) : null;
-                this.order = stored ? this.reconcileOrder(JSON.parse(stored), defaultOrder) : defaultOrder;
+                const stored = this.orderStorageKey
+                    ? localStorage.getItem(this.orderStorageKey)
+                    : null;
+                this.order = stored
+                    ? this.reconcileOrder(JSON.parse(stored), defaultOrder)
+                    : defaultOrder;
             } catch (e) {
                 this.order = defaultOrder;
             }
@@ -214,7 +218,8 @@ document.addEventListener('alpine:init', () => {
 
         persistOrder() {
             try {
-                if (this.orderStorageKey) localStorage.setItem(this.orderStorageKey, JSON.stringify(this.order));
+                if (this.orderStorageKey)
+                    localStorage.setItem(this.orderStorageKey, JSON.stringify(this.order));
             } catch (e) {}
 
             this.syncVisibleCount();
@@ -238,7 +243,9 @@ document.addEventListener('alpine:init', () => {
 
         columnsForModal() {
             const byKey = {};
-            this.columns.forEach((c) => { byKey[c.key] = c; });
+            this.columns.forEach((c) => {
+                byKey[c.key] = c;
+            });
 
             return this.order
                 .filter((k) => byKey[k])
@@ -247,9 +254,8 @@ document.addEventListener('alpine:init', () => {
 
         visibilityDefaultFor(key) {
             const isPinned = this.pinned.includes(key);
-            const fromDefault = this.defaultVisible === null
-                ? true
-                : this.defaultVisible.includes(key);
+            const fromDefault =
+                this.defaultVisible === null ? true : this.defaultVisible.includes(key);
 
             return isPinned ? true : fromDefault;
         },
@@ -310,7 +316,7 @@ document.addEventListener('alpine:init', () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json',
+                    Accept: 'application/json',
                     'X-CSRF-TOKEN': this.csrfToken ?? '',
                 },
                 body: JSON.stringify(payload),
@@ -323,7 +329,9 @@ document.addEventListener('alpine:init', () => {
         },
 
         showAll() {
-            this.allKeys.forEach((k) => { this.visible[k] = true; });
+            this.allKeys.forEach((k) => {
+                this.visible[k] = true;
+            });
             this.persist();
         },
 

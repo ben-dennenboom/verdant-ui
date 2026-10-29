@@ -125,13 +125,13 @@
  */
 
 /* Force hidden cells to collapse completely */
-.v\:tile-view .v\:grid-cell[style*="display: none"],
+.v\:tile-view .v\:grid-cell[style*='display: none'],
 .v\:tile-view .v\:grid-cell[x-cloak] {
     display: none !important;
 }
 
 /* Ensure hideable columns respect the 'display: none' style in all views */
-.v\:hideable-column[style*="display: none"] {
+.v\:hideable-column[style*='display: none'] {
     display: none !important;
 }
 
@@ -194,5 +194,9 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-:is(.dark .v\view-toggle-btn) { background-color: rgb(55 65 81); }
-:is(.dark .v\view-toggle-btn i) { color: #d1d5db; }
+:is(.dark .v\view-toggle-btn) {
+    background-color: rgb(55 65 81);
+}
+:is(.dark .v\view-toggle-btn i) {
+    color: #d1d5db;
+}

@@ -11,7 +11,10 @@ window.verdantTableState = function (config) {
 
         try {
             const referrer = new URL(document.referrer);
-            return referrer.origin === window.location.origin && referrer.pathname === window.location.pathname;
+            return (
+                referrer.origin === window.location.origin &&
+                referrer.pathname === window.location.pathname
+            );
         } catch (e) {
             return false;
         }

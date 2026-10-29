@@ -6,8 +6,8 @@
 @import './grid-utils.css' layer(utilities);
 @import './grid-toolbar.css' layer(utilities);
 
-@import "tailwindcss/theme" layer(theme)prefix(v);
-@import "tailwindcss/utilities" layer(utilities) prefix(v);
+@import 'tailwindcss/theme' layer(theme) prefix(v);
+@import 'tailwindcss/utilities' layer(utilities) prefix(v);
 
 @custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
@@ -17,19 +17,20 @@
 
 @source "../views/**/*.blade.php";
 @source "../js/**/*.js";
+@source not "../../public";
 
 @theme {
-    --color-blue-100: #E6F2FF;
-    --color-blue-200: #B3D9FF;
-    --color-blue-400: #63A9F7;
-    --color-blue-600: #2A76D2;
-    --color-blue-800: #114B7F;
-    --color-blue-900: #0A2540;
+    --color-blue-100: #e6f2ff;
+    --color-blue-200: #b3d9ff;
+    --color-blue-400: #63a9f7;
+    --color-blue-600: #2a76d2;
+    --color-blue-800: #114b7f;
+    --color-blue-900: #0a2540;
 
-    --color-gray-100: #F3F4F6;
-    --color-gray-200: #E5E7EB;
-    --color-gray-300: #D1D5DB;
-    --color-gray-900: #1F2937;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-900: #1f2937;
 
     --color-primary: var(--color-primary);
     --color-primary-50: var(--color-primary-50);
@@ -64,7 +65,8 @@
     --color-v-border-primary: var(--v-border-primary, rgb(229 231 235));
 }
 
-[data-theme="dark"], [data-theme="dark"] * {
+[data-theme='dark'],
+[data-theme='dark'] * {
     --v-color-surface: var(--v-bg-primary, rgb(31 41 55));
     --v-color-surface-muted: var(--v-bg-secondary, rgb(17 24 39));
     --v-color-floating: var(--v-bg-floating, rgb(31 41 55));
@@ -88,11 +90,11 @@
     color: red;
 }
 
-.v\:sidebar[data-collapsed="true"] .v\:sidebar-label,
-.v\:sidebar[data-collapsed="true"] .v\:sidebar-chevron,
-.v\:sidebar[data-collapsed="true"] .v\:sidebar-children,
-.v\:sidebar[data-collapsed="true"] .v\:sidebar-expanded-only,
-.v\:sidebar:not([data-collapsed="true"]) .v\:sidebar-collapsed-only {
+.v\:sidebar[data-collapsed='true'] .v\:sidebar-label,
+.v\:sidebar[data-collapsed='true'] .v\:sidebar-chevron,
+.v\:sidebar[data-collapsed='true'] .v\:sidebar-children,
+.v\:sidebar[data-collapsed='true'] .v\:sidebar-expanded-only,
+.v\:sidebar:not([data-collapsed='true']) .v\:sidebar-collapsed-only {
     display: none;
 }
 
@@ -114,7 +116,7 @@
             border-color: theme(--color-blue-300);
         }
 
-        [data-theme="dark"] & {
+        [data-theme='dark'] & {
             background-color: theme(--color-gray-800);
             border-color: theme(--color-gray-600);
             color: theme(--color-gray-100);
@@ -149,7 +151,7 @@
             background-repeat: no-repeat;
         }
 
-        [data-theme="dark"] & {
+        [data-theme='dark'] & {
             background-color: theme(--color-gray-700);
             border-color: theme(--color-gray-600);
 

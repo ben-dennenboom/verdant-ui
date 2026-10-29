@@ -38,7 +38,7 @@ window.gridComponent = function (config) {
                 hasScroll: false,
                 isAtStart: true,
                 isAtEnd: false,
-                tileView: config.initialTileView || false
+                tileView: config.initialTileView || false,
             });
 
             this.handleResize();
@@ -52,7 +52,9 @@ window.gridComponent = function (config) {
                         this.updateScrollState(wrapper);
                     };
 
-                    wrapper.addEventListener('scroll', scrollHandler, { passive: true });
+                    wrapper.addEventListener('scroll', scrollHandler, {
+                        passive: true,
+                    });
                     this.updateScrollState(wrapper);
                 }
             });
@@ -98,7 +100,7 @@ window.gridComponent = function (config) {
             const state = {
                 hasScroll: wrapper.scrollWidth > wrapper.clientWidth,
                 isAtStart: wrapper.scrollLeft <= margin,
-                isAtEnd: wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - margin
+                isAtEnd: wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - margin,
             };
 
             this.$store.grids.update(this.id, state);
@@ -113,7 +115,7 @@ window.gridComponent = function (config) {
                 this.$store.grids.update(this.id, {
                     hasScroll: false,
                     isAtStart: false,
-                    isAtEnd: false
+                    isAtEnd: false,
                 });
                 return;
             }
@@ -143,7 +145,7 @@ window.gridComponent = function (config) {
          */
         toggleColumn(columnId) {
             if (this.hiddenColumns.includes(columnId)) {
-                this.hiddenColumns = this.hiddenColumns.filter(id => id !== columnId);
+                this.hiddenColumns = this.hiddenColumns.filter((id) => id !== columnId);
             } else {
                 this.hiddenColumns.push(columnId);
             }
@@ -182,7 +184,7 @@ window.gridComponent = function (config) {
             const headers = grid.querySelectorAll('.v-grid-header-wrapper > [data-column-id]');
             let totalSpan = 0;
 
-            headers.forEach(header => {
+            headers.forEach((header) => {
                 const columnId = header.getAttribute('data-column-id');
 
                 if (this.isColumnVisible(columnId)) {
@@ -218,9 +220,8 @@ window.gridComponent = function (config) {
             content.style.display = 'grid';
 
             this.$nextTick(() => {
-                const targetScroll = direction === 'end'
-                    ? container.scrollWidth - container.clientWidth
-                    : 0;
+                const targetScroll =
+                    direction === 'end' ? container.scrollWidth - container.clientWidth : 0;
 
                 container.scrollLeft = targetScroll;
 
@@ -256,6 +257,6 @@ window.gridComponent = function (config) {
          */
         scrollToStart() {
             this.scrollTo('start');
-        }
-    }
-}
+        },
+    };
+};

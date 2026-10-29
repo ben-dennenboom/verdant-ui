@@ -77,8 +77,8 @@ class DynamicTableBuilder
     }
 
     /**
-     * @param array<string> $searchable
-     * @param array<Column> $columns
+     * @param  array<string>  $searchable
+     * @param  array<Column>  $columns
      */
     private function applySearch(Builder $query, array $searchable, array $columns, string $search, string $operator): void
     {
@@ -94,11 +94,12 @@ class DynamicTableBuilder
 
                 if ($definition !== null && isset($definition['search_query']) && is_callable($definition['search_query'])) {
                     ($definition['search_query'])($builder, $search);
+
                     continue;
                 }
 
                 $searchKey = Column::resolveSearchKey($key, $columns);
-                $builder->orWhere($searchKey, $operator, '%' . $search . '%');
+                $builder->orWhere($searchKey, $operator, '%'.$search.'%');
             }
         });
     }

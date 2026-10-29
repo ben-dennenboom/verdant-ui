@@ -1,5 +1,4 @@
 document.addEventListener('alpine:init', () => {
-
     Alpine.data('imageCropper', (config) => ({
         name: config.name,
         showModal: false,
@@ -72,22 +71,35 @@ document.addEventListener('alpine:init', () => {
 
                     this.tempImageData = e.target.result;
                     if (this.disableCrop) {
-                        if (this.maxScale > 0 && (img.width > this.maxScale || img.height > this.maxScale)) {
+                        if (
+                            this.maxScale > 0 &&
+                            (img.width > this.maxScale || img.height > this.maxScale)
+                        ) {
                             const canvas = document.createElement('canvas');
                             const ctx = canvas.getContext('2d');
 
                             let newWidth, newHeight;
                             if (img.width > img.height) {
                                 newWidth = this.maxScale;
-                                newHeight = Math.round(img.height * this.maxScale / img.width);
+                                newHeight = Math.round((img.height * this.maxScale) / img.width);
                             } else {
                                 newHeight = this.maxScale;
-                                newWidth = Math.round(img.width * this.maxScale / img.height);
+                                newWidth = Math.round((img.width * this.maxScale) / img.height);
                             }
 
                             canvas.width = newWidth;
                             canvas.height = newHeight;
-                            ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, newWidth, newHeight);
+                            ctx.drawImage(
+                                img,
+                                0,
+                                0,
+                                img.width,
+                                img.height,
+                                0,
+                                0,
+                                newWidth,
+                                newHeight,
+                            );
 
                             const scaledImage = canvas.toDataURL('image/png');
                             this.preview = scaledImage;
@@ -95,7 +107,7 @@ document.addEventListener('alpine:init', () => {
 
                             this.$dispatch('image-cropped', {
                                 name: this.name,
-                                data: scaledImage
+                                data: scaledImage,
                             });
                         } else {
                             this.preview = e.target.result;
@@ -103,7 +115,7 @@ document.addEventListener('alpine:init', () => {
 
                             this.$dispatch('image-cropped', {
                                 name: this.name,
-                                data: e.target.result
+                                data: e.target.result,
                             });
                         }
                     } else {
@@ -118,7 +130,7 @@ document.addEventListener('alpine:init', () => {
         openCropModal() {
             if (!this.tempImageData) {
                 if (!this.preview || this.preview === this.initialSrc) {
-                    this.error = "No image selected for cropping";
+                    this.error = 'No image selected for cropping';
                     return;
                 }
                 this.tempImageData = this.preview;
@@ -184,22 +196,35 @@ document.addEventListener('alpine:init', () => {
                 }
 
                 let finalCanvas = canvas;
-                if (this.maxScale > 0 && (canvas.width > this.maxScale || canvas.height > this.maxScale)) {
+                if (
+                    this.maxScale > 0 &&
+                    (canvas.width > this.maxScale || canvas.height > this.maxScale)
+                ) {
                     finalCanvas = document.createElement('canvas');
                     const ctx = finalCanvas.getContext('2d');
 
                     let newWidth, newHeight;
                     if (canvas.width > canvas.height) {
                         newWidth = this.maxScale;
-                        newHeight = Math.round(canvas.height * this.maxScale / canvas.width);
+                        newHeight = Math.round((canvas.height * this.maxScale) / canvas.width);
                     } else {
                         newHeight = this.maxScale;
-                        newWidth = Math.round(canvas.width * this.maxScale / canvas.height);
+                        newWidth = Math.round((canvas.width * this.maxScale) / canvas.height);
                     }
 
                     finalCanvas.width = newWidth;
                     finalCanvas.height = newHeight;
-                    ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, newWidth, newHeight);
+                    ctx.drawImage(
+                        canvas,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height,
+                        0,
+                        0,
+                        newWidth,
+                        newHeight,
+                    );
                 }
 
                 const croppedData = finalCanvas.toDataURL('image/png');
@@ -212,7 +237,7 @@ document.addEventListener('alpine:init', () => {
 
                     this.$dispatch('image-cropped', {
                         name: this.name,
-                        data: croppedData
+                        data: croppedData,
                     });
                 }
 
@@ -231,9 +256,9 @@ document.addEventListener('alpine:init', () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': this.csrfToken
+                        'X-CSRF-TOKEN': this.csrfToken,
                     },
-                    body: JSON.stringify({image: imageData})
+                    body: JSON.stringify({ image: imageData }),
                 });
 
                 if (!response.ok) {
@@ -247,9 +272,8 @@ document.addEventListener('alpine:init', () => {
                 this.$dispatch('image-cropped', {
                     name: this.name,
                     url: data.url,
-                    path: data.path || data.url
+                    path: data.path || data.url,
                 });
-
             } catch (error) {
                 console.error('Upload failed:', error);
                 this.error = 'Failed to upload image. Please try again.';
@@ -271,6 +295,6 @@ document.addEventListener('alpine:init', () => {
                 }
                 this.cropper = null;
             }
-        }
+        },
     }));
 });

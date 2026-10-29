@@ -8,20 +8,34 @@ use Illuminate\Pagination\AbstractPaginator;
 final class DynamicTableViewModel
 {
     public array $headers;
+
     public array $rows;
+
     public array $columnKeys;
+
     public int $columnCount;
+
     public bool $usesKeys;
+
     public ?int $actionsColumnIndex;
+
     public ?AbstractPaginator $paginator = null;
+
     public ?DynamicTableSort $sort = null;
+
     public ?string $columnVisibilityKey = null;
+
     public ?array $defaultVisibleColumns = null;
+
     public ?array $searchableColumns = null;
+
     public string $searchTerm = '';
+
     public ?string $searchApiUrl = null;
+
     /** @var array<int, array<string, mixed>>|null */
     public ?array $filterColumns = null;
+
     /** @var array<string, mixed>|null */
     public ?array $filterValues = null;
 
@@ -73,13 +87,13 @@ final class DynamicTableViewModel
         array $fallbackHeaders = [],
         array $fallbackRows = []
     ): self {
-        $vm = new self();
+        $vm = new self;
 
         [$headers, $rows] = self::resolveSource($data, $fallbackHeaders, $fallbackRows);
 
         $vm->headers = self::normalizeHeaders($headers, $rows);
         $vm->columnKeys = self::extractColumnKeys($vm->headers);
-        $vm->usesKeys = in_array(true, array_map(fn ($k) => !is_null($k), $vm->columnKeys), true);
+        $vm->usesKeys = in_array(true, array_map(fn ($k) => ! is_null($k), $vm->columnKeys), true);
 
         $idx = array_search(self::ACTIONS_KEY, $vm->columnKeys, true);
         $vm->actionsColumnIndex = $idx !== false ? $idx : null;
@@ -90,7 +104,7 @@ final class DynamicTableViewModel
         $vm->columnGridWidths = self::extractColumnGridWidths($vm->headers);
         $vm->gridTemplateColumns = self::buildGridTemplateColumnsFromWidths($vm->columnGridWidths);
 
-        if ($data instanceof DynamicTableDataProvider && !is_null($data->sort())) {
+        if ($data instanceof DynamicTableDataProvider && ! is_null($data->sort())) {
             $vm->sort = $data->sort();
         }
 
@@ -98,32 +112,32 @@ final class DynamicTableViewModel
             $vm->paginator = $data->paginator();
 
             $visibilityKey = $data->columnVisibilityKey();
-            if (!is_null($visibilityKey)) {
+            if (! is_null($visibilityKey)) {
                 $vm->columnVisibilityKey = $visibilityKey;
             }
 
             $defaultVisible = $data->defaultVisibleColumns();
-            if (!is_null($defaultVisible)) {
+            if (! is_null($defaultVisible)) {
                 $vm->defaultVisibleColumns = $defaultVisible;
             }
 
             $searchable = $data->searchableColumns();
-            if (!is_null($searchable)) {
+            if (! is_null($searchable)) {
                 $vm->searchableColumns = $searchable;
             }
 
             $apiUrl = $data->searchApiUrl();
-            if (!is_null($apiUrl)) {
+            if (! is_null($apiUrl)) {
                 $vm->searchApiUrl = $apiUrl;
             }
 
             $filterCols = $data->filterColumns();
-            if (!is_null($filterCols) && $filterCols !== []) {
+            if (! is_null($filterCols) && $filterCols !== []) {
                 $vm->filterColumns = self::normalizeFilterColumns($filterCols);
             }
 
             $maxVisible = $data->actionsMaxVisible();
-            if (!is_null($maxVisible)) {
+            if (! is_null($maxVisible)) {
                 $vm->actionsMaxVisible = $maxVisible;
             }
 
@@ -131,7 +145,7 @@ final class DynamicTableViewModel
             $vm->openRowOnClick = $data->openRowOnClick();
 
             $bulkFields = $data->bulkFields();
-            if (!empty($bulkFields)) {
+            if (! empty($bulkFields)) {
                 $vm->bulkFields = self::normalizeBulkFields($bulkFields);
                 $vm->bulkActionUrl = $data->bulkActionUrl();
                 $vm->hasBulkEdit = true;
@@ -219,7 +233,7 @@ final class DynamicTableViewModel
         }
 
         if (self::rowsContainActions($rows)
-            && !collect($normalized)->contains(fn ($h) => ($h['key'] ?? null) === self::ACTIONS_KEY)
+            && ! collect($normalized)->contains(fn ($h) => ($h['key'] ?? null) === self::ACTIONS_KEY)
         ) {
             $normalized[] = [
                 'label' => 'Actions',
@@ -256,22 +270,22 @@ final class DynamicTableViewModel
     }
 
     /**
-     * @param array<int, array<string, mixed>> $fields
+     * @param  array<int, array<string, mixed>>  $fields
      * @return array<int, array<string, mixed>>
      */
     private static function normalizeBulkFields(array $fields): array
     {
         $normalized = [];
         foreach ($fields as $field) {
-            if (!is_array($field) || empty($field['key']) || empty($field['label']) || empty($field['type'])) {
+            if (! is_array($field) || empty($field['key']) || empty($field['label']) || empty($field['type'])) {
                 continue;
             }
             $item = [
-                'key'         => (string) $field['key'],
-                'label'       => (string) $field['label'],
-                'type'        => (string) $field['type'],
+                'key' => (string) $field['key'],
+                'label' => (string) $field['label'],
+                'type' => (string) $field['type'],
                 'placeholder' => $field['placeholder'] ?? null,
-                'multiple'    => !empty($field['multiple']),
+                'multiple' => ! empty($field['multiple']),
             ];
             if (($field['type'] ?? '') === 'select' && isset($field['options']) && is_array($field['options'])) {
                 $item['options'] = self::normalizeSelectOptions($field['options']);
@@ -285,7 +299,7 @@ final class DynamicTableViewModel
     }
 
     /**
-     * @param array<Filter> $filters
+     * @param  array<Filter>  $filters
      * @return array<int, array<string, mixed>>
      */
     private static function normalizeFilterColumns(array $filters): array
@@ -295,7 +309,7 @@ final class DynamicTableViewModel
             if ($filter instanceof Filter) {
                 $filter = $filter->toDefinition();
             }
-            if (!is_array($filter) || empty($filter['key']) || empty($filter['label']) || empty($filter['type'])) {
+            if (! is_array($filter) || empty($filter['key']) || empty($filter['label']) || empty($filter['type'])) {
                 continue;
             }
             $item = [
@@ -304,7 +318,7 @@ final class DynamicTableViewModel
                 'type' => (string) $filter['type'],
                 'placeholder' => $filter['placeholder'] ?? null,
                 'default' => $filter['default'] ?? null,
-                'multiple' => !empty($filter['multiple']),
+                'multiple' => ! empty($filter['multiple']),
             ];
             if (($filter['type'] ?? '') === 'select' && isset($filter['options']) && is_array($filter['options'])) {
                 $item['options'] = self::normalizeSelectOptions($filter['options']);
@@ -318,7 +332,7 @@ final class DynamicTableViewModel
     }
 
     /**
-     * @param array<int|string, mixed> $options
+     * @param  array<int|string, mixed>  $options
      * @return array<int, array{value: string|int|float, label: string}>
      */
     private static function normalizeSelectOptions(array $options): array
@@ -338,7 +352,7 @@ final class DynamicTableViewModel
     }
 
     /**
-     * @param array<int, array<string, mixed>> $filterColumns
+     * @param  array<int, array<string, mixed>>  $filterColumns
      * @return array<string, mixed>
      */
     private static function resolveFilterValues(array $filterColumns): array
@@ -350,7 +364,7 @@ final class DynamicTableViewModel
                 continue;
             }
             $default = $col['default'] ?? null;
-            if (!empty($col['multiple'])) {
+            if (! empty($col['multiple'])) {
                 $values[$key] = request()->has($key) ? (array) request($key) : (is_array($default) ? $default : []);
             } else {
                 $values[$key] = request($key, $default);
@@ -367,7 +381,7 @@ final class DynamicTableViewModel
     {
         $key = $this->columnKeys[$index] ?? null;
 
-        return !is_null($key) ? (string) $key : 'col-' . $index;
+        return ! is_null($key) ? (string) $key : 'col-'.$index;
     }
 
     /**

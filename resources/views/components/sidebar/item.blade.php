@@ -26,7 +26,7 @@
         ])>
             {!! $label !!}
         </span>
-        @if($count)
+        @isset($count)
             <span @class([
                 'v:sidebar-expanded-only v:mx-2 v:min-w-6 v:px-1 v:py-0.5 v:rounded-lg v:bg-white/80 v:text-xs v:font-bold v:text-center',
                 $active ? 'v:text-primary-700' : 'v:text-primary-500',
@@ -35,7 +35,7 @@
                 'v:sidebar-collapsed-only v:absolute v:top-2 v:left-10 v:size-2 v:rounded-full v:border v:border-white',
                 $active ? 'v:bg-white' : 'v:bg-primary-500',
             ])></span>
-        @endif
+        @endisset
     @if($slot->isNotEmpty())
             <i class="v:sidebar-chevron fas fa-chevron-down v:ml-auto"></i>
         @endif

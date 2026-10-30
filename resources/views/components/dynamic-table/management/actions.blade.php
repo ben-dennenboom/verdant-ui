@@ -6,11 +6,14 @@
 <div x-cloak x-data='verdantTableActions(@json(["actions" => $actions, "maxVisible" => $maxVisible, "csrfToken" => csrf_token()]))'
      class="v:relative v:flex v:items-center"
 >
-    <div class="v:flex v:items-center v:gap-0 v:border v:border-gray-200 v:dark:border-gray-600 v:rounded-lg">
+    <div class="v:flex v:items-center v:gap-0 v:border v:border-gray-200 v:dark:border-gray-600 v:bg-surface v:rounded-lg v:overflow-hidden">
         @foreach($actions as $i => $action)
             @if($i < $maxVisible)
-                @php $disabled = !empty($action['disabled']); @endphp
-                @php $icon = $action['icon'] ?? null; @endphp
+                @php
+                    $disabled = !empty($action['disabled']);
+                    $icon = $action['icon'] ?? null;
+                    $showLabel = $icon === null || ($action['display'] ?? (count($actions) === 1 ? 'all' : 'icon')) === 'all';
+                @endphp
                 <div
                     x-show="visibleCount > {{ $i }}"
                     x-transition
@@ -25,30 +28,35 @@
                             @endif
                             <button type="submit"
                                     @disabled($disabled)
-                                    class="v:p-1 v:px-2 v:text-sm v:hover:bg-gray-50 v:overflow-hidden {{ $disabled ? 'v:text-gray-300 v:cursor-not-allowed' : 'v:text-gray-700' }}"
+                                    class="v:p-1 v:px-2 v:text-sm v:hover:bg-gray-50 v:overflow-hidden {{ $disabled ? 'v:text-gray-300 v:cursor-not-allowed' : 'v:text-gray-700 v:cursor-pointer' }}"
+                                    @if(!$showLabel) title="{{ $action['label'] }}"@endif
                             >
-                                @if($icon)<i class="fas fa-{{ $icon }} {{ filled($action['label'] ?? null) ? 'v:mr-2' : 'v:mx-1' }}"></i>@endif
-                                {{ $action['label'] }}
+                                @if($icon)<i class="fas fa-{{ $icon }} {{ $showLabel ? 'v:mr-2' : 'v:mx-1' }}"></i>@endif
+                                @if($showLabel){{ $action['label'] }}@endif
                             </button>
                         </form>
                     @elseif($disabled)
-                        <span class="v:p-1 v:px-2 v:text-sm v:text-gray-300 v:cursor-not-allowed">
-                            @if($icon)<i class="fas fa-{{ $icon }} {{ filled($action['label'] ?? null) ? 'v:mr-2' : 'v:mx-1' }}"></i>@endif
-                            {{ $action['label'] }}
+                        <span
+                            class="v:p-1 v:px-2 v:text-sm v:text-gray-300 v:cursor-not-allowed"
+                            @if(!$showLabel) title="{{ $action['label'] }}"@endif
+                        >
+                            @if($icon)<i class="fas fa-{{ $icon }} {{ $showLabel ? 'v:mr-2' : 'v:mx-1' }}"></i>@endif
+                            @if($showLabel){{ $action['label'] }}@endif
                         </span>
                     @else
                         <a href="{{ $action['route'] }}"
-                           class="v:p-1 v:px-2 v:text-sm v:text-gray-700 v:hover:bg-gray-50">
-                            @if($icon)<i class="fas fa-{{ $icon }} {{ filled($action['label'] ?? null) ? 'v:mr-2' : 'v:mx-1' }}"></i>@endif
-                            {{ $action['label'] }}
+                           class="v:p-1 v:px-2 v:text-sm v:text-gray-700 v:hover:bg-gray-50"
+                           @if(!$showLabel) title="{{ $action['label'] }}"@endif
+                        >
+                            @if($icon)<i class="fas fa-{{ $icon }} {{ $showLabel ? 'v:mr-2' : 'v:mx-1' }}"></i>@endif
+                            @if($showLabel){{ $action['label'] }}@endif
                         </a>
                     @endif
                 </div>
             @endif
         @endforeach
 
-        <button x-show="hasOverflow"
-                x-cloak
+        <button x-cloak x-show="hasOverflow"
                 @click="open = !open"
                 class="v:py-1 v:text-sm v:text-gray-700 v:hover:bg-gray-50 v:border-gray-200 v:dark:border-gray-600"
         >
@@ -76,7 +84,7 @@
                             @endif
                             <button type="submit"
                                     @disabled($disabled)
-                                    class="v:block v:w-full v:text-left v:px-4 v:py-2 v:text-sm v:hover:bg-gray-50 {{ $disabled ? 'v:text-gray-300 v:cursor-not-allowed' : 'v:text-gray-700' }}"
+                                    class="v:block v:w-full v:text-left v:px-4 v:py-2 v:text-sm v:hover:bg-gray-50 {{ $disabled ? 'v:text-gray-300 v:cursor-not-allowed' : 'v:text-gray-700 v:cursor-pointer' }}"
                             >
                                 @if($icon)<i class="fas fa-{{ $icon }} v:mr-2"></i>@endif
                                 {{ $action['label'] }}

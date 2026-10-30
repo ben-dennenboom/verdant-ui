@@ -161,4 +161,59 @@
             }
         }
     }
+
+    input[type='file']:focus {
+        outline: none;
+        box-shadow: 0 0 0 1px var(--color-secondary-500);
+    }
+
+    input[type='file']::file-selector-button {
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.125rem;
+        margin-right: 0.5rem;
+        background-color: var(--color-primary-300);
+        color: white;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: background-color 200ms ease;
+    }
+
+    input[type='file']::file-selector-button:hover {
+        background-color: var(--color-primary-400);
+    }
+
+    .v\:scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-gray-300) transparent;
+    }
+
+    .v\:scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .v\:scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .v\:scrollbar::-webkit-scrollbar-thumb {
+        background-color: var(--color-gray-300);
+        transition: background-color 200ms ease;
+        border-radius: 3px;
+    }
+
+    .v\:scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-gray-400);
+    }
+
+    [data-theme='dark'] .v\:scrollbar {
+        scrollbar-color: var(--color-gray-600) transparent;
+    }
+
+    [data-theme='dark'] .v\:scrollbar::-webkit-scrollbar-thumb {
+        background-color: var(--color-gray-600);
+    }
+
+    [data-theme='dark'] .v\:scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-gray-500);
+    }
 }

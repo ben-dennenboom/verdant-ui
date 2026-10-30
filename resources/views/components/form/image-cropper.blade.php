@@ -11,7 +11,34 @@
     'uploadUrl' => null,
     'maxScale' => 512,
     'disableCrop' => false,
+    'texts' => [],
 ])
+
+@php
+    // Every visible text can be translated by the host application; English stays the default.
+    $t = array_merge([
+        'select' => 'Select Image',
+        'upload' => 'Upload Image',
+        'recrop' => 'Recrop Image',
+        'title' => 'Crop Image',
+        'cancel' => 'Cancel',
+        'apply' => 'Apply Crop',
+        'upload_action' => 'Upload',
+        'min' => 'min',
+        'min_width' => 'min width',
+        'min_height' => 'min height',
+        'ratio' => 'ratio',
+        'too_heavy' => 'File size exceeds 5MB limit',
+        'invalid_type' => 'Invalid file type. Please use JPG, PNG, GIF, or WebP images.',
+        'too_small' => 'Image dimensions (:widthx:heightpx) too small. Minimum size is :min_widthx:min_heightpx',
+        'too_large' => 'Image dimensions (:widthx:heightpx) too large. Maximum size is :max_widthx:max_heightpx',
+        'no_image' => 'No image selected for cropping',
+        'init_failed' => 'Failed to initialize image cropper',
+        'not_initialized' => 'Image cropper not initialized',
+        'crop_failed' => 'Failed to crop image',
+        'upload_failed' => 'Failed to upload image. Please try again.',
+    ], $texts);
+@endphp
 
 <div class="v-mb-4"
      x-data="imageCropper({
@@ -27,6 +54,7 @@
         csrfToken: '{{ csrf_token() }}',
         maxScale: {{ $maxScale }},
         disableCrop: {{ $disableCrop ? 'true' : 'false' }},
+        texts: @js($t),
      })">
 
   @if($label)
@@ -36,11 +64,11 @@
         @if($minWidth || $minHeight || $aspectRatio)
           (
           @if($minWidth && $minHeight)
-            min {{ $minWidth }}x{{ $minHeight }}px
+            {{ $t['min'] }} {{ $minWidth }}x{{ $minHeight }}px
           @elseif($minWidth)
-            min width {{ $minWidth }}px
+            {{ $t['min_width'] }} {{ $minWidth }}px
           @elseif($minHeight)
-            min height {{ $minHeight }}px
+            {{ $t['min_height'] }} {{ $minHeight }}px
           @endif
 
           @if(($minWidth || $minHeight) && $aspectRatio)
@@ -48,7 +76,7 @@
           @endif
 
           @if($aspectRatio)
-            ratio {{ $aspectRatio }}
+            {{ $t['ratio'] }} {{ $aspectRatio }}
           @endif
           )
         @endif
@@ -71,7 +99,7 @@
              @change="handleFileSelect">
 
       <x-v-button.secondary type="button" @click="selectFile" icon="image">
-        {{ $uploadUrl ? 'Upload Image' : 'Select Image' }}
+        {{ $uploadUrl ? $t['upload'] : $t['select'] }}
       </x-v-button.secondary>
 
       <x-v-button.light
@@ -79,7 +107,7 @@
               type="button"
               @click="openCropModal"
               icon="crop">
-        Recrop Image
+        {{ $t['recrop'] }}
       </x-v-button.light>
     </div>
   </div>
@@ -106,7 +134,7 @@
            x-transition:leave-end="v-opacity-0 v-transform v-scale-95">
 
         <div class="v-p-4 v-border-b v-border-gray-200">
-          <h3 class="v-text-lg v-font-medium v-text-gray-900">Crop Image</h3>
+          <h3 class="v-text-lg v-font-medium v-text-gray-900">{{ $t['title'] }}</h3>
         </div>
 
         <div class="v-p-4">
@@ -117,11 +145,11 @@
 
         <div class="v-bg-gray-50 v-px-4 v-py-3 v-flex v-justify-end v-gap-2">
           <x-v-button.light type="button" @click="cancelCrop">
-            Cancel
+            {{ $t['cancel'] }}
           </x-v-button.light>
 
           <x-v-button.primary type="button" @click="applyCrop">
-            {{ $uploadUrl ? 'Upload' : 'Apply Crop' }}
+            {{ $uploadUrl ? $t['upload_action'] : $t['apply'] }}
           </x-v-button.primary>
         </div>
       </div>
@@ -151,6 +179,11 @@
       maxScale: config.maxScale !== undefined ? config.maxScale : 512,
       tempImageData: null,
       disableCrop: config.disableCrop || false,
+      texts: config.texts || {},
+
+      text(key, replacements = {}) {
+        return Object.entries(replacements).reduce((text, [name, value]) => text.replaceAll(`:${name}`, value), this.texts[key] || key);
+      },
 
       init() {
         const aspectRatio = config.aspectRatio || null;
@@ -178,13 +211,13 @@
         this.$refs.fileInput.value = '';
 
         if (currentFile.size > 5 * 1024 * 1024) {
-          this.error = 'File size exceeds 5MB limit';
+          this.error = this.text('too_heavy');
           return;
         }
 
         const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (!validTypes.includes(currentFile.type)) {
-          this.error = 'Invalid file type. Please use JPG, PNG, GIF, or WebP images.';
+          this.error = this.text('invalid_type');
           return;
         }
 
@@ -193,12 +226,12 @@
           const img = new Image();
           img.onload = () => {
             if (img.width < this.minWidth || img.height < this.minHeight) {
-              this.error = `Image dimensions (${img.width}x${img.height}px) too small. Minimum size is ${this.minWidth}x${this.minHeight}px`;
+              this.error = this.text('too_small', { min_width: this.minWidth, min_height: this.minHeight, width: img.width, height: img.height });
               return;
             }
 
             if (img.width > this.maxWidth || img.height > this.maxHeight) {
-              this.error = `Image dimensions (${img.width}x${img.height}px) too large. Maximum size is ${this.maxWidth}x${this.maxHeight}px`;
+              this.error = this.text('too_large', { max_width: this.maxWidth, max_height: this.maxHeight, width: img.width, height: img.height });
               return;
             }
 
@@ -250,7 +283,7 @@
       openCropModal() {
         if (!this.tempImageData) {
           if (!this.preview || this.preview === this.initialSrc) {
-            this.error = "No image selected for cropping";
+            this.error = this.text('no_image');
             return;
           }
           this.tempImageData = this.preview;
@@ -293,13 +326,13 @@
           });
         } catch (err) {
           console.error('Failed to initialize cropper:', err);
-          this.error = 'Failed to initialize image cropper';
+          this.error = this.text('init_failed');
         }
       },
 
       async applyCrop() {
         if (!this.cropper) {
-          this.error = 'Image cropper not initialized';
+          this.error = this.text('not_initialized');
           return;
         }
 
@@ -311,7 +344,7 @@
           });
 
           if (!canvas) {
-            this.error = 'Failed to crop image';
+            this.error = this.text('crop_failed');
             return;
           }
 
@@ -353,7 +386,7 @@
           this.tempImageData = null;
         } catch (err) {
           console.error('Failed to crop image:', err);
-          this.error = 'Failed to crop image';
+          this.error = this.text('crop_failed');
         }
       },
 
@@ -384,7 +417,7 @@
 
         } catch (error) {
           console.error('Upload failed:', error);
-          this.error = 'Failed to upload image. Please try again.';
+          this.error = this.text('upload_failed');
         }
       },
 

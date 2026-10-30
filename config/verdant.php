@@ -45,6 +45,8 @@ return [
         'hide_reset_on_required_selects' => false,
         'striped_table_rows' => false,
         'modal_z_index' => null,
+        'scrollable_tables' => false,
+        'table_min_column_width' => '6.5rem',
     ],
 
     'components' => [

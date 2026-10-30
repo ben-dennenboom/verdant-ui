@@ -1,5 +1,6 @@
 @php
     $bulkPrefix = $vm->hasBulkEdit ? '3rem ' : '';
+    $initial = $columnVisibility['initial'] ?? null;
 @endphp
 
 <div x-data="dynamicTableSort({
@@ -7,6 +8,8 @@
     })"
     class="v:grid v:bg-gray-50 v:dark:bg-gray-700 v:relative"
     @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
+        style="grid-template-columns: {{ $bulkPrefix }}{{ $initial['gridTemplateColumns'] }};"
+        data-grid-prefix="{{ $bulkPrefix }}"
         :style="'grid-template-columns: {{ $bulkPrefix }}' + (Alpine.store('{{ $columnVisibility['storeKey'] }}')?.gridTemplateColumns ?? @js($vm->gridTemplateColumns))"
     @else
         @if($vm->gridTemplateColumns !== '')
@@ -23,6 +26,7 @@
             <input
                 type="checkbox"
                 x-show="$store[@js($bulkStoreKey)].selected.length > 0"
+                x-cloak
                 :checked="$store[@js($bulkStoreKey)].allRowKeys.length > 0 && $store[@js($bulkStoreKey)].allRowKeys.every(k => $store[@js($bulkStoreKey)].selected.includes(k))"
                 @change="$store[@js($bulkStoreKey)].toggleAll()"
                 title="{{ __('verdant::table.select_all_on_page') }}"
@@ -46,9 +50,12 @@
         "
             @if(!empty($header['tooltip'])) title="{{ e($header['tooltip']) }}" @endif
             @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']) && !empty($columnVisibility['storeKey']))
+                data-column-key="{{ $columnKey }}"
                 @if(!empty($columnVisibility['orderEnabled']))
+                    style="{{ $initial['visible'][$columnKey] ? '' : 'display:none;' }}order:{{ $initial['orderIndex'][$columnKey] }}"
                     :style="(Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}') ? '' : 'display:none;') + 'order:' + Alpine.store('{{ $columnVisibility['storeKey'] }}').orderIndex('{{ $columnKey }}')"
                 @else
+                    @unless($initial['visible'][$columnKey]) style="display:none;" @endunless
                     x-show="Alpine.store('{{ $columnVisibility['storeKey'] }}').isVisible('{{ $columnKey }}')"
                 @endif
             @endif

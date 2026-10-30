@@ -420,6 +420,52 @@ final class DynamicTableViewModel
     }
 
     /**
+     * @param  array<int, string>  $pinned
+     * @return array{visible: array<string, bool>, order: array<int, string>, orderIndex: array<string, int>, gridTemplateColumns: string}
+     */
+    public function initialColumnState(array $pinned, bool $orderEnabled): array
+    {
+        $allKeys = array_map(fn ($i) => $this->columnKeyForIndex($i), array_keys($this->columnKeys));
+        $useStored = $this->preferencesSaveUrl !== null && $this->storedVisibleColumns !== null;
+
+        $visible = [];
+        foreach ($allKeys as $key) {
+            $visible[$key] = in_array($key, $pinned, true) || match (true) {
+                $useStored => in_array($key, $this->storedVisibleColumns, true),
+                $this->defaultVisibleColumns === null => true,
+                default => in_array($key, $this->defaultVisibleColumns, true),
+            };
+        }
+
+        $order = array_values(array_diff($allKeys, $pinned));
+        if ($orderEnabled && $this->preferencesSaveUrl !== null && $this->defaultColumnOrder !== null) {
+            $valid = array_values(array_intersect($this->defaultColumnOrder, $order));
+            $order = [...$valid, ...array_diff($order, $valid)];
+        }
+
+        $queue = $order;
+        $effectiveOrder = [];
+        foreach ($allKeys as $key) {
+            $effectiveOrder[] = ! $orderEnabled || in_array($key, $pinned, true) ? $key : array_shift($queue);
+        }
+
+        $widths = array_combine($allKeys, $this->columnGridWidths);
+        $tracks = [];
+        foreach ($effectiveOrder as $key) {
+            if ($visible[$key]) {
+                $tracks[] = ($widths[$key] ?? null) ?: 'minmax(0, 1fr)';
+            }
+        }
+
+        return [
+            'visible' => $visible,
+            'order' => $order,
+            'orderIndex' => array_flip($effectiveOrder),
+            'gridTemplateColumns' => implode(' ', $tracks),
+        ];
+    }
+
+    /**
      * Resolve the header label for a given column index.
      */
     public function headerLabel(int $index): string

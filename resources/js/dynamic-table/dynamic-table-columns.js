@@ -97,27 +97,20 @@ document.addEventListener('alpine:init', () => {
         columnWidths: config.columnWidths ?? [],
         pinned: config.pinned ?? ['actions'],
         defaultVisible: config.defaultVisible ?? null,
-        storedVisible: config.storedVisible ?? null,
         columns: config.columns ?? [],
         orderEnabled: config.orderEnabled ?? false,
-        defaultOrder: config.defaultOrder ?? null,
         saveUrl: config.saveUrl ?? null,
         csrfToken: config.csrfToken ?? null,
-        visible: {},
-        order: [],
+        visible: { ...config.initialVisible },
+        order: [...(config.initialOrder ?? [])],
         widthsByKey: {},
 
         gridTemplateForVisible() {
-            const parts = [];
-            this.effectiveOrder().forEach((key) => {
-                if (this.visible[key] === false) {
-                    return;
-                }
-                const w = this.widthsByKey[key] ?? null;
-                parts.push(w ? w : 'minmax(0, 1fr)');
-            });
-
-            return parts.join(' ');
+            return window.verdantColumnLayout.gridTemplate(
+                this.effectiveOrder(),
+                this.visible,
+                this.widthsByKey,
+            );
         },
 
         init() {
@@ -126,29 +119,18 @@ document.addEventListener('alpine:init', () => {
                 this.widthsByKey[key] = this.columnWidths[i] ?? null;
             });
 
-            if (this.saveUrl) {
-                this.applyStoredOrDefaults();
-            } else {
-                try {
-                    const stored = localStorage.getItem(this.storageKey);
-                    if (stored) {
-                        const parsed = JSON.parse(stored);
-                        this.visible = { ...parsed };
-                        this.allKeys.forEach((key) => {
-                            if (!(key in this.visible)) {
-                                this.visible[key] = this.visibilityDefaultFor(key);
-                            }
-                        });
-                    } else {
-                        this.applyDefaults();
-                    }
-                } catch {
-                    this.applyDefaults();
-                }
-            }
+            if (!this.saveUrl) {
+                const stored = window.verdantColumnLayout.readStored({
+                    storageKey: this.storageKey,
+                    orderStorageKey: this.orderEnabled ? this.orderStorageKey : null,
+                    initialVisible: this.visible,
+                    initialOrder: this.order,
+                });
 
-            if (this.orderEnabled) {
-                this.loadOrder();
+                if (stored) {
+                    this.visible = stored.visible;
+                    this.order = stored.order;
+                }
             }
 
             Alpine.store(this.storeKey, {
@@ -171,42 +153,13 @@ document.addEventListener('alpine:init', () => {
             return this.allKeys.filter((k) => !this.pinned.includes(k));
         },
 
-        reconcileOrder(candidate, fallback) {
-            const valid = candidate.filter((k) => fallback.includes(k));
-            const missing = fallback.filter((k) => !valid.includes(k));
-
-            return [...valid, ...missing];
-        },
-
-        loadOrder() {
-            const defaultOrder = this.nonPinnedKeys();
-
-            if (this.saveUrl) {
-                this.order = this.defaultOrder
-                    ? this.reconcileOrder(this.defaultOrder, defaultOrder)
-                    : defaultOrder;
-
-                return;
-            }
-
-            try {
-                const stored = this.orderStorageKey
-                    ? localStorage.getItem(this.orderStorageKey)
-                    : null;
-                this.order = stored
-                    ? this.reconcileOrder(JSON.parse(stored), defaultOrder)
-                    : defaultOrder;
-            } catch {
-                this.order = defaultOrder;
-            }
-        },
-
         effectiveOrder() {
-            if (!this.orderEnabled) return this.allKeys;
-
-            const queue = [...this.order];
-
-            return this.allKeys.map((key) => (this.pinned.includes(key) ? key : queue.shift()));
+            return window.verdantColumnLayout.effectiveOrder(
+                this.allKeys,
+                this.pinned,
+                this.order,
+                this.orderEnabled,
+            );
         },
 
         orderIndex(key) {
@@ -264,19 +217,6 @@ document.addEventListener('alpine:init', () => {
             this.visible = {};
             this.allKeys.forEach((key) => {
                 this.visible[key] = this.visibilityDefaultFor(key);
-            });
-        },
-
-        applyStoredOrDefaults() {
-            if (!this.storedVisible) {
-                this.applyDefaults();
-
-                return;
-            }
-
-            this.visible = {};
-            this.allKeys.forEach((key) => {
-                this.visible[key] = this.pinned.includes(key) || this.storedVisible.includes(key);
             });
         },
 

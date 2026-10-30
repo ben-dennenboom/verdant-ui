@@ -3,7 +3,7 @@
     'maxVisible' => 2,
 ])
 
-<div x-data='verdantTableActions(@json(["actions" => $actions, "maxVisible" => $maxVisible, "csrfToken" => csrf_token()]))'
+<div x-cloak x-data='verdantTableActions(@json(["actions" => $actions, "maxVisible" => $maxVisible, "csrfToken" => csrf_token()]))'
      class="v:relative v:flex v:items-center"
 >
     <div class="v:flex v:items-center v:gap-0 v:border v:border-gray-200 v:dark:border-gray-600 v:bg-surface v:rounded-lg v:overflow-hidden">
@@ -66,6 +66,7 @@
 
     @if(count($actions) > 0)
         <div x-show="open"
+             x-cloak
              @click.away="open = false"
              x-transition
              class="v:absolute v:right-0 v:top-full v:mt-1 v:bg-floating v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-600 v:z-50 v:shadow-lg v:min-w-[180px] v:py-1"

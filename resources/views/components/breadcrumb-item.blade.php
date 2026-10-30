@@ -2,7 +2,7 @@
 
 <li class="v:flex v:items-center v:m-0 v:text-gray-700 v:dark:text-gray-300">
     @if($icon)
-        <i class="fas fa-{{ $icon }} v:mr-2"></i>
+        <i class="fas fa-{{ $icon }}"></i>
     @endif
 
     @if($route)

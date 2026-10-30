@@ -42,6 +42,7 @@ return [
         'numbered_pagination' => false,
         'wide_column_picker' => false,
         'hide_reset_on_required_selects' => false,
+        'checkbox_first' => false,
     ],
 
     'components' => [

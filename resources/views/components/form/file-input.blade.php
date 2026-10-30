@@ -15,24 +15,3 @@
     </p>
     @enderror
 </div>
-
-<style>
-
-    input[type="file"]:focus {
-        outline: none;
-        box-shadow: 0 0 0 1px var(--color-secondary-500);
-    }
-    input[type="file"]::file-selector-button {
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.125rem;
-        margin-right: 0.5rem;
-        background-color: var(--color-primary-300);
-        color: white;
-        font-size: 0.75rem;
-        cursor: pointer;
-        transition: background-color 200ms ease;
-    }
-    input[type="file"]::file-selector-button:hover {
-        background-color: var(--color-primary-400);
-    }
-</style>

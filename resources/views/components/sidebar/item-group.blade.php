@@ -21,7 +21,7 @@
                 ? 'fa-brands fa-' . substr($icon, 7)
                 : 'fa-solid fa-' . $icon;
         @endphp
-        <i class="{{ $iconGroupClass }} v:flex-none v:w-6 v:text-center"></i>
+        <i class="{{ $iconGroupClass }} v:flex-none v:w-6 v:text-center v:mx-auto"></i>
         <span class="v:sidebar-label v:flex-1 v:ml-2">{!! $label !!}</span>
         @if($count)
             <span class="v:sidebar-expanded-only v:mx-2 v:min-w-6 v:px-1 v:py-0.5 v:rounded-lg v:bg-primary-600 v:text-xs v:font-semibold v:border v:border-primary-700 v:text-center v:text-white">{{ $count }}</span>

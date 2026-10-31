@@ -91,6 +91,11 @@ final class DynamicTableQuery
         ]));
     }
 
+    public static function usesExplicitClear(): bool
+    {
+        return (bool) config('verdant.ui.explicit_table_clear');
+    }
+
     /**
      * @param  array<int, array<string, mixed>>  $filterDefinitions
      */

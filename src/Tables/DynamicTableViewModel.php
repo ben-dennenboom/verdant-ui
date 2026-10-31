@@ -4,6 +4,7 @@ namespace Dennenboom\VerdantUI\Tables;
 
 use Dennenboom\VerdantUI\Contracts\DynamicTableDataProvider;
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Arr;
 
 final class DynamicTableViewModel
 {
@@ -417,6 +418,158 @@ final class DynamicTableViewModel
         }
 
         return implode(' ', $parts);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function pinnedColumnKeys(): array
+    {
+        $pinned = [];
+        $hasExplicit = false;
+
+        foreach ($this->headers as $i => $header) {
+            if (is_array($header) && array_key_exists('pinned', $header)) {
+                $hasExplicit = true;
+                if ($header['pinned']) {
+                    $pinned[] = $this->columnKeyForIndex($i);
+                }
+            }
+        }
+
+        return $hasExplicit ? $pinned : [self::ACTIONS_KEY];
+    }
+
+    public function isColumnVisible(int $index): bool
+    {
+        if (is_null($this->columnVisibilityKey)) {
+            return true;
+        }
+
+        $key = $this->columnKeyForIndex($index);
+        $visibleKeys = $this->storedVisibleColumns ?? $this->defaultVisibleColumns;
+
+        return in_array($key, $this->pinnedColumnKeys(), true)
+            || is_null($visibleKeys)
+            || in_array($key, $visibleKeys, true);
+    }
+
+    public function isColumnDefaultVisible(int $index): bool
+    {
+        $key = $this->columnKeyForIndex($index);
+
+        return in_array($key, $this->pinnedColumnKeys(), true)
+            || is_null($this->defaultVisibleColumns)
+            || in_array($key, $this->defaultVisibleColumns, true);
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    public function orderedColumnIndexes(): array
+    {
+        $indexes = array_keys($this->headers);
+
+        if (is_null($this->columnVisibilityKey) || ! $this->columnOrderEnabled || empty($this->defaultColumnOrder)) {
+            return $indexes;
+        }
+
+        $pinned = $this->pinnedColumnKeys();
+        $byKey = [];
+        foreach ($indexes as $i) {
+            if (! in_array($this->columnKeyForIndex($i), $pinned, true)) {
+                $byKey[$this->columnKeyForIndex($i)] = $i;
+            }
+        }
+
+        $queue = [];
+        foreach ($this->defaultColumnOrder as $key) {
+            if (isset($byKey[$key])) {
+                $queue[] = $byKey[$key];
+                unset($byKey[$key]);
+            }
+        }
+        $queue = [...$queue, ...array_values($byKey)];
+
+        return array_map(
+            function ($i) use ($pinned, &$queue) {
+                return in_array($this->columnKeyForIndex($i), $pinned, true) ? $i : array_shift($queue);
+            },
+            $indexes
+        );
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    public function visibleColumnIndexes(): array
+    {
+        return array_values(array_filter($this->orderedColumnIndexes(), fn ($i) => $this->isColumnVisible($i)));
+    }
+
+    /**
+     * @return array<int, array{index: int, key: string, label: string, pinned: bool, width: string|null, visible: bool, defaultVisible: bool}>
+     */
+    public function columnPickerColumns(): array
+    {
+        $pinned = $this->pinnedColumnKeys();
+
+        return array_map(fn ($i) => [
+            'index' => $i,
+            'key' => $this->columnKeyForIndex($i),
+            'label' => $this->headerLabel($i),
+            'pinned' => in_array($this->columnKeyForIndex($i), $pinned, true),
+            'width' => $this->columnGridWidths[$i] ?? null,
+            'visible' => $this->isColumnVisible($i),
+            'defaultVisible' => $this->isColumnDefaultVisible($i),
+        ], $this->orderedColumnIndexes());
+    }
+
+    public function visibleGridTemplateColumns(): string
+    {
+        $widths = array_map(fn ($i) => $this->columnGridWidths[$i] ?? null, $this->visibleColumnIndexes());
+
+        return self::buildGridTemplateColumnsFromWidths($widths) ?: 'minmax(0, 1fr)';
+    }
+
+    public function rowOpenTrigger(): ?string
+    {
+        if (! $this->rowInteractionEnabled) {
+            return null;
+        }
+
+        return $this->openRowOnClick && ! $this->hasBulkEdit ? 'click' : 'dblclick';
+    }
+
+    public function sortUrl(string $key): string
+    {
+        $sort = $this->sort ?? new DynamicTableSort([]);
+
+        return $this->urlWithSort($sort->cycle($key));
+    }
+
+    public function resetSortUrl(): ?string
+    {
+        return empty($this->sort?->columns) ? null : $this->urlWithSort([]);
+    }
+
+    /**
+     * @param  array<int, array{key: string, direction: string}>  $columns
+     */
+    private function urlWithSort(array $columns): string
+    {
+        $sortQuery = DynamicTableSort::queryFor($columns);
+
+        if ($sortQuery === [] && DynamicTableQuery::usesExplicitClear()) {
+            $sortQuery = ['sort' => ''];
+        }
+
+        $query = array_merge(
+            Arr::except(request()->query(), ['sort', 'direction', 'page']),
+            $sortQuery
+        );
+
+        return request()->url().($query ? '?'.Arr::query($query) : '');
     }
 
     /**

@@ -65,4 +65,34 @@ final class DynamicTableSort
             return $c;
         })->all();
     }
+
+    /**
+     * @return array<int, array{key: string, direction: 'asc'|'desc'}>
+     */
+    public function cycle(string $key): array
+    {
+        $current = $this->directionFor($key);
+        $next = $current === 'asc' ? 'desc' : 'asc';
+
+        $columns = array_values(array_filter($this->columns, fn ($c) => $c['key'] !== $key));
+        $columns[] = ['key' => $key, 'direction' => $next];
+
+        return $columns;
+    }
+
+    /**
+     * @param  array<int, array{key: string, direction: string}>  $columns
+     * @return array<string, string>
+     */
+    public static function queryFor(array $columns): array
+    {
+        if ($columns === []) {
+            return [];
+        }
+
+        return [
+            'sort' => implode(',', array_column($columns, 'key')),
+            'direction' => implode(',', array_column($columns, 'direction')),
+        ];
+    }
 }

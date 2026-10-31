@@ -32,7 +32,7 @@ $columns = [
 | `->sortValue(callable)`                    | Value used for in-memory sorting when not using DB pagination: `fn ($model) => mixed`                                                             |
 | `->sortableQuery(callable)`                | Complex DB sort (joins, raw): `fn ($query, $direction) => void` – applied via `Column::applySort()`                                               |
 | `->visibleWhen(callable)`                  | Table-level visibility: `fn ($context) => bool` – pass context as 4th arg to `fromCollection($items, $columns, $actions, $context)`               |
-| `->pinned(bool)`                           | Column always visible and cannot be hidden in the column picker (default `true` when called)                                                      |
+| `->pinned(bool)`                           | Column always visible, even when missing from the visible columns (default `true` when called)                                                    |
 | `->width(string)`                          | Column width hint (e.g. `'8rem'`, `'minmax(100px, 1fr)'`)                                                                                         |
 | `->align(string)`                          | Text alignment: `'left'`, `'center'`, or `'right'`                                                                                                |
 | `->tooltip(string)`                        | Header tooltip (title attribute)                                                                                                                  |
@@ -164,9 +164,13 @@ Defaults from columns marked `->default()` (pass `null` as second argument):
 $table->withColumnVisibility('users-table', null);
 ```
 
+The server decides which columns are visible: pinned columns always, then stored preferences (`columns`, see [Persisting table preferences server-side](#persisting-table-preferences-server-side)), then the defaults. Hidden columns are rendered with `display: none`, so no JavaScript runs at page load.
+
+A columns dropdown in the toolbar lets the user show or hide columns, show all, hide all, or reset to the defaults. Changes apply immediately in the browser and are saved through `saveUrl` when `withPersistentPreferences()` is set (automatic for tables built with `DynamicTableBuilder`); otherwise they last until the next page load. Pinned columns can't be unchecked.
+
 ### Column ordering
 
-Let the user drag & drop reorder columns via a "Change order" button at the bottom of the columns dropdown. Requires `withColumnVisibility()` to also be set—the button lives in that dropdown. Off by default.
+Let the user reorder columns via a "Change order" button at the bottom of the columns dropdown, which opens a dialog with drag & drop and up/down buttons. Requires `withColumnVisibility()` to also be set. Off by default.
 
 ```php
 $table
@@ -174,7 +178,7 @@ $table
     ->withColumnOrder();
 ```
 
-The chosen order is saved to `localStorage` per `columnVisibilityKey`, the same way column visibility is. Pinned columns (see `->pinned()` / `Column::make()->pinned()`) are excluded from the reorder modal and always stay in their original position.
+At load the server renders the stored `order` preference. It lists all non-pinned columns, hidden ones included. To keep it short, the end of the list is left out where it already matches the default order, and missing columns are appended in their original order. Saving in the dialog reorders the columns in place and, with `withPersistentPreferences()`, saves the new order through `saveUrl`. Pinned columns (see `->pinned()` / `Column::make()->pinned()`) always stay in their original position.
 
 ### 4. Sorting
 
@@ -185,12 +189,14 @@ $sort = DynamicTableSort::fromRequest(['name', 'email', 'created_at']);
 $table->withSorting($sort);
 ```
 
+Sortable headers are links. Clicking one cycles that column asc → desc → asc and moves it to the end of the sort chain (multi-column sort); a reset link clears all sorting.
+
 Server-side: apply sort in the controller with `Column::applySort()` so `sort_key` and `sort_query` are respected (see [Sort key resolution and server-side sort](#sort-key-resolution-and-server-side-sort)). When not using a paginator, `withSorting($sort)` sorts the current rows in memory.
 
-### Row open URL (row selection + double-click)
+### Row open URL
 
 Chain `withRowOpenUrl()` after `fromCollection()`, or override `protected static function rowOpenUrl(): ?callable` on a `BaseTable` subclass (`make()` applies it only when that method returns a non-null callback).
-The callback receives each row’s source model (or array row) and should return a URL string, or `null`/empty to skip navigation for that row on double-click.
+The callback receives each row’s source model (or array row) and should return a URL string, or `null`/empty for none. Double-clicking a row opens its URL. Call `withRowOpenOnClick()` to open on a single click instead (ignored with bulk edit, where single click is left free). Each row then also gets a real link behind its content, so it can be reached with Tab and opened with Enter. Mouse clicks on the row go through JS so cell text can still be selected: clicks that end a text selection don't navigate, and ctrl/⌘-click and middle-click open the row in a new tab. Clicks on links, buttons, inputs, the actions cell and the bulk checkbox never open the row. In double-click mode (without bulk edit), a single click highlights the row.
 Pass `null` to `withRowOpenUrl()` to disable; reserved keys `_row_key` / `_row_open_url` are removed only if row-open had been applied earlier on the same `DynamicTableData` instance.
 
 If you use `withSorting()` **without** a paginator, call `withRowOpenUrl()` **before** `withSorting()` so row metadata stays aligned when rows are reordered in memory.
@@ -226,13 +232,13 @@ $table->withSearchableColumns(['name', 'email']);
 // In controller: if ($q = request('search')) { $query->where(...); }
 ```
 
-API search (dropdown with results from an endpoint):
+API search (dropdown with results from an endpoint while typing, with arrow keys and Enter to open a result):
 
 ```php
 $table->withSearchApiUrl(route('api.users.search'));
 ```
 
-API should return JSON: array of objects with at least `url` and `label`.
+The API should return JSON: an array of objects with at least `url` and `label` (or `{data: [...]}` / `{results: [...]}`). Submitting the form still does a normal search.
 
 ### 7. Export
 
@@ -283,7 +289,7 @@ $table = DynamicTableData::fromCollection($users, $columns, $actions, auth()->us
 
 ## Dynamic Table – Filter modal
 
-The Dynamic Table can show a **Filter** button (before the Columns dropdown) that opens a modal. Filter controls (text, number, date, checkbox, select) are built from a definition array, similar to column headers.
+The Dynamic Table can show a **Filter** button that opens a modal (`x-v-modal`, requires Alpine). Filter controls (text, number, date, checkbox, select) are built from a definition array, similar to column headers.
 
 ### Providing filters
 
@@ -573,7 +579,7 @@ UsersTable::make($users, context: auth()->user());
 | `rowOpenUrl(): ?callable`  | URL opened on row double-click; receives the model, return `null` to skip  |
 | `bulkFields(): array`      | `BulkField` instances; non-empty enables the bulk-edit bar                 |
 | `bulkActionUrl(): ?string` | POST URL for the bulk-edit form; receives `_ids[]` + each field value      |
-| `actionsMaxVisible(): int` | Inline actions before overflow dropdown (default `2`)                      |
+| `actionsMaxVisible(): int` | Inline actions before the overflow menu (default `2`)                      |
 
 ---
 
@@ -581,12 +587,14 @@ UsersTable::make($users, context: auth()->user());
 
 When `withBulkEdit()` is called (or `bulkFields()` is overridden in a `BaseTable` subclass), the table gains:
 
-- A **checkbox column** prepended to every row (always visible).
-- A **select-all checkbox** in the header that toggles all rows on the current page.
-- **Shift+click** on a row to toggle its selection without a form submission.
-- A **floating bar** pinned to the bottom of the viewport that appears as soon as at least one row is selected, containing the bulk fields and a submit button.
+- A **checkbox column** prepended to every row. On devices with a mouse the checkboxes appear on hover, and stay visible once any row is selected.
+- **Shift+click** on a row to toggle its checkbox. Selected rows are highlighted.
+- A **select-all checkbox** in the header that toggles all rows on the current page (indeterminate when only some are selected).
+- A **floating bar** pinned to the bottom of the viewport that appears as soon as a row is selected, with the selected count, the bulk fields, an apply button and a clear (reset) button.
 
-The form POSTs to `bulkActionUrl` with `_ids[]` (the selected row primary keys) plus the value of each bulk field.
+The checkboxes belong to the bulk form through the HTML `form` attribute, so submitting works without JavaScript. Select-all and the selected count come from `dynamic-table.js`. The form POSTs to `bulkActionUrl` with `_ids[]` (the selected row primary keys) plus the value of each bulk field.
+
+Both the table and the card layout render a checkbox per row (only one is visible per breakpoint). `dynamic-table.js` keeps them in sync and sends each selected id once; without JavaScript, an id is only sent twice if the user ticks the same row in both layouts. In a multi-select bulk field, choosing the `_none` option clears the other values and vice versa, and the button shows a summary ("3 statuses" or the none label).
 
 ### BulkField DTO
 
@@ -692,6 +700,19 @@ $table = UsersTable::make($users)
 
 ---
 
+## Persisting table preferences
+
+By default a user's visible columns, column order, search term, sort and active filters are remembered in `localStorage`, per browser. The table is still rendered by Blade first. The container inlines the built `dynamic-table-persist.js` once per page (read from the package's `public/build`, so it needs no publishing and no extra request), and a one-line inline script right after the table hands it the table element, so the stored state is applied before the page is painted:
+
+- When the URL has no `search`, `sort`, `direction` or filter params of its own and the visitor didn't come from the same page, the stored search/sort/filters are appended to the URL with `location.replace()`. Otherwise the current params are saved (`verdant.table.state.<key>`).
+- The stored column visibility (`verdant.table.columns.<key>`) and order (`verdant.table.order.<key>`) are applied to the server-rendered markup, and the columns dropdown picks them up.
+
+The configuration travels on the table element as `data-v-persist*` attributes.
+
+`<key>` is the table's `withColumnVisibility()` key (the request path for the search/filter state when there is none). Because "coming from the same page" skips the restore, clearing the search or filters sticks without needing `ui.explicit_table_clear`. That check relies on the browser sending the referrer; if your app sends `Referrer-Policy: no-referrer`, enable `ui.explicit_table_clear` so clearing still sticks.
+
+To keep preferences per user instead, use a server-side store as described below; column preferences then come from the server and are not read from `localStorage`.
+
 ## Persisting table preferences server-side
 
 By default, a user's visible columns, column order, active filters, search term, and sort are remembered via `localStorage` only — they're per-browser and lost if storage is cleared or the user switches devices. To make preferences follow the user instead, implement `DynamicTablePreferencesStore` and bind it in your app; verdant-ui reads from it to seed defaults and writes to it when the user changes something.
@@ -796,17 +817,9 @@ $table = UsersTable::make($users)
 This reads any previously stored `visible_columns`/`column_order` and uses them as the defaults (taking priority over `localStorage`, which becomes a write-through cache instead of the source of truth), and wires the column picker to `POST` `{ visible_columns: [...], column_order: [...] }` to `saveUrl` whenever the user toggles a column, shows/hides all, resets, or drags columns into a new order.
 ---
 
-## Open rows with a single click
-
-By default a row opens its `withRowOpenUrl()` target on double-click (single click selects it). Call `withRowOpenOnClick()` to open on a single click instead; selecting text inside a row does not trigger navigation.
-
-```php
-$table = UsersTable::make($users)->withRowOpenOnClick();
-```
-
 ## Toolbar actions
 
-Put your own buttons (export, import…) next to the filter and column buttons with the `toolbar` slot:
+Put your own buttons (export, import…) next to the filter button with the `toolbar` slot:
 
 ```blade
 <x-v-dynamic-table.container :data="$table">
@@ -818,7 +831,7 @@ Put your own buttons (export, import…) next to the filter and column buttons w
 
 ## Translations and pagination
 
-All table texts go through `__('verdant::table.*')` (English and French included, publishable via `lang/vendor/verdant`). Length-aware paginators show page numbers with ellipses and a “from–to of total” summary.
+All table texts go through `__('verdant::table.*')` (English, French and Dutch included, publishable via `lang/vendor/verdant`). Length-aware paginators show page numbers with ellipses and a “from–to of total” summary.
 
 ## Form helpers
 
@@ -826,3 +839,14 @@ All table texts go through `__('verdant::table.*')` (English and French included
 - `<x-v-form.toggle>` accepts `description` (text under the label) and works with array names such as `permissions[members.view]`.
 - `<x-v-form.select>` accepts `search-url` (options fetched from that URL as the user types: `GET url?q=term` returning `[{value, label, ...}]`) with `selected-label` for the initial value, and dispatches a `select-change` event (`detail: {name, value, option}`) whenever an option is picked.
 - `selected-label-expression` (JavaScript expression) gives the label of the selected value when the option is not loaded, e.g. inside `x-for` rows with remote options.
+
+## Server rendering
+
+The table is fully server-rendered. The only JavaScript is `dynamic-table.js`, loaded when the table has column visibility, bulk edit, row actions, a row open URL or API search. Hover checkboxes, the floating bulk bar, the selected-row highlight and the selected count are pure CSS (`resources/css/dynamic-table.css` and `:has()` utilities). The JS powers the columns dropdown and reorder dialog, search autocomplete, the bulk multi-select fields, the bulk select-all and Shift+click, and opening rows on click or double-click:
+
+- Sorting, search, filters and pagination are links and GET forms.
+- The filter panel is an `x-v-modal` dialog. It starts hidden and needs Alpine to open; submitting is a normal GET.
+- Visible columns and their order are rendered by the server (defaults, or a server-side store's preferences); `dynamic-table-persist.js` applies the `localStorage` preferences right after the table, before paint.
+- Row actions show the first `actionsMaxVisible` inline and the rest in a `<details>` menu. Fewer actions are shown inline when the cell is narrow (none under 100px, one under 170px); this is done with CSS container queries on the action cell, so there is no shift after load.
+- Bulk edit is a plain POST form.
+- The card layout (below the `lg` breakpoint) is a CSS swap.

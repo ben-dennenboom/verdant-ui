@@ -27,6 +27,7 @@ return [
     'next' => 'Volgende',
     'pagination' => 'Paginering',
     'go_to_page' => 'Ga naar pagina :page',
+    'page_of' => 'Pagina :page van :last',
     'showing' => ':from–:to van :total',
     'open_row' => 'Rij openen',
 ];

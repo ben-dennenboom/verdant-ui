@@ -27,6 +27,7 @@ return [
     'next' => 'Next',
     'pagination' => 'Pagination',
     'go_to_page' => 'Go to page :page',
+    'page_of' => 'Page :page of :last',
     'showing' => ':from–:to of :total',
     'open_row' => 'Open row',
 ];

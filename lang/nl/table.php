@@ -30,4 +30,5 @@ return [
     'page_of' => 'Pagina :page van :last',
     'showing' => ':from–:to van :total',
     'open_row' => 'Rij openen',
+    'actions' => 'Acties',
 ];

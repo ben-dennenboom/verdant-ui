@@ -237,10 +237,11 @@ final class DynamicTableViewModel
             && ! collect($normalized)->contains(fn ($h) => ($h['key'] ?? null) === self::ACTIONS_KEY)
         ) {
             $normalized[] = [
-                'label' => 'Actions',
+                'label' => __('verdant::table.actions'),
                 'key' => self::ACTIONS_KEY,
                 'class' => 'v-text-center',
                 'sortable' => false,
+                'width' => 'minmax(6rem, 0.5fr)',
             ];
         }
 

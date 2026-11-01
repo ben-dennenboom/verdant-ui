@@ -30,4 +30,5 @@ return [
     'page_of' => 'Page :page of :last',
     'showing' => ':from–:to of :total',
     'open_row' => 'Open row',
+    'actions' => 'Actions',
 ];

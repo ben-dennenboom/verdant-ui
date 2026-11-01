@@ -1,6 +1,4 @@
 document.addEventListener('alpine:init', () => {
-    if (Alpine.data('verdantColumnPicker')) return;
-
     Alpine.data('verdantColumnPicker', (config) => {
         let tableEl = null;
 

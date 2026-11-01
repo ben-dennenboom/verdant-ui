@@ -1,5 +1,7 @@
 function rowCheckboxes(formId) {
-    return [...document.querySelectorAll(`input[name="_ids[]"][form="${CSS.escape(formId)}"]`)];
+    return [
+        ...document.querySelectorAll(`input[data-v-row-checkbox][form="${CSS.escape(formId)}"]`),
+    ];
 }
 
 function syncMulti(details) {
@@ -28,76 +30,49 @@ function sync(formId) {
     });
 }
 
-if (!window.verdantTableBulkInit) {
-    window.verdantTableBulkInit = true;
+document.addEventListener('change', (e) => {
+    const el = e.target;
 
-    document.addEventListener('change', (e) => {
-        const el = e.target;
+    const multi = el.closest('[data-v-multi]');
+    if (multi && el.checked) {
+        multi.querySelectorAll('input[type="checkbox"]').forEach((b) => {
+            if (b !== el && (el.value === '_none' || b.value === '_none')) b.checked = false;
+        });
+    }
+    if (multi) {
+        syncMulti(multi);
 
-        const multi = el.closest('[data-v-multi]');
-        if (multi && el.checked) {
-            multi.querySelectorAll('input[type="checkbox"]').forEach((b) => {
-                if (b !== el && (el.value === '_none' || b.value === '_none')) b.checked = false;
-            });
-        }
-        if (multi) {
-            syncMulti(multi);
+        return;
+    }
 
-            return;
-        }
-
-        if (el.matches('input[data-v-select-all]')) {
-            const formId = el.dataset.vSelectAll;
-            rowCheckboxes(formId).forEach((b) => {
+    if (el.matches('input[data-v-select-all]')) {
+        const formId = el.dataset.vSelectAll;
+        rowCheckboxes(formId).forEach((b) => {
+            b.checked = el.checked;
+        });
+        sync(formId);
+    } else if (el.matches('input[data-v-row-checkbox][form]')) {
+        const formId = el.getAttribute('form');
+        rowCheckboxes(formId)
+            .filter((b) => b.value === el.value)
+            .forEach((b) => {
                 b.checked = el.checked;
             });
-            sync(formId);
-        } else if (el.matches('input[name="_ids[]"][form]')) {
-            const formId = el.getAttribute('form');
-            rowCheckboxes(formId)
-                .filter((b) => b.value === el.value)
-                .forEach((b) => {
-                    b.checked = el.checked;
-                });
-            sync(formId);
-        }
+        sync(formId);
+    }
+});
+
+document.addEventListener('reset', (e) => {
+    const formId = e.target.id;
+    if (!formId) return;
+    setTimeout(() => {
+        sync(formId);
+        e.target.querySelectorAll('[data-v-multi]').forEach(syncMulti);
     });
+});
 
-    document.addEventListener('submit', (e) => {
-        const formId = e.target.id;
-        if (!formId) return;
-
-        const seen = new Set();
-        const duplicates = rowCheckboxes(formId).filter((b) => {
-            if (!b.checked || b.disabled) return false;
-            if (seen.has(b.value)) return true;
-            seen.add(b.value);
-
-            return false;
-        });
-
-        duplicates.forEach((b) => {
-            b.disabled = true;
-        });
-        setTimeout(() => {
-            duplicates.forEach((b) => {
-                b.disabled = false;
-            });
-        });
+window.addEventListener('pageshow', () => {
+    document.querySelectorAll('input[data-v-select-all]').forEach((el) => {
+        sync(el.dataset.vSelectAll);
     });
-
-    document.addEventListener('reset', (e) => {
-        const formId = e.target.id;
-        if (!formId) return;
-        setTimeout(() => {
-            sync(formId);
-            e.target.querySelectorAll('[data-v-multi]').forEach(syncMulti);
-        });
-    });
-
-    window.addEventListener('pageshow', () => {
-        document.querySelectorAll('input[data-v-select-all]').forEach((el) => {
-            sync(el.dataset.vSelectAll);
-        });
-    });
-}
+});

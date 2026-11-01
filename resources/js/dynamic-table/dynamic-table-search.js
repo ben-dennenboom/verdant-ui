@@ -1,6 +1,4 @@
 document.addEventListener('alpine:init', () => {
-    if (Alpine.data('verdantTableSearch')) return;
-
     Alpine.data('verdantTableSearch', (config) => ({
         apiUrl: config.apiUrl ?? '',
         queryParam: config.queryParam ?? 'q',

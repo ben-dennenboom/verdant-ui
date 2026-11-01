@@ -40,7 +40,6 @@
                 <label class="v:flex v:items-center v:gap-2 v:cursor-pointer v:select-none">
                     <input
                         type="checkbox"
-                        name="_ids[]"
                         value="{{ $row->rowKey }}"
                         form="{{ $bulkFormId }}"
                         data-v-row-checkbox

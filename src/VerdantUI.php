@@ -27,7 +27,7 @@ class VerdantUI
         <link rel="stylesheet" href="{$cropperCssPath}">
         <style>{$customColors}</style>
         <script src="{$cropperJsPath}" defer></script>
-        <script src="{$verdantJsPath}" defer></script>
+        <script src="{$verdantJsPath}" type="module"></script>
         HTML;
     }
 

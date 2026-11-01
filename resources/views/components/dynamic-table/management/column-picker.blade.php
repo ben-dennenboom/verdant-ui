@@ -48,7 +48,7 @@
                     </x-v-button.transparent>
                 </div>
 
-                <div class="v:max-h-64 v:space-y-2 v:overflow-auto v:pl-1 v:pt-1">
+                <div class="v:max-h-64 v:space-y-2 v:overflow-auto v:pl-1 v:pt-1 v:scrollbar">
                     <template x-for="col in columns" :key="col.key">
                         <label class="v:flex v:items-center v:gap-2 v:text-sm v:cursor-pointer">
                             <input
@@ -110,7 +110,7 @@
                         {{ __('verdant::table.drag_to_reorder') }}
                     </div>
 
-                    <div class="v:space-y-2 v:max-h-96 v:overflow-auto">
+                    <div class="v:space-y-2 v:max-h-96 v:overflow-auto v:scrollbar">
                         <template x-for="(col, index) in draft" :key="col.key">
                             <div
                                 draggable="true"

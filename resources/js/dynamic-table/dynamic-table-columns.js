@@ -122,7 +122,12 @@ document.addEventListener('alpine:init', () => {
             },
 
             persist() {
-                const order = this.columns.filter((c) => !c.pinned).map((c) => c.key);
+                const payload = {
+                    visible_columns: this.columns.filter((c) => c.visible).map((c) => c.key),
+                    ...(this.orderEnabled && {
+                        column_order: this.columns.filter((c) => !c.pinned).map((c) => c.key),
+                    }),
+                };
 
                 if (this.saveUrl) {
                     fetch(this.saveUrl, {
@@ -132,28 +137,14 @@ document.addEventListener('alpine:init', () => {
                             Accept: 'application/json',
                             'X-CSRF-TOKEN': this.csrfToken,
                         },
-                        body: JSON.stringify({
-                            visible_columns: this.columns
-                                .filter((c) => c.visible)
-                                .map((c) => c.key),
-                            ...(this.orderEnabled && { column_order: order }),
-                        }),
+                        body: JSON.stringify(payload),
                     }).catch(() => {});
 
                     return;
                 }
 
-                const key = this.table()?.dataset.vPersist;
-                if (!key) return;
-
-                const { write } = window.verdantTableStorage;
-                write(
-                    `verdant.table.columns.${key}`,
-                    Object.fromEntries(this.columns.map((c) => [c.key, c.visible])),
-                );
-                if (this.orderEnabled) {
-                    write(`verdant.table.order.${key}`, order);
-                }
+                const key = tableEl?.dataset.vPersist;
+                if (key) window.verdantTableStorage.write(`verdant.table.columns.${key}`, payload);
             },
         };
     });

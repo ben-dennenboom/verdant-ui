@@ -705,7 +705,7 @@ $table = UsersTable::make($users)
 By default a user's visible columns, column order, search term, sort and active filters are remembered in `localStorage`, per browser. The table is still rendered by Blade first. The container inlines the built `dynamic-table-persist.js` once per page (read from the package's `public/build`, so it needs no publishing and no extra request), and a one-line inline script right after the table hands it the table element, so the stored state is applied before the page is painted:
 
 - When the URL has no `search`, `sort`, `direction` or filter params of its own and the visitor didn't come from the same page, the stored search/sort/filters are appended to the URL with `location.replace()`. Otherwise the current params are saved (`verdant.table.state.<key>`).
-- The stored column visibility (`verdant.table.columns.<key>`) and order (`verdant.table.order.<key>`) are applied to the server-rendered markup, and the columns dropdown picks them up.
+- The stored column visibility and order (`verdant.table.columns.<key>`, same `{ visible_columns, column_order }` shape as the server payload) are applied to the server-rendered markup, and the columns dropdown picks them up.
 
 The configuration travels on the table element as `data-v-persist*` attributes.
 

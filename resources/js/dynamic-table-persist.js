@@ -86,14 +86,14 @@
     }
 
     function restoreColumns(table, key, columns, orderEnabled) {
-        const visible = read(`verdant.table.columns.${key}`);
-        const order = orderEnabled ? read(`verdant.table.order.${key}`) : null;
+        const stored = read(`verdant.table.columns.${key}`);
+        const visible = Array.isArray(stored?.visible_columns) ? stored.visible_columns : null;
+        const order = orderEnabled ? stored?.column_order : null;
         if (!visible && !Array.isArray(order)) return;
 
         let effective = columns.map((c) => ({
             ...c,
-            visible:
-                c.pinned || (visible && c.key in visible ? visible[c.key] !== false : c.visible),
+            visible: c.pinned || (visible ? visible.includes(c.key) : c.visible),
         }));
 
         if (Array.isArray(order)) {

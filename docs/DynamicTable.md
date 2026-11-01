@@ -592,9 +592,9 @@ When `withBulkEdit()` is called (or `bulkFields()` is overridden in a `BaseTable
 - A **select-all checkbox** in the header that toggles all rows on the current page (indeterminate when only some are selected).
 - A **floating bar** pinned to the bottom of the viewport that appears as soon as a row is selected, with the selected count, the bulk fields, an apply button and a clear (reset) button.
 
-The checkboxes belong to the bulk form through the HTML `form` attribute, so submitting works without JavaScript. Select-all and the selected count come from `dynamic-table.js`. The form POSTs to `bulkActionUrl` with `_ids[]` (the selected row primary keys) plus the value of each bulk field.
+The checkboxes belong to the bulk form through the HTML `form` attribute, so submitting works without JavaScript in the table layout. Select-all comes from `dynamic-table.js`; the selected count is a CSS counter. The form POSTs to `bulkActionUrl` with `_ids[]` (the selected row primary keys) plus the value of each bulk field.
 
-Both the table and the card layout render a checkbox per row (only one is visible per breakpoint). `dynamic-table.js` keeps them in sync and sends each selected id once; without JavaScript, an id is only sent twice if the user ticks the same row in both layouts. In a multi-select bulk field, choosing the `_none` option clears the other values and vice versa, and the button shows a summary ("3 statuses" or the none label).
+Both the table and the card layout render a checkbox per row (only one is visible per breakpoint). Only the table checkbox carries `name="_ids[]"`, so each id is sent once; `dynamic-table.js` mirrors the card checkbox into it, which means selecting in the card layout needs JavaScript. In a multi-select bulk field, choosing the `_none` option clears the other values and vice versa, and the button shows a summary ("3 statuses" or the none label).
 
 ### BulkField DTO
 
@@ -814,7 +814,7 @@ $table = UsersTable::make($users)
     );
 ```
 
-This reads any previously stored `visible_columns`/`column_order` and uses them as the defaults (taking priority over `localStorage`, which becomes a write-through cache instead of the source of truth), and wires the column picker to `POST` `{ visible_columns: [...], column_order: [...] }` to `saveUrl` whenever the user toggles a column, shows/hides all, resets, or drags columns into a new order.
+This reads any previously stored `visible_columns`/`column_order` and renders the table with them (column preferences are then not read from or written to `localStorage`), and wires the column picker to `POST` `{ visible_columns: [...], column_order: [...] }` to `saveUrl` whenever the user toggles a column, shows/hides all, resets, or drags columns into a new order.
 ---
 
 ## Toolbar actions

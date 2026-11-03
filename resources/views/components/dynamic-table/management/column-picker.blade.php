@@ -53,7 +53,7 @@
                     </x-v-button.transparent>
                 </div>
 
-                <div class="v:max-h-64 v:space-y-2 v:overflow-auto v:pl-1 v:pt-1">
+                <div class="v:max-h-64 v:space-y-2 v:overflow-auto v:pl-1 v:pt-1 v:scrollbar">
                     <template x-for="col in columns" :key="col.key">
                         <label class="v:flex v:items-center v:gap-2 v:text-sm v:cursor-pointer">
                             <input

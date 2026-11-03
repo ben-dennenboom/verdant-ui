@@ -1,42 +1,17 @@
-document.addEventListener('alpine:init', () => {
-    if (Alpine.data('verdantTableActions')) return;
+const menus = '[data-v-action-menu][open], [data-v-multi][open]';
 
-    Alpine.data('verdantTableActions', (config) => ({
-        actions: config.actions ?? [],
-        maxVisible: config.maxVisible ?? 2,
-        visibleCount: config.maxVisible ?? 2,
-        open: false,
-        csrfToken: config.csrfToken ?? '',
+document.addEventListener('click', (e) => {
+    document.querySelectorAll(menus).forEach((menu) => {
+        if (!menu.contains(e.target)) menu.open = false;
+    });
+});
 
-        init() {
-            this.updateVisibleCount();
-            const el = this.$el.parentElement;
-            if (el && typeof ResizeObserver !== 'undefined') {
-                const ro = new ResizeObserver(() => this.updateVisibleCount());
-                ro.observe(el);
-            }
-        },
+document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
 
-        updateVisibleCount() {
-            const el = this.$el.parentElement;
-            if (!el) return;
-            const w = el.offsetWidth;
-            const max = Math.min(this.maxVisible, this.actions.length);
-            if (w < 100) this.visibleCount = 0;
-            else if (w < 170) this.visibleCount = 1;
-            else this.visibleCount = max;
-        },
-
-        get visibleActions() {
-            return this.actions.slice(0, this.visibleCount);
-        },
-
-        get overflowActions() {
-            return this.actions.slice(this.visibleCount);
-        },
-
-        get hasOverflow() {
-            return this.overflowActions.length > 0;
-        },
-    }));
+    document.querySelectorAll(menus).forEach((menu) => {
+        const hadFocus = menu.contains(document.activeElement);
+        menu.open = false;
+        if (hadFocus) menu.querySelector('summary')?.focus();
+    });
 });

@@ -21,10 +21,6 @@ function initializeVerdant() {
             .join(' ');
     };
 
-    document.addEventListener('transitionend', function (e) {
-        if (!e.target.parentNode) return;
-    });
-
     if (window.Alpine) {
         Alpine.directive('vclass', (el, { expression }, { evaluateLater, effect }) => {
             const evaluate = evaluateLater(expression);

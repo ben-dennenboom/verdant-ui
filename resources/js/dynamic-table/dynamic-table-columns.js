@@ -1,49 +1,65 @@
 document.addEventListener('alpine:init', () => {
-    if (!Alpine.data('verdantColumnPicker')) {
-        Alpine.data('verdantColumnPicker', (config) => ({
+    Alpine.data('verdantColumnPicker', (config) => {
+        let tableEl = null;
+
+        return {
             open: false,
-            storeKey: config.storeKey ?? 'vtd_default',
-            columns: config.columns ?? [],
-            panelId: config.panelId ?? 'columns-panel-default',
-
-            resetAndClose() {
-                const store = Alpine.store(this.storeKey);
-                if (store?.reset) store.reset();
-                this.open = false;
-            },
-            isColumnVisible(key) {
-                const store = Alpine.store(this.storeKey);
-
-                return store?.isVisible ? store.isVisible(key) : false;
-            },
-            setColumnVisible(key, checked) {
-                const store = Alpine.store(this.storeKey);
-                if (store?.setVisible) store.setVisible(key, checked);
-            },
-            showAll() {
-                const store = Alpine.store(this.storeKey);
-                if (store?.showAll) store.showAll();
-            },
-            hideAll() {
-                const store = Alpine.store(this.storeKey);
-                if (store?.hideAll) store.hideAll();
-            },
-        }));
-    }
-
-    if (!Alpine.data('verdantColumnReorder')) {
-        Alpine.data('verdantColumnReorder', (config) => ({
-            storeKey: config.storeKey ?? 'vtd_default',
-            orderedColumns: [],
+            columns: [],
+            saveUrl: config.saveUrl ?? null,
+            csrfToken: config.csrfToken ?? '',
+            orderEnabled: config.orderEnabled ?? false,
+            reorderModalId: config.reorderModalId ?? null,
+            draft: [],
             draggingKey: null,
 
             init() {
-                this.syncFromStore();
+                tableEl = this.$root.closest('[data-v-table]');
+
+                try {
+                    this.columns = JSON.parse(tableEl?.dataset.vColumns ?? '[]');
+                } catch {
+                    this.columns = [];
+                }
             },
 
-            syncFromStore() {
-                const store = Alpine.store(this.storeKey);
-                this.orderedColumns = store?.columnsForModal ? store.columnsForModal() : [];
+            table() {
+                return tableEl;
+            },
+
+            setVisible(key, visible) {
+                const col = this.columns.find((c) => c.key === key);
+                if (!col || col.pinned) return;
+                col.visible = visible;
+                this.apply();
+            },
+
+            showAll() {
+                this.columns.forEach((c) => {
+                    c.visible = true;
+                });
+                this.apply();
+            },
+
+            hideAll() {
+                this.columns.forEach((c) => {
+                    c.visible = c.pinned;
+                });
+                this.apply();
+            },
+
+            reset() {
+                this.columns.forEach((c) => {
+                    c.visible = c.pinned || c.defaultVisible;
+                });
+                this.apply();
+            },
+
+            openReorder() {
+                this.draft = this.columns
+                    .filter((c) => !c.pinned)
+                    .map((c) => ({ key: c.key, label: c.label }));
+                this.open = false;
+                this.$dispatch('open-modal', this.reorderModalId);
             },
 
             dragStart(key) {
@@ -53,298 +69,81 @@ document.addEventListener('alpine:init', () => {
             drop(targetKey) {
                 if (this.draggingKey === null || this.draggingKey === targetKey) return;
 
-                const fromIndex = this.orderedColumns.findIndex((c) => c.key === this.draggingKey);
-                const toIndex = this.orderedColumns.findIndex((c) => c.key === targetKey);
-                if (fromIndex === -1 || toIndex === -1) return;
+                const from = this.draft.findIndex((c) => c.key === this.draggingKey);
+                const to = this.draft.findIndex((c) => c.key === targetKey);
+                if (from === -1 || to === -1) return;
 
-                const [moved] = this.orderedColumns.splice(fromIndex, 1);
-                this.orderedColumns.splice(toIndex, 0, moved);
+                const [moved] = this.draft.splice(from, 1);
+                this.draft.splice(to, 0, moved);
                 this.draggingKey = null;
             },
 
             moveUp(index) {
                 if (index <= 0) return;
-                const [moved] = this.orderedColumns.splice(index, 1);
-                this.orderedColumns.splice(index - 1, 0, moved);
+                const [moved] = this.draft.splice(index, 1);
+                this.draft.splice(index - 1, 0, moved);
             },
 
             moveDown(index) {
-                if (index >= this.orderedColumns.length - 1) return;
-                const [moved] = this.orderedColumns.splice(index, 1);
-                this.orderedColumns.splice(index + 1, 0, moved);
+                if (index >= this.draft.length - 1) return;
+                const [moved] = this.draft.splice(index, 1);
+                this.draft.splice(index + 1, 0, moved);
             },
 
             resetOrder() {
-                const store = Alpine.store(this.storeKey);
-                if (store?.resetOrder) store.resetOrder();
-                this.syncFromStore();
+                this.draft = this.columns
+                    .filter((c) => !c.pinned)
+                    .sort((a, b) => a.index - b.index)
+                    .map((c) => ({ key: c.key, label: c.label }));
+                this.saveOrder();
             },
 
-            save() {
-                const store = Alpine.store(this.storeKey);
-                if (store?.setOrder) store.setOrder(this.orderedColumns.map((c) => c.key));
+            saveOrder() {
+                const byKey = Object.fromEntries(this.columns.map((c) => [c.key, c]));
+                const queue = this.draft.map((c) => byKey[c.key]);
+                const pinnedSlots = [...this.columns]
+                    .sort((a, b) => a.index - b.index)
+                    .map((c) => (c.pinned ? c : null));
+
+                this.columns = pinnedSlots.map((c) => c ?? queue.shift());
+                this.apply();
             },
-        }));
-    }
 
-    if (Alpine.data('verdantTableColumns')) return;
+            apply() {
+                const table = this.table();
+                if (!table) return;
 
-    Alpine.data('verdantTableColumns', (config) => ({
-        storageKey: config.storageKey ?? 'verdant.table.columns.default',
-        orderStorageKey: config.orderStorageKey ?? null,
-        storeKey: config.storeKey ?? 'vtd_default',
-        allKeys: config.allKeys ?? [],
-        columnWidths: config.columnWidths ?? [],
-        pinned: config.pinned ?? ['actions'],
-        defaultVisible: config.defaultVisible ?? null,
-        storedVisible: config.storedVisible ?? null,
-        columns: config.columns ?? [],
-        orderEnabled: config.orderEnabled ?? false,
-        defaultOrder: config.defaultOrder ?? null,
-        saveUrl: config.saveUrl ?? null,
-        csrfToken: config.csrfToken ?? null,
-        visible: {},
-        order: [],
-        widthsByKey: {},
+                window.verdantTableApplyColumns(table, this.columns, this.orderEnabled);
+                table.dataset.vColumns = JSON.stringify(this.columns);
 
-        gridTemplateForVisible() {
-            const parts = [];
-            this.effectiveOrder().forEach((key) => {
-                if (this.visible[key] === false) {
+                this.persist();
+            },
+
+            persist() {
+                const payload = {
+                    visible_columns: this.columns.filter((c) => c.visible).map((c) => c.key),
+                    ...(this.orderEnabled && {
+                        column_order: this.columns.filter((c) => !c.pinned).map((c) => c.key),
+                    }),
+                };
+
+                if (this.saveUrl) {
+                    fetch(this.saveUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json',
+                            'X-CSRF-TOKEN': this.csrfToken,
+                        },
+                        body: JSON.stringify(payload),
+                    }).catch(() => {});
+
                     return;
                 }
-                const w = this.widthsByKey[key] ?? null;
-                parts.push(w ? w : 'minmax(0, 1fr)');
-            });
 
-            return parts.join(' ');
-        },
-
-        init() {
-            this.widthsByKey = {};
-            this.allKeys.forEach((key, i) => {
-                this.widthsByKey[key] = this.columnWidths[i] ?? null;
-            });
-
-            if (this.saveUrl) {
-                this.applyStoredOrDefaults();
-            } else {
-                try {
-                    const stored = localStorage.getItem(this.storageKey);
-                    if (stored) {
-                        const parsed = JSON.parse(stored);
-                        this.visible = { ...parsed };
-                        this.allKeys.forEach((key) => {
-                            if (!(key in this.visible)) {
-                                this.visible[key] = this.visibilityDefaultFor(key);
-                            }
-                        });
-                    } else {
-                        this.applyDefaults();
-                    }
-                } catch {
-                    this.applyDefaults();
-                }
-            }
-
-            if (this.orderEnabled) {
-                this.loadOrder();
-            }
-
-            Alpine.store(this.storeKey, {
-                visibleCount: this.allKeys.filter((k) => this.visible[k] !== false).length,
-                gridTemplateColumns: this.gridTemplateForVisible(),
-                orderEnabled: this.orderEnabled,
-                isVisible: (k) => this.isVisible(k),
-                setVisible: (k, v) => this.setVisible(k, v),
-                showAll: () => this.showAll(),
-                hideAll: () => this.hideAll(),
-                reset: () => this.reset(),
-                orderIndex: (k) => this.orderIndex(k),
-                setOrder: (o) => this.setOrder(o),
-                resetOrder: () => this.resetOrder(),
-                columnsForModal: () => this.columnsForModal(),
-            });
-        },
-
-        nonPinnedKeys() {
-            return this.allKeys.filter((k) => !this.pinned.includes(k));
-        },
-
-        reconcileOrder(candidate, fallback) {
-            const valid = candidate.filter((k) => fallback.includes(k));
-            const missing = fallback.filter((k) => !valid.includes(k));
-
-            return [...valid, ...missing];
-        },
-
-        loadOrder() {
-            const defaultOrder = this.nonPinnedKeys();
-
-            if (this.saveUrl) {
-                this.order = this.defaultOrder
-                    ? this.reconcileOrder(this.defaultOrder, defaultOrder)
-                    : defaultOrder;
-
-                return;
-            }
-
-            try {
-                const stored = this.orderStorageKey
-                    ? localStorage.getItem(this.orderStorageKey)
-                    : null;
-                this.order = stored
-                    ? this.reconcileOrder(JSON.parse(stored), defaultOrder)
-                    : defaultOrder;
-            } catch {
-                this.order = defaultOrder;
-            }
-        },
-
-        effectiveOrder() {
-            if (!this.orderEnabled) return this.allKeys;
-
-            const queue = [...this.order];
-
-            return this.allKeys.map((key) => (this.pinned.includes(key) ? key : queue.shift()));
-        },
-
-        orderIndex(key) {
-            if (!this.orderEnabled) return 0;
-            const idx = this.effectiveOrder().indexOf(key);
-
-            return idx === -1 ? 0 : idx;
-        },
-
-        persistOrder() {
-            try {
-                if (this.orderStorageKey)
-                    localStorage.setItem(this.orderStorageKey, JSON.stringify(this.order));
-            } catch {}
-
-            this.syncVisibleCount();
-            this.persistToServer();
-        },
-
-        setOrder(newOrderKeys) {
-            const defaultOrder = this.nonPinnedKeys();
-            this.order = newOrderKeys.filter((k) => defaultOrder.includes(k));
-            defaultOrder.forEach((k) => {
-                if (!this.order.includes(k)) this.order.push(k);
-            });
-
-            this.persistOrder();
-        },
-
-        resetOrder() {
-            this.order = this.nonPinnedKeys();
-            this.persistOrder();
-        },
-
-        columnsForModal() {
-            const byKey = {};
-            this.columns.forEach((c) => {
-                byKey[c.key] = c;
-            });
-
-            return this.order
-                .filter((k) => byKey[k])
-                .map((k) => ({ key: k, label: byKey[k].label }));
-        },
-
-        visibilityDefaultFor(key) {
-            const isPinned = this.pinned.includes(key);
-            const fromDefault =
-                this.defaultVisible === null ? true : this.defaultVisible.includes(key);
-
-            return isPinned ? true : fromDefault;
-        },
-
-        applyDefaults() {
-            this.visible = {};
-            this.allKeys.forEach((key) => {
-                this.visible[key] = this.visibilityDefaultFor(key);
-            });
-        },
-
-        applyStoredOrDefaults() {
-            if (!this.storedVisible) {
-                this.applyDefaults();
-
-                return;
-            }
-
-            this.visible = {};
-            this.allKeys.forEach((key) => {
-                this.visible[key] = this.pinned.includes(key) || this.storedVisible.includes(key);
-            });
-        },
-
-        syncVisibleCount() {
-            if (!Alpine.store || !this.storeKey) return;
-            const store = Alpine.store(this.storeKey);
-            if (!store) return;
-            store.visibleCount = this.allKeys.filter((k) => this.visible[k] !== false).length;
-            store.gridTemplateColumns = this.gridTemplateForVisible();
-        },
-
-        isVisible(key) {
-            return this.visible[key] !== false;
-        },
-
-        persist() {
-            try {
-                localStorage.setItem(this.storageKey, JSON.stringify(this.visible));
-            } catch {}
-
-            this.syncVisibleCount();
-            this.persistToServer();
-        },
-
-        persistToServer() {
-            if (!this.saveUrl) return;
-
-            const payload = {
-                visible_columns: this.allKeys.filter((k) => this.visible[k] !== false),
-            };
-
-            if (this.orderEnabled) {
-                payload.column_order = this.order;
-            }
-
-            fetch(this.saveUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'X-CSRF-TOKEN': this.csrfToken ?? '',
-                },
-                body: JSON.stringify(payload),
-            }).catch(() => {});
-        },
-
-        setVisible(key, bool) {
-            this.visible[key] = bool;
-            this.persist();
-        },
-
-        showAll() {
-            this.allKeys.forEach((k) => {
-                this.visible[k] = true;
-            });
-            this.persist();
-        },
-
-        hideAll() {
-            this.allKeys.forEach((k) => {
-                if (!this.pinned.includes(k)) this.visible[k] = false;
-            });
-            this.persist();
-        },
-
-        reset() {
-            this.applyDefaults();
-            this.persist();
-        },
-    }));
+                const key = tableEl?.dataset.vPersist;
+                if (key) window.verdantTableStorage.write(`verdant.table.columns.${key}`, payload);
+            },
+        };
+    });
 });

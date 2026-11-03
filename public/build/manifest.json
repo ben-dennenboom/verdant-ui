@@ -1,4 +1,10 @@
 {
+  "resources/js/dynamic-table-persist.js": {
+    "file": "js/dynamic-table-persist.js",
+    "name": "dynamic-table-persist",
+    "src": "resources/js/dynamic-table-persist.js",
+    "isEntry": true
+  },
   "resources/js/dynamic-table/index.js": {
     "file": "js/dynamic-table.js",
     "name": "dynamic-table",

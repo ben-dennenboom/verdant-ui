@@ -6,10 +6,10 @@
 ])
 
 @php
-    $currentQuery = request()->except($paramName);
+    $currentQuery = request()->except([$paramName, 'page']);
     $currentPath = \Illuminate\Support\Str::before(request()->getRequestUri(), '?');
-    $clearUrlBase = config('verdant.ui.explicit_table_clear')
-        ? $currentPath . '?' . http_build_query([...\Illuminate\Support\Arr::except($currentQuery, ['page']), $paramName => ''])
+    $clearUrlBase = \Dennenboom\VerdantUI\Tables\DynamicTableQuery::usesExplicitClear()
+        ? $currentPath . '?' . http_build_query([...$currentQuery, $paramName => ''])
         : $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : '');
     $clearUrl = $searchTerm !== '' ? $clearUrlBase : null;
     $inputId = 'v:table-search-' . $paramName;
@@ -35,7 +35,7 @@
     <form
         method="GET"
         action="{{ $currentPath }}"
-        class="v:flex v:items-center v:gap-2 v:w-full {{ $searchApiUrl ? 'v:relative v:flex-1' : '' }}"
+        class="v:flex v:items-center v:gap-2 v:w-full {{ $searchApiUrl ? 'v:group/search v:relative v:flex-1' : '' }}"
         role="search"
     >
         @foreach ($currentQuery as $name => $value)
@@ -84,7 +84,7 @@
                     id="{{ $resultsId }}"
                     role="listbox"
                     x-show="open && (results.length > 0 || loading)"
-                    x-cloak
+                    style="display: none;"
                     x-transition
                     class="v:absolute v:left-0 v:right-0 v:z-30 v:mt-1 v:max-h-60 v:overflow-auto v:rounded-md
                         v:border v:border-gray-200 v:dark:border-gray-600 v:bg-floating
@@ -119,12 +119,7 @@
             <a
                 href="{{ $clearUrl ?? $clearUrlBase }}"
                 class="v:shrink-0 v:text-sm v:text-gray-500 v:hover:text-gray-700
-                    v:dark:hover:text-gray-400 b v:hover:underline"
-
-                @if($searchApiUrl)
-                    x-show="query.trim() !== ''"
-                    x-cloak
-                @endif
+                    v:dark:hover:text-gray-400 v:hover:underline {{ $searchApiUrl ? 'v:group-has-[input:placeholder-shown]/search:hidden' : '' }}"
             >
                 {{ __('verdant::table.clear') }}
             </a>

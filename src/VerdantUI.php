@@ -27,8 +27,17 @@ class VerdantUI
         <link rel="stylesheet" href="{$cropperCssPath}">
         <style>{$customColors}</style>
         <script src="{$cropperJsPath}" defer></script>
-        <script src="{$verdantJsPath}" defer></script>
+        <script src="{$verdantJsPath}" type="module"></script>
         HTML;
+    }
+
+    public static function inlineAsset(string $path): string
+    {
+        static $contents = [];
+
+        $file = __DIR__.'/../public/build/'.$path;
+
+        return $contents[$path] ??= is_file($file) ? (string) file_get_contents($file) : '';
     }
 
     private static function assetPath($path)

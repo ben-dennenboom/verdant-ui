@@ -1,0 +1,49 @@
+@media (hover: hover) {
+    [data-v-table] [data-v-row-checkbox],
+    [data-v-table] [data-v-select-all] {
+        opacity: 0;
+        transition: opacity 0.15s;
+    }
+
+    [data-v-table] [data-v-row-select]:hover [data-v-row-checkbox],
+    [data-v-table] [data-v-grid]:hover > * > [data-v-select-all],
+    [data-v-table]:has([data-v-row-checkbox]:checked) [data-v-row-checkbox],
+    [data-v-table]:has([data-v-row-checkbox]:checked) [data-v-select-all],
+    [data-v-table] [data-v-row-checkbox]:focus-visible,
+    [data-v-table] [data-v-select-all]:focus-visible {
+        opacity: 1;
+    }
+}
+
+[data-v-bulk-bar] {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    z-index: 50;
+    max-width: calc(100vw - 2rem);
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, 0.75rem);
+    transition:
+        opacity 0.2s,
+        transform 0.2s,
+        visibility 0.2s;
+}
+
+[data-v-table]:has([data-v-row-checkbox]:checked) ~ [data-v-bulk-bar] {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+}
+
+[data-v-table] {
+    counter-reset: v-selected;
+}
+
+[data-v-table] [data-v-row-checkbox]:checked {
+    counter-increment: v-selected;
+}
+
+[data-v-selected-count]::before {
+    content: counter(v-selected);
+}

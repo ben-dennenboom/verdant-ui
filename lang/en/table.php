@@ -16,6 +16,7 @@ return [
     'change_column_order' => 'Change column order',
     'change_order' => 'Change order',
     'save_order' => 'Save order',
+    'drag_to_reorder' => 'Drag and drop columns to reorder them.',
     'choose_visible_columns' => 'Choose visible columns',
     'visible_columns' => 'Visible columns',
     'show_all' => 'Show all',
@@ -26,5 +27,8 @@ return [
     'next' => 'Next',
     'pagination' => 'Pagination',
     'go_to_page' => 'Go to page :page',
+    'page_of' => 'Page :page of :last',
     'showing' => ':from–:to of :total',
+    'open_row' => 'Open row',
+    'actions' => 'Actions',
 ];

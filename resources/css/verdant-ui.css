@@ -5,6 +5,7 @@
 @import './grid-views.css' layer(utilities);
 @import './grid-utils.css' layer(utilities);
 @import './grid-toolbar.css' layer(utilities);
+@import './dynamic-table.css' layer(utilities);
 
 @import 'tailwindcss/theme' layer(theme) prefix(v);
 @import 'tailwindcss/utilities' layer(utilities) prefix(v);

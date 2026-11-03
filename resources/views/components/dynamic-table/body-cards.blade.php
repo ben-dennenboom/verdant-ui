@@ -1,18 +1,8 @@
 @php
-    $rowIx = !$vm->hasBulkEdit && ($vm->rowInteractionEnabled ?? false);
-    $bsk = $bulkStoreKey ?? null;
+    $columnIndexes = $vm->orderedColumnIndexes();
+    $openOn = $vm->rowOpenTrigger();
+    $titleIndexes = array_values(array_intersect($columnIndexes, [0, 1]));
 @endphp
-
-@if($rowIx)
-    <div
-        x-data="{
-            selectedRowKey: null,
-            selectRow(key) { this.selectedRowKey = key; },
-            isSelected(key) { return this.selectedRowKey !== null && String(this.selectedRowKey) === String(key); },
-            openRow(url) { if (url) window.location.assign(url); }
-        }"
-    >
-@endif
 
 @forelse ($vm->rows as $row)
     @php
@@ -24,76 +14,65 @@
             default   => 'v:bg-surface',
         };
         $boldClass = $row->rowStyle?->bold ? ' v:font-semibold' : '';
+        $actionsCell = collect($row->cells)->first(fn ($c) => $c->isActions);
+        $interactive = $openOn && ($row->openUrl || $row->rowKey !== null);
+        $cursorClass = $interactive && ! $vm->hasBulkEdit ? ' v:shadow-sm v:cursor-pointer' : '';
+        $rowLink = $openOn === 'click' && $row->openUrl;
+        $highlightClass = $vm->hasBulkEdit
+            ? ' v:has-[[data-v-row-checkbox]:checked]:border-primary-300 v:dark:has-[[data-v-row-checkbox]:checked]:border-primary-600 v:has-[[data-v-row-checkbox]:checked]:bg-primary-50 v:dark:has-[[data-v-row-checkbox]:checked]:bg-primary-900/20'
+            : ' v:data-v-active:ring-2 v:data-v-active:ring-blue-400 v:dark:data-v-active:ring-blue-600';
     @endphp
     <div
-        @if($vm->hasBulkEdit && $row->rowKey !== null)
-            x-data="{ rowHovered: false }"
-            @mouseenter="rowHovered = true"
-            @mouseleave="rowHovered = false"
-            @click="if ($event.shiftKey) { $store[@js($bsk)].toggle(@js($row->rowKey)); $event.preventDefault(); }"
-            @dblclick="$store[@js($bsk)].openRow(@js($row->openUrl))"
-            :class="$store[@js($bsk)].isSelected(@js($row->rowKey))
-                ? 'v:mb-4 v:rounded-lg v:border v:border-primary-300 v:dark:border-primary-600 v:bg-primary-50 v:dark:bg-primary-900/20 v:p-4 {{ $boldClass }}'
-                : 'v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 {{ $boldClass }}'"
-        @elseif($rowIx && $row->rowKey !== null)
-            class="v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 v:shadow-sm v:cursor-pointer{{ $boldClass }}"
-            @if($vm->openRowOnClick)
-                @click="if (! window.getSelection().toString()) openRow(@js($row->openUrl))"
-            @else
-                @click="selectRow(@js($row->rowKey))"
-                @dblclick="openRow(@js($row->openUrl))"
-            @endif
-            :class="isSelected(@js($row->rowKey)) ? 'v:ring-2 v:ring-blue-400 v:dark:ring-blue-600' : ''"
-        @else
-            class="v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4 {{ $boldClass }}"
-        @endif
+        class="v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4{{ $boldClass }}{{ $cursorClass }}{{ $highlightClass }}{{ $rowLink ? ' v:relative' : '' }}"
+        @if($interactive) data-v-open-on="{{ $openOn }}" @endif
+        @if($interactive && $row->openUrl) data-v-open-url="{{ $row->openUrl }}" @endif
+        @if($vm->hasBulkEdit && $row->rowKey !== null) data-v-row-select @endif
     >
-        {{-- Bulk checkbox for cards --}}
+        @if($rowLink)
+            <a
+                href="{{ $row->openUrl }}"
+                class="v:absolute v:inset-0 v:focus-visible:outline-none v:focus-visible:ring-2 v:focus-visible:ring-inset v:focus-visible:ring-primary-500 v:rounded-lg"
+                aria-label="{{ __('verdant::table.open_row') }}"
+            ></a>
+        @endif
         @if($vm->hasBulkEdit && $row->rowKey !== null)
-            <div class="v:flex v:items-center v:justify-between v:mb-2" x-show="rowHovered || $store[@js($bsk)].selected.length > 0" @click.stop @dblclick.stop>
+            <div class="v:flex v:items-center v:justify-between v:mb-2" data-v-no-row-click>
                 <label class="v:flex v:items-center v:gap-2 v:cursor-pointer v:select-none">
                     <input
                         type="checkbox"
-                        :checked="$store[@js($bsk)].isSelected(@js($row->rowKey))"
-                        @change="$store[@js($bsk)].toggle(@js($row->rowKey))"
-                        class="v:rounded v:border-gray-300 v:dark:border-gray-600 v:text-primary-600 v:focus:ring-primary-500 v:bg-white v:dark:bg-gray-700"
+                        value="{{ $row->rowKey }}"
+                        form="{{ $bulkFormId }}"
+                        data-v-row-checkbox
+                        class="v:peer v:rounded v:border-gray-300 v:dark:border-gray-600 v:text-primary-600 v:focus:ring-primary-500 v:bg-white v:dark:bg-gray-700"
                     >
-                    <span class="v:text-xs v:text-gray-500 v:dark:text-gray-400" x-show="$store[@js($bsk)].isSelected(@js($row->rowKey))" x-cloak>{{ __('verdant::table.selected') }}</span>
+                    <span class="v:hidden v:peer-checked:inline v:text-xs v:text-gray-500 v:dark:text-gray-400">{{ __('verdant::table.selected') }}</span>
                 </label>
             </div>
         @endif
 
-        {{-- Primary title (first two non-action columns) --}}
-        <div class="v:font-semibold v:text-gray-900 v:dark:text-gray-100">
-            @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
-                @if(isset($row->cells[0]))<span x-show="isVisible('{{ $vm->columnKeyForIndex(0) }}')">{{ $row->cells[0]->value ?? '' }}</span>@endif
-                @if(isset($row->cells[1]))<span x-show="isVisible('{{ $vm->columnKeyForIndex(1) }}')">{{ $row->cells[1]->value ?? '' }}</span>@endif
-            @else
-                {{ isset($row->cells[0]) ? ($row->cells[0]->value ?? '') : '' }}
-                {{ isset($row->cells[1]) ? ($row->cells[1]->value ?? '') : '' }}
-            @endif
+        <div class="v:font-semibold v:text-gray-900 v:dark:text-gray-100{{ $rowLink ? ' v:relative' : '' }}">
+            @foreach ($titleIndexes as $index)
+                @isset($row->cells[$index])
+                    <span
+                        data-v-col="{{ $vm->columnKeyForIndex($index) }}"
+                        @unless($vm->isColumnVisible($index)) style="display: none;" @endunless
+                    >{{ $row->cells[$index]->value ?? '' }}</span>
+                @endisset
+            @endforeach
         </div>
 
-        {{-- Remaining fields --}}
-        <div class="v:mt-2 v:flex v:flex-col v:gap-1 v:text-sm">
-            @foreach ($row->cells as $cell)
-                @continue($cell->isActions)
-                @continue($loop->index < 2)
+        <div class="v:mt-2 v:flex v:flex-col v:gap-1 v:text-sm{{ $rowLink ? ' v:relative' : '' }}">
+            @foreach ($columnIndexes as $index)
+                @php $cell = $row->cells[$index] ?? null; @endphp
+                @continue(is_null($cell) || $cell->isActions || $index < 2)
 
-                @php
-                    $columnKey = $vm->columnKeyForIndex($loop->index);
-                @endphp
-                <div class="v:flex v:justify-between v:gap-4"
-                    @if(!empty($columnVisibility) && !empty($columnVisibility['enabled']))
-                        @if(!empty($columnVisibility['orderEnabled']))
-                            :style="(isVisible('{{ $columnKey }}') ? '' : 'display:none;') + 'order:' + orderIndex('{{ $columnKey }}')"
-                        @else
-                            x-show="isVisible('{{ $columnKey }}')"
-                        @endif
-                    @endif
+                <div
+                    class="v:flex v:justify-between v:gap-4"
+                    data-v-col="{{ $vm->columnKeyForIndex($index) }}"
+                    @unless($vm->isColumnVisible($index)) style="display: none;" @endunless
                 >
                     <span class="v:text-gray-500 v:dark:text-gray-400">
-                        {{ $vm->headerLabel($loop->index) }}
+                        {{ $vm->headerLabel($index) }}
                     </span>
 
                     <span class="v:text-right v:text-gray-900 v:dark:text-gray-300">
@@ -107,13 +86,8 @@
             @endforeach
         </div>
 
-        {{-- Actions --}}
-        @php
-            $actionsCell = collect($row->cells)->first(fn ($c) => $c->isActions);
-        @endphp
-
         @if ($actionsCell)
-            <div class="v:mt-3 v:flex v:justify-end" @if($rowIx || $vm->hasBulkEdit) @click.stop @dblclick.stop @endif>
+            <div class="v:@container v:relative v:has-[[open]]:z-10 v:mt-3 v:flex v:justify-end" data-v-no-row-click>
                 @if ($actionsCell->value instanceof \Illuminate\Contracts\Support\Htmlable)
                     {!! $actionsCell->value->toHtml() !!}
                 @elseif (is_array($actionsCell->actions) && count($actionsCell->actions))
@@ -127,7 +101,3 @@
         {{ $emptyText ?? 'No data available.' }}
     </div>
 @endforelse
-
-@if($rowIx)
-    </div>
-@endif

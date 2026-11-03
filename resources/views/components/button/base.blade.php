@@ -12,7 +12,7 @@
 
 @php
     $sizeClasses = config('verdant.ui.aligned_form_controls') ? 'v:text-base v:sm:text-sm v:leading-6 v:sm:leading-5' : 'v:text-base';
-    $baseClasses = "v:rounded inline-flex v:items-center v:justify-center v:px-4 v:py-2 v:border {$sizeClasses} v:font-medium v:focus:outline-hidden v:transition v:ease-in-out v:duration-150";
+    $baseClasses = "v:rounded v:inline-flex v:items-center v:justify-center v:px-4 v:py-2 v:border {$sizeClasses} v:font-medium v:focus:outline-hidden v:transition v:ease-in-out v:duration-150";
     $tag = $href ? 'a' : 'button';
     $attributes = $attributes->merge([
         'type' => $tag === 'button' ? $type : null,

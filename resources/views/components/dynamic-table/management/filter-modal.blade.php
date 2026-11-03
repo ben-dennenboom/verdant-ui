@@ -4,7 +4,7 @@
     $filterColumns = $vm->filterColumns ?? [];
     $filterValues = $vm->filterValues ?? [];
     $filterKeys = collect($filterColumns)->pluck('key')->all();
-    $currentQuery = request()->except($filterKeys);
+    $currentQuery = request()->except([...$filterKeys, 'page']);
     $activeCount = collect($filterValues)->filter(function ($v) {
         if (is_array($v)) {
             return count($v) > 0;
@@ -14,14 +14,14 @@
     $hasExplicitFilterInQuery = collect($filterKeys)->contains(fn($key) => request()->query->has($key));
     $currentPath = \Illuminate\Support\Str::before(request()->getRequestUri(), '?');
     $clearUrl = match (true) {
-        config('verdant.ui.explicit_table_clear') && $activeCount > 0 => $currentPath . '?' . http_build_query([...\Illuminate\Support\Arr::except($currentQuery, ['page']), ...array_fill_keys($filterKeys, '')]),
+        \Dennenboom\VerdantUI\Tables\DynamicTableQuery::usesExplicitClear() && $activeCount > 0 => $currentPath . '?' . http_build_query([...$currentQuery, ...array_fill_keys($filterKeys, '')]),
         $activeCount > 0 && $hasExplicitFilterInQuery => $currentPath . (count($currentQuery) ? '?' . http_build_query($currentQuery) : ''),
         default => null,
     };
     $formId = $modalId . '-form';
 @endphp
 
-<div class="v:shrink-0 v:flex v:items-center v:gap-2">
+<div class="v:shrink-0 v:flex v:items-center v:gap-2" x-data>
     <x-v-button.light
         type="button"
         icon="filter"
@@ -32,7 +32,7 @@
         class="v:text-sm v:border-gray-500 v:dark:border-gray-600 v:text-gray-700 v:whitespace-nowrap v:dark:text-gray-300 v:hover:bg-gray-200 v:dark:hover:bg-gray-600 v:focus:ring-gray-500"
     >
         @if($activeCount > 0)
-            <span class="v:ml-1 v:inline-flex v:items-center v:justify-center v:min-w-5 v:h-5 v:rounded-full v:bg-primary-100 v:dark:bg-primary-900 v:text-primary-800 v:dark:text-primary-200 v:text-xs">
+            <span class="v:ml-1 v:-my-1 v:align-middle v:inline-flex v:items-center v:justify-center v:min-w-5 v:h-5 v:rounded-full v:bg-primary-100 v:dark:bg-primary-900 v:text-primary-800 v:dark:text-primary-200 v:text-xs">
                 {{ $activeCount }}
             </span>
         @endif
@@ -46,97 +46,98 @@
             {{ __('verdant::table.clear') }}
         </a>
     @endif
-</div>
 
-<template x-teleport="body">
-    <x-v-modal :id="$modalId" maxWidth="2xl">
-        <form
-            id="{{ $formId }}"
-            method="GET"
-            action="{{ $currentPath }}"
-            class="v-form v-auto-filter"
-        >
-            @foreach ($currentQuery as $name => $value)
-                @if (is_array($value))
-                    @foreach ($value as $v)
-                        <input type="hidden" name="{{ $name }}[]" value="{{ $v }}" />
-                    @endforeach
-                @else
-                    <input type="hidden" name="{{ $name }}" value="{{ $value }}" />
-                @endif
-            @endforeach
-
-            <h3 class="v:text-lg v:font-medium v:leading-6 v:text-gray-900 v:dark:text-gray-100" id="{{ $modalId }}-title">
-                {{ __('verdant::table.filters') }}
-            </h3>
-
-            <div class="v:mt-4 v:mb-4 v:space-y-4">
-                @foreach ($filterColumns as $col)
-                    @php
-                        $key = $col['key'];
-                        $label = $col['label'];
-                        $type = $col['type'] ?? 'text';
-                        $value = $filterValues[$key] ?? $col['default'] ?? '';
-                        $placeholder = $col['placeholder'] ?? null;
-                        $options = $col['options'] ?? null;
-                        $multiple = !empty($col['multiple']);
-                        $valueArray = $multiple ? (array) $value : null;
-                    @endphp
-
-                    @if ($type === 'checkbox')
-                        <x-v-form.checkbox
-                            :name="$key"
-                            :label="$label"
-                            value="1"
-                            :checked="!!$value"
-                            :id="$modalId . '-' . $key"
-                            class="v:mb-0"
-                        />
-                    @elseif ($type === 'select')
-                        <x-v-form.select
-                            :name="$multiple ? $key . '[]' : $key"
-                            :label="$label"
-                            :options="$options ?? []"
-                            :selected="$multiple ? $valueArray : $value"
-                            :multiple="$multiple"
-                            :first_empty="false"
-                        />
+    <template x-teleport="body">
+        <x-v-modal :id="$modalId" maxWidth="2xl">
+            <form
+                id="{{ $formId }}"
+                method="GET"
+                action="{{ $currentPath }}"
+                class="v-form v-auto-filter"
+            >
+                @foreach ($currentQuery as $name => $value)
+                    @if (is_array($value))
+                        @foreach ($value as $v)
+                            <input type="hidden" name="{{ $name }}[]" value="{{ $v }}" />
+                        @endforeach
                     @else
-                        <x-v-form.input
-                            :name="$key"
-                            :label="$label"
-                            :type="$type === 'date' ? 'date' : ($type === 'number' ? 'number' : 'text')"
-                            :value="$value"
-                            :placeholder="$placeholder"
-                            :id="$modalId . '-' . $key"
-                            class="v:mb-0"
-                        />
+                        <input type="hidden" name="{{ $name }}" value="{{ $value }}" />
                     @endif
                 @endforeach
-            </div>
 
-            <div class="v:mt-5 v:sm:mt-4 v:flex v:justify-between">
-                <x-v-button.light
-                    type="button"
-                    @click="$dispatch('close-modal')"
-                    class="v:border-gray-500 v:dark:border-gray-600 v:text-gray-700 v:dark:text-gray-300 v:hover:bg-gray-200 v:dark:hover:bg-gray-600 v:focus:ring-gray-500"
-                >
-                    {{ __('verdant::table.cancel') }}
-                </x-v-button.light>
-                <div class="v:flex v:gap-2">
-                    @if($clearUrl)
-                        <x-v-button.danger
-                            :href="$clearUrl"
-                            outline
-                        >
-                            {{ __('verdant::table.reset') }}
-                        </x-v-button.danger>
-                    @endif
-                    <x-v-button.primary type="submit">
-                        {{ __('verdant::table.apply') }}
-                    </x-v-button.primary>
+                <h3 class="v:text-lg v:font-medium v:leading-6 v:text-gray-900 v:dark:text-gray-100" id="{{ $modalId }}-title">
+                    {{ __('verdant::table.filters') }}
+                </h3>
+
+                <div class="v:mt-4 v:mb-4 v:space-y-4">
+                    @foreach ($filterColumns as $col)
+                        @php
+                            $key = $col['key'];
+                            $label = $col['label'];
+                            $type = $col['type'] ?? 'text';
+                            $value = $filterValues[$key] ?? $col['default'] ?? '';
+                            $placeholder = $col['placeholder'] ?? null;
+                            $options = $col['options'] ?? null;
+                            $multiple = !empty($col['multiple']);
+                            $valueArray = $multiple ? (array) $value : null;
+                        @endphp
+
+                        @if ($type === 'checkbox')
+                            <input type="hidden" name="{{ $key }}" value="" />
+                            <x-v-form.checkbox
+                                :name="$key"
+                                :label="$label"
+                                value="1"
+                                :checked="!!$value"
+                                :id="$modalId . '-' . $key"
+                                class="v:mb-0"
+                            />
+                        @elseif ($type === 'select')
+                            <x-v-form.select
+                                :name="$multiple ? $key . '[]' : $key"
+                                :label="$label"
+                                :options="$options ?? []"
+                                :selected="$multiple ? $valueArray : $value"
+                                :multiple="$multiple"
+                                :first_empty="false"
+                            />
+                        @else
+                            <x-v-form.input
+                                :name="$key"
+                                :label="$label"
+                                :type="$type === 'date' ? 'date' : ($type === 'number' ? 'number' : 'text')"
+                                :value="$value"
+                                :placeholder="$placeholder"
+                                :id="$modalId . '-' . $key"
+                                class="v:mb-0"
+                            />
+                        @endif
+                    @endforeach
                 </div>
-            </div>
-        </form>
-    </x-v-modal>
-</template>
+
+                <div class="v:mt-5 v:sm:mt-4 v:flex v:justify-between">
+                    <x-v-button.light
+                        type="button"
+                        @click="$dispatch('close-modal')"
+                        class="v:border-gray-500 v:dark:border-gray-600 v:text-gray-700 v:dark:text-gray-300 v:hover:bg-gray-200 v:dark:hover:bg-gray-600 v:focus:ring-gray-500"
+                    >
+                        {{ __('verdant::table.cancel') }}
+                    </x-v-button.light>
+                    <div class="v:flex v:gap-2">
+                        @if($clearUrl)
+                            <x-v-button.danger
+                                :href="$clearUrl"
+                                outline
+                            >
+                                {{ __('verdant::table.reset') }}
+                            </x-v-button.danger>
+                        @endif
+                        <x-v-button.primary type="submit">
+                            {{ __('verdant::table.apply') }}
+                        </x-v-button.primary>
+                    </div>
+                </div>
+            </form>
+        </x-v-modal>
+    </template>
+</div>

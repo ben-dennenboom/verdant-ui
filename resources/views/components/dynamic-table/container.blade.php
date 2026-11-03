@@ -141,8 +141,16 @@
         </div>
     @endif
 
-    <div class="v-hidden lg:v-block">
-        <div class="v-min-w-full">
+    @php
+        $scrollable = (bool) config('verdant.ui.scrollable_tables');
+        $minColumn = (string) config('verdant.ui.table_min_column_width', '6.5rem');
+        $templateExpression = ! empty($columnVisibility['storeKey'])
+            ? "(Alpine.store('{$columnVisibility['storeKey']}')?.gridTemplateColumns ?? ".\Illuminate\Support\Js::from($vm->gridTemplateColumns).')'
+            : \Illuminate\Support\Js::from($vm->gridTemplateColumns);
+    @endphp
+    <div class="v-hidden lg:v-block" @if($scrollable) style="overflow-x: auto;" @endif>
+        {{-- Scrollable: every row is as wide as its visible columns' minimums, so borders and hover cover the scrolled part. --}}
+        <div class="v-min-w-full" @if($scrollable) x-data x-bind:style="'min-width: max(100%, calc(' + ({{ $templateExpression }}.split('minmax(').length - 1) + ' * {{ $minColumn }} + 10rem))'" @endif>
             @include('verdant::components.dynamic-table.header', ['columnVisibility' => $columnVisibility, 'bulkStoreKey' => $bulkStoreKey])
             @include('verdant::components.dynamic-table.body-table', [
                 'columnVisibility' => $columnVisibility,

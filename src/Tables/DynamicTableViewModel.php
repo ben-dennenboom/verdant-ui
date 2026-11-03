@@ -418,12 +418,14 @@ final class DynamicTableViewModel
      */
     private static function extractColumnGridWidths(array $headers): array
     {
+        $minimum = config('verdant.ui.scrollable_tables') ? (string) config('verdant.ui.table_min_column_width', '6.5rem') : null;
+
         $widths = [];
         foreach ($headers as $header) {
             if (is_array($header) && ! empty($header['width'])) {
                 $widths[] = (string) $header['width'];
             } else {
-                $widths[] = null;
+                $widths[] = $minimum ? "minmax({$minimum}, 1fr)" : null;
             }
         }
 

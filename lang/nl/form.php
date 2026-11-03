@@ -7,5 +7,5 @@ return [
     'show' => 'Tonen',
     'hide' => 'Verbergen',
     'nothing_selected' => 'Niets geselecteerd',
-    'reset' => 'herstellen',
+    'reset' => 'reset',
 ];

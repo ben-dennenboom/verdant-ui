@@ -8,4 +8,13 @@ return [
     'hide' => 'Masquer',
     'nothing_selected' => 'Aucune sélection',
     'reset' => 'effacer',
+    'cancel' => 'Annuler',
+    'image_cropper' => [
+        'select' => 'Choisir une image',
+        'upload' => 'Téléverser une image',
+        'recrop' => 'Recadrer l\'image',
+        'title' => 'Recadrer l\'image',
+        'apply' => 'Appliquer',
+        'upload_apply' => 'Téléverser',
+    ],
 ];

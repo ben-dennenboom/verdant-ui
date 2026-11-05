@@ -60,7 +60,7 @@
 
   <div class="v:flex v:flex-col v:mb-4 v:gap-4">
     <div x-show="preview" class="v:w-fit v:max-w-[300px] v:border v:border-secondary-300 v:rounded v:overflow-hidden">
-      <img :src="preview" alt="Preview" class="v:max-w-full v:max-h-64 v:h-auto v:object-contain v:rounded">
+      <img :src="preview" alt="Preview" class="v:max-w-full v:max-h-64 v:h-auto v:object-contain">
     </div>
 
     <div class="v:flex v:gap-2">
@@ -71,7 +71,7 @@
              @change="handleFileSelect">
 
       <x-v-button.secondary type="button" @click="selectFile" icon="image">
-        {{ $uploadUrl ? 'Upload Image' : 'Select Image' }}
+        {{ $uploadUrl ? __('verdant::form.image_cropper.upload') : __('verdant::form.image_cropper.select') }}
       </x-v-button.secondary>
 
       <x-v-button.light
@@ -79,7 +79,7 @@
               type="button"
               @click="openCropModal"
               icon="crop">
-        Recrop Image
+        {{ __('verdant::form.image_cropper.recrop') }}
       </x-v-button.light>
     </div>
   </div>
@@ -88,7 +88,7 @@
 
   <template x-teleport="body">
     <div x-show="showModal"
-         class="v:fixed v:inset-0 v:z-50 v:overflow-auto v:bg-gray-500 v:opacity-75 v:flex v:items-center v:justify-center v:p-4"
+         class="v:fixed v:inset-0 v:z-50 v:overflow-auto v:bg-gray-500/75 v:flex v:items-center v:justify-center v:p-4"
          x-transition:enter="v:transition v:ease-out v:duration-300"
          x-transition:enter-start="v:opacity-0"
          x-transition:enter-end="v:opacity-100"
@@ -106,7 +106,7 @@
            x-transition:leave-end="v:opacity-0 v:transform v:scale-95">
 
         <div class="v:p-4 v:border-b v:border-gray-200">
-          <h3 class="v:text-lg v:font-medium v:text-gray-900">Crop Image</h3>
+          <h3 class="v:text-lg v:font-medium v:text-gray-900">{{ __('verdant::form.image_cropper.title') }}</h3>
         </div>
 
         <div class="v:p-4">
@@ -117,11 +117,11 @@
 
         <div class="v:bg-gray-50 v:px-4 v:py-3 v:flex v:justify-end v:gap-2">
           <x-v-button.light type="button" @click="cancelCrop">
-            Cancel
+            {{ __('verdant::form.cancel') }}
           </x-v-button.light>
 
           <x-v-button.primary type="button" @click="applyCrop">
-            {{ $uploadUrl ? 'Upload' : 'Apply Crop' }}
+            {{ $uploadUrl ? __('verdant::form.image_cropper.upload_apply') : __('verdant::form.image_cropper.apply') }}
           </x-v-button.primary>
         </div>
       </div>

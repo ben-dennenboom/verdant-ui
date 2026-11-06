@@ -14,14 +14,14 @@
         "@tailwindcss/vite": "^4.3.4",
         "alpinejs": "^3.17.5",
         "cropperjs": "^1.7.0",
-        "laravel-vite-plugin": "^3.2.0",
+        "laravel-vite-plugin": "^3.2.1",
         "npm-check-updates": "^23.1.1",
         "tailwindcss": "^4.3.4",
-        "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0",
-        "vite-plus": "1.4.0"
+        "vite": "npm:@voidzero-dev/vite-plus-core@1.5.0",
+        "vite-plus": "1.5.0"
     },
     "overrides": {
-        "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0"
+        "vite": "npm:@voidzero-dev/vite-plus-core@1.5.0"
     },
     "devEngines": {
         "packageManager": {

@@ -44,6 +44,7 @@ return [
         'hide_reset_on_required_selects' => false,
         'checkbox_first' => false,
         'single_click_row_with_bulk_edit' => false,
+        'table_actions_icon_only' => false,
     ],
 
     'components' => [

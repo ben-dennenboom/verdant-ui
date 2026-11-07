@@ -19,7 +19,8 @@
             @php
                 $disabled = !empty($action['disabled']);
                 $icon = $action['icon'] ?? null;
-                $showLabel = $icon === null || ($action['display'] ?? (count($actions) === 1 ? 'all' : 'icon')) === 'all';
+                $display = $action['display'] ?? (config('verdant.ui.table_actions_icon_only') ? 'icon' : 'all');
+                $showLabel = $icon === null || $display === 'all';
                 $hasBorder = $i < $maxVisible - 1 || ($i < $maxVisible && $hasOverflow);
                 $inlineClass = match (true) {
                     $i >= $maxVisible => 'v:hidden',

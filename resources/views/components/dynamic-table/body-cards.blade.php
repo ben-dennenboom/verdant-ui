@@ -16,7 +16,7 @@
         $boldClass = $row->rowStyle?->bold ? ' v:font-semibold' : '';
         $actionsCell = collect($row->cells)->first(fn ($c) => $c->isActions);
         $interactive = $openOn && ($row->openUrl || $row->rowKey !== null);
-        $cursorClass = $interactive && ! $vm->hasBulkEdit ? ' v:shadow-sm v:cursor-pointer' : '';
+        $cursorClass = $openOn && $row->openUrl && ! $vm->hasBulkEdit ? ' v:shadow-sm v:cursor-pointer' : '';
         $rowLink = $openOn === 'click' && $row->openUrl;
         $highlightClass = $vm->hasBulkEdit
             ? ' v:has-[[data-v-row-checkbox]:checked]:border-primary-300 v:dark:has-[[data-v-row-checkbox]:checked]:border-primary-600 v:has-[[data-v-row-checkbox]:checked]:bg-primary-50 v:dark:has-[[data-v-row-checkbox]:checked]:bg-primary-900/20'

@@ -43,6 +43,7 @@ return [
         'wide_column_picker' => false,
         'hide_reset_on_required_selects' => false,
         'checkbox_first' => false,
+        'single_click_row_with_bulk_edit' => false,
     ],
 
     'components' => [

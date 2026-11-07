@@ -539,7 +539,7 @@ final class DynamicTableViewModel
             return null;
         }
 
-        return $this->openRowOnClick && ! $this->hasBulkEdit ? 'click' : 'dblclick';
+        return ($this->openRowOnClick && ! $this->hasBulkEdit) || config('verdant.ui.single_click_row_with_bulk_edit') ? 'click' : 'dblclick';
     }
 
     public function sortUrl(string $key): string

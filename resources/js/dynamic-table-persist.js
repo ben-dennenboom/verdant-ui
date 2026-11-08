@@ -34,13 +34,13 @@
             });
         });
 
-        const template =
-            columns
-                .filter((c) => c.visible)
-                .map((c) => c.width || 'minmax(0, 1fr)')
-                .join(' ') || 'minmax(0, 1fr)';
-
         table.querySelectorAll('[data-v-grid]').forEach((el) => {
+            const template =
+                columns
+                    .filter((c) => c.visible)
+                    .map((c) => c.width)
+                    .join(' ') || el.dataset.vDefaultTrack;
+
             el.style.gridTemplateColumns = el.dataset.vGrid + template;
         });
     }

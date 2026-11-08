@@ -57,7 +57,7 @@ class DynamicTableData implements DynamicTableDataProvider
 
     protected bool $rowOpenUrlEnabled = false;
 
-    protected bool $openRowOnClick = false;
+    protected ?bool $openRowOnClick = null;
 
     /**
      * @var array<int, array<string, mixed>>|null
@@ -300,7 +300,7 @@ class DynamicTableData implements DynamicTableDataProvider
 
     public function openRowOnClick(): bool
     {
-        return $this->openRowOnClick && $this->rowOpenUrlEnabled;
+        return ($this->openRowOnClick ?? (bool) config('verdant.ui.open_row_on_click')) && $this->rowOpenUrlEnabled;
     }
 
     public function rowInteractionEnabled(): bool

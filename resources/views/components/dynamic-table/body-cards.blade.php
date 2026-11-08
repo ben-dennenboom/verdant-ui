@@ -16,8 +16,9 @@
         $boldClass = $row->rowStyle?->bold ? ' v:font-semibold' : '';
         $actionsCell = collect($row->cells)->first(fn ($c) => $c->isActions);
         $interactive = $openOn && ($row->openUrl || $row->rowKey !== null);
-        $cursorClass = $openOn && $row->openUrl && ! $vm->hasBulkEdit ? ' v:shadow-sm v:cursor-pointer' : '';
-        $rowLink = $openOn === 'click' && $row->openUrl;
+        $opensUrl = $openOn && $row->openUrl;
+        $cursorClass = $opensUrl && ! $vm->hasBulkEdit ? ' v:shadow-sm v:cursor-pointer' : '';
+        $rowLink = $opensUrl && $openOn === 'click';
         $highlightClass = $vm->hasBulkEdit
             ? ' v:has-[[data-v-row-checkbox]:checked]:border-primary-300 v:dark:has-[[data-v-row-checkbox]:checked]:border-primary-600 v:has-[[data-v-row-checkbox]:checked]:bg-primary-50 v:dark:has-[[data-v-row-checkbox]:checked]:bg-primary-900/20'
             : ' v:data-v-active:ring-2 v:data-v-active:ring-blue-400 v:dark:data-v-active:ring-blue-600';
@@ -25,7 +26,7 @@
     <div
         class="v:mb-4 v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-700 {{ $rowBgClass }} v:p-4{{ $boldClass }}{{ $cursorClass }}{{ $highlightClass }}{{ $rowLink ? ' v:relative' : '' }}"
         @if($interactive) data-v-open-on="{{ $openOn }}" @endif
-        @if($interactive && $row->openUrl) data-v-open-url="{{ $row->openUrl }}" @endif
+        @if($opensUrl) data-v-open-url="{{ $row->openUrl }}" @endif
         @if($vm->hasBulkEdit && $row->rowKey !== null) data-v-row-select @endif
     >
         @if($rowLink)

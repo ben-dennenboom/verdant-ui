@@ -6,7 +6,7 @@
     }
 
     [data-v-table] [data-v-row-select]:hover [data-v-row-checkbox],
-    [data-v-table] [data-v-grid]:hover > * > [data-v-select-all],
+    [data-v-table] [data-v-table-header]:hover > * > [data-v-select-all],
     [data-v-table]:has([data-v-row-checkbox]:checked) [data-v-row-checkbox],
     [data-v-table]:has([data-v-row-checkbox]:checked) [data-v-select-all],
     [data-v-table] [data-v-row-checkbox]:focus-visible,

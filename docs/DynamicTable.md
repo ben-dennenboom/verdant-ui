@@ -33,7 +33,7 @@ $columns = [
 | `->sortableQuery(callable)`                | Complex DB sort (joins, raw): `fn ($query, $direction) => void` – applied via `Column::applySort()`                                               |
 | `->visibleWhen(callable)`                  | Table-level visibility: `fn ($context) => bool` – pass context as 4th arg to `fromCollection($items, $columns, $actions, $context)`               |
 | `->pinned(bool)`                           | Column always visible, even when missing from the visible columns (default `true` when called)                                                    |
-| `->width(string)`                          | Column width hint (e.g. `'8rem'`, `'minmax(100px, 1fr)'`)                                                                                         |
+| `->width(string)`                          | Column width hint (e.g. `'8rem'`, `'minmax(100px, 1fr)'`, `'max-content'`); content-sized tracks stay aligned across rows                         |
 | `->align(string)`                          | Text alignment: `'left'`, `'center'`, or `'right'`                                                                                                |
 | `->tooltip(string)`                        | Header tooltip (title attribute)                                                                                                                  |
 | `->class(string)`                          | Optional CSS class for the header cell                                                                                                            |

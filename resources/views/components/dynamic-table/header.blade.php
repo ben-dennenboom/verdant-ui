@@ -1,12 +1,10 @@
 @php
-    $bulkPrefix = $vm->hasBulkEdit ? '3rem ' : '';
     $resetSortUrl = $vm->resetSortUrl();
 @endphp
 
 <div
-    class="v:grid v:bg-gray-50 v:dark:bg-gray-700 v:relative"
-    data-v-grid="{{ $bulkPrefix }}"
-    style="grid-template-columns: {{ $bulkPrefix }}{{ $vm->visibleGridTemplateColumns() }};"
+    class="v:grid v:grid-cols-subgrid v:col-span-full v:bg-gray-50 v:dark:bg-gray-700 v:relative"
+    data-v-table-header
 >
     @if($vm->hasBulkEdit)
         <div class="v:pl-3 v:pr-1 v:py-3 v:flex v:items-center v:justify-center">
@@ -23,15 +21,12 @@
     @foreach ($vm->orderedColumnIndexes() as $index)
         @php
             $header = $vm->headers[$index];
-            $alignClass = match ($header['align'] ?? '') {
-                'center' => 'v:text-center',
-                'right'  => 'v:text-right',
-                default  => 'v:text-left',
-            };
+            [$alignClass, $justifyClass] = $vm->alignClasses($index);
             $direction = !empty($header['key']) ? $vm->sort?->directionFor($header['key']) : null;
+            $isActions = ($header['key'] ?? null) === \Dennenboom\VerdantUI\Tables\DynamicTableViewModel::ACTIONS_KEY;
         @endphp
         <div class="
-            v:px-6 v:min-h-10 v:flex v:items-stretch v:border-b v:border-gray-100 v:dark:border-gray-600 @if($index === 0 && $vm->hasBulkEdit) v:pl-3 @endif v:text-sm v:font-medium v:text-gray-500
+            {{ $isActions ? 'v:px-3' : 'v:px-6' }} v:min-h-10 v:flex v:items-stretch v:border-b v:border-gray-100 v:dark:border-gray-600 @if($index === 0 && $vm->hasBulkEdit) v:pl-3 @endif v:text-sm v:font-medium v:text-gray-500
             v:dark:text-gray-400 v:uppercase {{ $alignClass }} {{ $header['class'] ?? '' }}
         "
             @if(!empty($header['tooltip'])) title="{{ e($header['tooltip']) }}" @endif
@@ -42,7 +37,7 @@
                 <a
                     href="{{ $vm->sortUrl($header['key']) }}"
                     title="{{ !empty($header['tooltip']) ? e($header['tooltip']) : __('verdant::table.click_to_sort') }}"
-                    class="v:group v:inline-flex v:items-center v:uppercase v:gap-1 v:w-full v:py-3"
+                    class="v:group v:inline-flex v:items-center {{ $justifyClass }} v:uppercase v:gap-1 v:w-full v:py-3"
                 >
                     <span class="v:group-hover:underline">{{ $header['label'] }}</span>
 
@@ -51,7 +46,7 @@
                     @endif
                 </a>
             @else
-                <span class="v:flex v:items-center v:py-3 v:w-full">
+                <span class="v:flex v:items-center {{ $justifyClass }} v:py-3 v:w-full">
                     {{ $header['label'] }}
                 </span>
             @endif

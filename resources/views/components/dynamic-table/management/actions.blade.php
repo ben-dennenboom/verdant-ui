@@ -4,12 +4,19 @@
 ])
 
 @php
+    $actions = array_values($actions);
     $maxVisible = min((int) ($maxVisible ?? 2), count($actions));
     $hasOverflow = count($actions) > $maxVisible;
+    $defaultDisplay = config('verdant.ui.table_actions_icon_only') ? 'icon' : 'all';
+    $showsLabel = fn (array $a): bool => empty($a['icon']) || ($a['display'] ?? $defaultDisplay) === 'all';
+    $iconOnly = collect(array_slice($actions, 0, $maxVisible))->every(fn ($a) => ! $showsLabel($a));
+    [$foldSecondHidden, $foldSecondBlock, $foldFirstHidden, $foldFirstBlock] = $iconOnly
+        ? ['v:@max-[100px]:hidden', 'v:@max-[100px]:block', 'v:@max-[70px]:hidden', 'v:@max-[70px]:block']
+        : ['v:@max-[170px]:hidden', 'v:@max-[170px]:block', 'v:@max-[100px]:hidden', 'v:@max-[100px]:block'];
     $menuClass = match (true) {
         $hasOverflow => '',
-        count($actions) > min(1, $maxVisible) => 'v:hidden v:@max-[170px]:block',
-        default => 'v:hidden v:@max-[100px]:block',
+        count($actions) > min(1, $maxVisible) => 'v:hidden ' . $foldSecondBlock,
+        default => 'v:hidden ' . $foldFirstBlock,
     };
 @endphp
 
@@ -19,12 +26,12 @@
             @php
                 $disabled = !empty($action['disabled']);
                 $icon = $action['icon'] ?? null;
-                $showLabel = $icon === null || ($action['display'] ?? (count($actions) === 1 ? 'all' : 'icon')) === 'all';
+                $showLabel = $showsLabel($action);
                 $hasBorder = $i < $maxVisible - 1 || ($i < $maxVisible && $hasOverflow);
                 $inlineClass = match (true) {
                     $i >= $maxVisible => 'v:hidden',
-                    $i >= 1 => 'v:inline-flex v:@max-[170px]:hidden',
-                    default => 'v:inline-flex v:@max-[100px]:hidden',
+                    $i >= 1 => 'v:inline-flex ' . $foldSecondHidden,
+                    default => 'v:inline-flex ' . $foldFirstHidden,
                 };
             @endphp
             <div class="{{ $inlineClass }} v:items-center v:border-gray-200 v:dark:border-gray-600 {{ $hasBorder ? 'v:border-r' : '' }}">
@@ -69,15 +76,15 @@
                     <i class="fa-solid fa-ellipsis-vertical"></i>
                 </summary>
 
-                <div class="v:absolute v:right-0 v:top-full v:mt-1 v:bg-floating v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-600 v:z-50 v:shadow-lg v:min-w-[180px] v:py-1">
+                <div class="v:absolute v:right-0 v:top-full v:mt-1 v:bg-floating v:rounded-lg v:border v:border-gray-200 v:dark:border-gray-600 v:z-50 v:shadow-lg v:min-w-[180px] v:py-1 v:text-left">
                     @foreach($actions as $i => $action)
                         @php
                             $disabled = !empty($action['disabled']);
                             $icon = $action['icon'] ?? null;
                             $overflowClass = match (true) {
                                 $i >= $maxVisible => '',
-                                $i >= 1 => 'v:hidden v:@max-[170px]:block',
-                                default => 'v:hidden v:@max-[100px]:block',
+                                $i >= 1 => 'v:hidden ' . $foldSecondBlock,
+                                default => 'v:hidden ' . $foldFirstBlock,
                             };
                         @endphp
                         <div class="{{ $overflowClass }}">

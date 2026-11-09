@@ -18,6 +18,7 @@
 
 @source "../views/**/*.blade.php";
 @source "../js/**/*.js";
+@source "../../src/Tables/DynamicTableViewModel.php";
 @source not "../../public";
 
 @theme {

@@ -79,7 +79,9 @@ final class DynamicTableViewModel
      */
     public array $columnGridWidths = [];
 
-    private const ACTIONS_KEY = 'actions';
+    public const ACTIONS_KEY = 'actions';
+
+    public const DEFAULT_TRACK = 'minmax(0, 1fr)';
 
     private function __construct() {}
 
@@ -239,9 +241,9 @@ final class DynamicTableViewModel
             $normalized[] = [
                 'label' => __('verdant::table.actions'),
                 'key' => self::ACTIONS_KEY,
-                'class' => 'v-text-center',
+                'align' => 'center',
                 'sortable' => false,
-                'width' => 'minmax(6rem, 0.5fr)',
+                'width' => 'minmax(5rem, 0.4fr)',
             ];
         }
 
@@ -415,7 +417,7 @@ final class DynamicTableViewModel
 
         $parts = [];
         foreach ($widths as $w) {
-            $parts[] = ($w !== null && $w !== '') ? $w : 'minmax(0, 1fr)';
+            $parts[] = ($w !== null && $w !== '') ? $w : self::DEFAULT_TRACK;
         }
 
         return implode(' ', $parts);
@@ -439,6 +441,18 @@ final class DynamicTableViewModel
         }
 
         return $hasExplicit ? $pinned : [self::ACTIONS_KEY];
+    }
+
+    /**
+     * @return array{0: string, 1: string}
+     */
+    public function alignClasses(int $index): array
+    {
+        return match ($this->headers[$index]['align'] ?? '') {
+            'center' => ['v:text-center', 'v:justify-center'],
+            'right' => ['v:text-right', 'v:justify-end'],
+            default => ['v:text-left', 'v:justify-start'],
+        };
     }
 
     public function isColumnVisible(int $index): bool
@@ -520,7 +534,7 @@ final class DynamicTableViewModel
             'key' => $this->columnKeyForIndex($i),
             'label' => $this->headerLabel($i),
             'pinned' => in_array($this->columnKeyForIndex($i), $pinned, true),
-            'width' => $this->columnGridWidths[$i] ?? null,
+            'width' => ($this->columnGridWidths[$i] ?? null) ?: self::DEFAULT_TRACK,
             'visible' => $this->isColumnVisible($i),
             'defaultVisible' => $this->isColumnDefaultVisible($i),
         ], $this->orderedColumnIndexes());
@@ -530,7 +544,7 @@ final class DynamicTableViewModel
     {
         $widths = array_map(fn ($i) => $this->columnGridWidths[$i] ?? null, $this->visibleColumnIndexes());
 
-        return self::buildGridTemplateColumnsFromWidths($widths) ?: 'minmax(0, 1fr)';
+        return self::buildGridTemplateColumnsFromWidths($widths) ?: self::DEFAULT_TRACK;
     }
 
     public function rowOpenTrigger(): ?string

@@ -27,6 +27,7 @@
         ->values()
         ->all();
     $persistColumns = $showColumnPicker && $vm->preferencesSaveUrl === null;
+    $bulkPrefix = $vm->hasBulkEdit ? '3rem ' : '';
 @endphp
 
 @once
@@ -78,7 +79,12 @@
     @endif
 
     <div class="v:hidden v:lg:block">
-        <div class="v:min-w-full">
+        <div
+            class="v:grid v:min-w-full"
+            data-v-grid="{{ $bulkPrefix }}"
+            data-v-default-track="{{ \Dennenboom\VerdantUI\Tables\DynamicTableViewModel::DEFAULT_TRACK }}"
+            style="grid-template-columns: {{ $bulkPrefix }}{{ $vm->visibleGridTemplateColumns() }};"
+        >
             @include('verdant::components.dynamic-table.header')
             @include('verdant::components.dynamic-table.body-table', [
                 'emptyText' => $emptyText,

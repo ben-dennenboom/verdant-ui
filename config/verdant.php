@@ -43,6 +43,8 @@ return [
         'wide_column_picker' => false,
         'hide_reset_on_required_selects' => false,
         'checkbox_first' => false,
+        'open_row_on_click' => false,
+        'table_actions_icon_only' => false,
     ],
 
     'components' => [

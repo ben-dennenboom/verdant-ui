@@ -56,10 +56,10 @@
     </label>
   @endif
 
-  <div x-show="error" class="v:text-red-600 v:text-sm v:mb-2" x-text="error"></div>
+  <div x-cloak x-show="error" class="v:text-red-600 v:text-sm v:mb-2" x-text="error"></div>
 
   <div class="v:flex v:flex-col v:mb-4 v:gap-4">
-    <div x-show="preview" class="v:w-fit v:max-w-[300px] v:border v:border-secondary-300 v:rounded v:overflow-hidden">
+    <div x-cloak x-show="preview" class="v:w-fit v:max-w-[300px] v:border v:border-secondary-300 v:rounded v:overflow-hidden">
       <img :src="preview" alt="Preview" class="v:max-w-full v:max-h-64 v:h-auto v:object-contain">
     </div>
 
@@ -75,7 +75,7 @@
       </x-v-button.secondary>
 
       <x-v-button.light
-              x-show="preview && preview !== initialSrc && disableCrop === false"
+              x-cloak x-show="preview && preview !== initialSrc && disableCrop === false"
               type="button"
               @click="openCropModal"
               icon="crop">
@@ -87,7 +87,7 @@
   <input type="hidden" :name="name" x-model="croppedImage" :required="required">
 
   <template x-teleport="body">
-    <div x-show="showModal"
+    <div x-cloak x-show="showModal"
          class="v:fixed v:inset-0 v:z-50 v:overflow-auto v:bg-gray-500/75 v:flex v:items-center v:justify-center v:p-4"
          x-transition:enter="v:transition v:ease-out v:duration-300"
          x-transition:enter-start="v:opacity-0"

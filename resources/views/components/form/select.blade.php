@@ -171,7 +171,7 @@
             </span>
         </button>
 
-        <div x-show="isOpen" @click.away="isOpen = false"
+        <div x-cloak x-show="isOpen" @click.away="isOpen = false"
              class="v:absolute v:z-10 v:mt-1 v:w-full v:bg-floating v:border v:border-secondary-300 v:dark:border-gray-600 ">
             <div class="v:p-2">
                 <input type="text" x-model="search" x-ref="searchInput"

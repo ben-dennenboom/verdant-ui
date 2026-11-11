@@ -141,7 +141,7 @@
         @endunless
     </div>
 
-    <div class="v:relative v:mt-1">
+    <div class="v:relative v:mt-1 v:group">
         <button type="button"
                 @click="if (!disabled) isOpen = !isOpen"
                 :disabled="disabled"
@@ -163,7 +163,7 @@
                 </template>
             </div>
             <span class="v:absolute v:inset-y-0 v:right-0 v:flex v:items-center v:pr-2">
-                <svg class="v:h-5 v:w-5 v:text-gray-400 v:dark:text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                <svg class="v:h-5 v:w-5 v:text-gray-400 v:group-hover:text-gray-500 v:dark:text-gray-500 v:group-hover:dark:text-gray-400 v:transition-colors v:duration-200" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
                           d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
                           clip-rule="evenodd"/>
@@ -172,16 +172,23 @@
         </button>
 
         <div x-cloak x-show="isOpen" @click.away="isOpen = false"
-             class="v:absolute v:z-10 v:mt-1 v:w-full v:bg-floating v:border v:border-secondary-300 v:dark:border-gray-600 ">
+             @class([
+                'v:absolute v:z-10 v:mt-1 v:w-full v:bg-floating v:border v:border-secondary-300 v:dark:border-gray-600 v:shadow',
+                'v:rounded' => $aligned
+             ])>
             <div class="v:p-2">
                 <input type="text" x-model="search" x-ref="searchInput"
-                       x-init="$watch('isOpen', value => { if (value) $nextTick(() => $refs.searchInput.focus()); })"
-                       class="v:w-full v:border v:border-secondary-300 v:dark:border-gray-600 v:shadow-sm v:px-3 v:py-2 v:focus:ring-secondary-500 v:focus:border-secondary-500 v:bg-white v:dark:bg-gray-700 v:text-gray-900 v:dark:text-gray-100 v:dark:placeholder-gray-400"
-                       placeholder="{{ __('verdant::form.search_placeholder') }}">
+                    x-init="$watch('isOpen', value => { if (value) $nextTick(() => $refs.searchInput.focus()); })"
+                    @class([
+                        'v:w-full v:border v:border-secondary-300 v:dark:border-gray-600 v:shadow-sm v:px-3 v:py-2 v:focus:ring-secondary-500 v:focus:border-secondary-500 v:bg-white v:dark:bg-gray-700 v:text-gray-900 v:dark:text-gray-100 v:dark:placeholder-gray-400',
+                        'v:rounded' => $aligned
+                    ])
+
+                    placeholder="{{ __('verdant::form.search_placeholder') }}">
             </div>
 
             <ul class="v:max-h-60 v:overflow-auto v:py-1 v:list-none v:scrollbar-thin">
-                @if($searchUrl || config('verdant.ui.aligned_form_controls'))
+                @if($searchUrl || $aligned)
                     <li x-show="! loading && filteredOptions().length === 0" class="v:px-4 v:py-2 v:text-sm v:text-gray-500 v:dark:text-gray-400">{{ __('verdant::form.no_results') }}</li>
                 @endif
                 <template x-for="(option, index) in filteredOptions()" :key="index">

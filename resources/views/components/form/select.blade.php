@@ -146,9 +146,11 @@
                 @click="if (!disabled) isOpen = !isOpen"
                 :disabled="disabled"
                 :class="disabled ? 'v:opacity-50 v:cursor-not-allowed v:bg-gray-100 v:dark:bg-gray-700' : ''"
-                class="{{ $aligned
-                    ? 'v:bg-white v:dark:bg-gray-800 v:relative v:w-full v:rounded v:border v:border-secondary-300 v:dark:border-gray-600 v:py-2 v:pl-3 v:pr-10 v:text-left v:text-base v:sm:text-sm v:leading-6 v:sm:leading-5 v:focus:ring-secondary-500 v:focus:border-secondary-500 v:text-gray-900 v:dark:text-gray-100'
-                    : 'v:bg-white v:dark:bg-gray-800 v:relative v:w-full v:border v:border-secondary-300 v:dark:border-gray-600 v:px-4 v:py-2 v:text-left v:focus:ring-secondary-500 v:focus:border-secondary-500 v:text-gray-900 v:dark:text-gray-100' }}"
+                @class([
+                    'v:bg-white v:dark:bg-gray-800 v:relative v:w-full v:text-left v:text-gray-900 v:dark:text-gray-100 v:border v:border-secondary-300 v:dark:border-gray-600 v:group-focus-within:ring-1 v:group-focus-within:ring-secondary-500 v:group-focus-within:border-secondary-500',
+                    'v:py-2 v:pl-3 v:pr-10 v:rounded v:text-base v:sm:text-sm v:leading-6 v:sm:leading-5' => $aligned,
+                    'v:px-4 v:py-2' => ! $aligned
+                ])
                 tabindex="0">
             <div x-show="!selectedLabels().length" class="{{ $aligned ? 'v:truncate ' : '' }}v:text-gray-500 v:dark:text-gray-400">
                 {{ $placeholder ?? __('verdant::form.nothing_selected') }}
@@ -163,7 +165,7 @@
                 </template>
             </div>
             <span class="v:absolute v:inset-y-0 v:right-0 v:flex v:items-center v:pr-2">
-                <svg class="v:h-5 v:w-5 v:text-gray-400 v:group-hover:text-gray-500 v:dark:text-gray-500 v:group-hover:dark:text-gray-400 v:transition-colors v:duration-200" viewBox="0 0 20 20" fill="currentColor">
+                <svg class="v:h-5 v:w-5 v:text-gray-400 v:group-focus-within:text-gray-500 v:group-hover:text-gray-500 v:dark:text-gray-500 v:group-hover:dark:text-gray-400 v:group-focus-within:dark:text-gray-400 v:transition-colors v:duration-200" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
                           d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
                           clip-rule="evenodd"/>

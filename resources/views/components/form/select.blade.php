@@ -180,7 +180,7 @@
                        placeholder="{{ __('verdant::form.search_placeholder') }}">
             </div>
 
-            <ul class="v:max-h-60 v:overflow-auto v:py-1 v:list-none">
+            <ul class="v:max-h-60 v:overflow-auto v:py-1 v:list-none v:scrollbar-thin">
                 @if($searchUrl || config('verdant.ui.aligned_form_controls'))
                     <li x-show="! loading && filteredOptions().length === 0" class="v:px-4 v:py-2 v:text-sm v:text-gray-500 v:dark:text-gray-400">{{ __('verdant::form.no_results') }}</li>
                 @endif

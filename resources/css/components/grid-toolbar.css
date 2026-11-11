@@ -31,7 +31,7 @@
 }
 
 /* Dark mode support for the main toolbar */
-.dark .v\:toolbar-fixed {
+:is(.dark, [data-theme='dark']) .v\:toolbar-fixed {
     background-color: rgb(31 41 55) !important;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -63,33 +63,21 @@
 }
 
 /* Dark mode support for the dropdown */
-.dark .v\:column-manager-dropdown {
+:is(.dark, [data-theme='dark']) .v\:column-manager-dropdown {
     background-color: rgb(31 41 55) !important;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-/* ==========================================================================
-   TOOLTIP & POSITIONING FIXES
-   ========================================================================== */
-
-/**
- * Tooltip Container Adjustment
- * Forces tooltips to align to the right edge of the toolbar to prevent 
- * overflowing off-screen.
- */
-.v\:toolbar-fixed .v\:absolute.v-z-50 {
+.v\:toolbar-fixed .v\:absolute.v\:z-50.v\:cursor-pointer {
     left: auto !important;
     right: 0 !important;
-    transform: translateX(0) !important;
+    translate: none !important;
 }
 
-/**
- * Tooltip Arrow Adjustment
- * Re-aligns the small indicator arrow to match the new container position.
- */
-.v\:toolbar-fixed .v\:absolute.v-z-50 .v\:absolute {
+.v\:toolbar-fixed .v\:absolute.v\:z-50.v\:cursor-pointer > .v\:relative > .v\:absolute {
     left: auto !important;
-    right: 0.75rem !important; /* Slightly adjusted for better centering */
-    transform: translateX(0) rotate(45deg) !important;
+    right: 0.75rem !important;
+    translate: none !important;
+    rotate: 45deg !important;
 }

@@ -95,13 +95,13 @@ input[type='file']::file-selector-button:hover {
 
 .v\:scrollbar,
 .v\:scrollbar-thin {
-    scrollbar-color: var(--color-gray-200) transparent;
+    scrollbar-color: var(--color-gray-300) transparent;
     transition: scrollbar-color 200ms ease;
 }
 
 .v\:scrollbar:hover,
 .v\:scrollbar-thin:hover {
-    scrollbar-color: var(--color-gray-300) transparent;
+    scrollbar-color: var(--color-gray-400) transparent;
 }
 
 :is(.dark, [data-theme='dark']) .v\:scrollbar,

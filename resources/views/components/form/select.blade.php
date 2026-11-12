@@ -1,4 +1,4 @@
-@props(['name', 'label', 'options' => [], 'valueKey' => 'value', 'labelKey' => 'label', 'selected' => null, 'multiple' => false, 'required' => false, 'first_empty' => true, 'disabled' => false, 'placeholder' => null, 'searchUrl' => null, 'selectedLabel' => null, 'selectedLabelExpression' => null])
+@props(['name', 'label', 'options' => [], 'valueKey' => 'value', 'labelKey' => 'label', 'selected' => null, 'multiple' => false, 'required' => false, 'first_empty' => true, 'disabled' => false, 'placeholder' => null, 'searchUrl' => null, 'selectedLabel' => null, 'selectedLabelExpression' => null, 'creatable' => false])
 
 @php
     $aligned = (bool) config('verdant.ui.aligned_form_controls');
@@ -14,6 +14,7 @@
     }
 
     $xModelVar = $attributes->get('x-model');
+    $xSearchUrl = $attributes->get('x-search-url');
 
     if ($searchUrl && $options === [] && filled($fallbackSelected) && ! $multiple) {
         $options = [[$valueKey => $fallbackSelected, $labelKey => $selectedLabel ?? $fallbackSelected]];
@@ -35,7 +36,13 @@
         selected: @js($multiple ? (is_array($fallbackSelected) ? $fallbackSelected : []) : $fallbackSelected),
         @endif
         options: @js($options),
+        @if($xSearchUrl)
+        get searchUrl() {
+           return {{ $xSearchUrl }};
+        },
+        @else
         searchUrl: @js($searchUrl),
+        @endif
         loading: false,
         selectedOptionCache: null,
         @if($selectedLabelExpression)
@@ -72,7 +79,7 @@
         name: @js($name),
         getLabel(option) {
             @if($labelKey instanceof \Closure)
-                return this.labels[option.{{ $valueKey }}];
+                return this.labels[option.{{ $valueKey }}] ?? option.{{ $valueKey }};
             @else
                 return option.{{ $labelKey }};
             @endif
@@ -81,10 +88,16 @@
             return option.{{ $valueKey }};
         },
         filteredOptions() {
-            if (this.searchUrl) return this.options;
-            return this.options.filter(option =>
-                String(this.getLabel(option)).toLowerCase().includes(this.search.toLowerCase())
-            );
+            const term = this.search.trim();
+            const options = this.searchUrl
+                ? this.options
+                : this.options.filter(option => String(this.getLabel(option)).toLowerCase().includes(term.toLowerCase()));
+            @if($creatable)
+                if (term.length < 1 || this.options.some(option => String(this.getLabel(option)).toLowerCase() === term.toLowerCase())) return options;
+                return [{ __new: true, [@js($valueKey)]: term @unless($labelKey instanceof \Closure), [@js($labelKey)]: term @endunless }, ...options];
+            @else
+                return options;
+            @endif
         },
         isSelected(option) {
             return this.multiple
@@ -93,6 +106,11 @@
         },
         toggleOption(option) {
             if (this.disabled) return;
+            if (option.__new) {
+                const { __new, ...created } = option;
+                this.options = [...this.options, created];
+                option = created;
+            }
             if (this.multiple) {
                 if (!Array.isArray(this.selected)) this.selected = [];
                 const value = this.getValue(option);
@@ -119,11 +137,11 @@
                 const option = this.options.find(o => String(this.getValue(o)) === String(this.selected))
                     ?? (this.selectedOptionCache && String(this.getValue(this.selectedOptionCache)) === String(this.selected) ? this.selectedOptionCache : null);
                 if (option) return [this.getLabel(option)];
-                return this.fallbackLabel ? [this.fallbackLabel] : [];
+                return this.fallbackLabel ? [this.fallbackLabel] : (@js($creatable) && this.selected !== '' ? [String(this.selected)] : []);
             }
             return this.selected.map(value => {
                 const option = this.options.find(o => String(this.getValue(o)) === String(value));
-                return option ? this.getLabel(option) : '';
+                return option ? this.getLabel(option) : (@js($creatable) ? String(value) : '');
             }).filter(label => label);
         },
         displayedLabels() {
@@ -181,6 +199,7 @@
             <div class="v:p-2">
                 <input type="text" x-model="search" x-ref="searchInput"
                     x-init="$watch('isOpen', value => { if (value) $nextTick(() => $refs.searchInput.focus()); })"
+                    @if($creatable) @keydown.enter.prevent="const first = filteredOptions()[0]; if (first?.__new) toggleOption(first)" @endif
                     @class([
                         'v:w-full v:border v:border-secondary-300 v:dark:border-gray-600 v:shadow-sm v:px-3 v:py-2 v:focus:ring-secondary-500 v:focus:border-secondary-500 v:bg-white v:dark:bg-gray-700 v:text-gray-900 v:dark:text-gray-100 v:dark:placeholder-gray-400',
                         'v:rounded' => $aligned
@@ -190,14 +209,20 @@
             </div>
 
             <ul class="v:max-h-60 v:overflow-auto v:py-1 v:list-none v:scrollbar-thin">
-                @if($searchUrl || $aligned)
+                @if($searchUrl || $xSearchUrl || $aligned)
                     <li x-show="! loading && filteredOptions().length === 0" class="v:px-4 v:py-2 v:text-sm v:text-gray-500 v:dark:text-gray-400">{{ __('verdant::form.no_results') }}</li>
                 @endif
                 <template x-for="(option, index) in filteredOptions()" :key="index">
                     <li @click="toggleOption(option)"
                         :class="{'v:bg-primary-100 v:dark:bg-primary-500': isSelected(option) }"
-                        class="v:px-4 v:py-2 v:cursor-pointer v:hover:bg-gray-100 v:dark:hover:bg-gray-700 v:text-gray-900 v:dark:text-gray-100">
-                        <span x-text="getLabel(option)"></span>
+                        class="v:group/item v:px-4 v:py-2 v:cursor-pointer v:hover:bg-gray-100 v:dark:hover:bg-gray-700 v:text-gray-900 v:dark:text-gray-100">
+                        <span @if($creatable) x-show="! option.__new" @endif x-text="getLabel(option)"></span>
+                        @if($creatable)
+                            <button x-show="option.__new" type="button" class="v:flex v:items-center v:border v:px-2 v:py-1 v:border-primary-700 v:text-primary-700 v:group-hover/item:bg-primary-700 v:group-hover/item:text-white v:cursor-pointer v:rounded">
+                                <span x-text="getLabel(option)"></span>
+                                <i class="fa-solid fa-plus v:text-sm v:ml-1" aria-hidden="true"></i>
+                            </button>
+                        @endif
                     </li>
                 </template>
             </ul>

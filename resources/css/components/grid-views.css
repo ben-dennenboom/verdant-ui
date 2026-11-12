@@ -60,7 +60,7 @@
 }
 
 /* Dark mode support for Cards */
-:is(.dark .v\tile-view .v\contents-row) {
+:is(.dark, [data-theme='dark']) .v\:tile-view .v\:contents-row {
     background: rgb(31 41 55);
     border-color: rgb(55 65 81);
 }
@@ -80,7 +80,7 @@
     border-bottom: none !important;
 }
 
-:is(.dark .v\tile-view .v\grid-cell) {
+:is(.dark, [data-theme='dark']) .v\:tile-view .v\:grid-cell {
     border-bottom-color: rgb(55 65 81) !important;
 }
 
@@ -105,7 +105,7 @@
 }
 
 /* Dark mode for labels */
-:is(.dark .v\tile-view .v\cell-tileview-label) {
+:is(.dark, [data-theme='dark']) .v\:tile-view .v\:cell-tileview-label {
     color: #9ca3af;
 }
 

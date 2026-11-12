@@ -39,11 +39,11 @@
 }
 
 /* Dark mode overrides for Header & Body */
-:is(.dark .v\:grid-header-wrapper > div) {
+:is(.dark, [data-theme='dark']) .v\:grid-header-wrapper > div {
     background-color: rgb(55 65 81);
 }
 
-:is(.dark .v\:contents-row > div) {
+:is(.dark, [data-theme='dark']) .v\:contents-row > div {
     border-color: rgb(55 65 81);
 }
 
@@ -60,7 +60,7 @@
     background-color: rgb(249 250 251);
 }
 
-:is(.dark .v\:group:hover > div) {
+:is(.dark, [data-theme='dark']) .v\:group:hover > div {
     background-color: #2d3441;
 }
 

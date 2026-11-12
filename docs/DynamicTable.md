@@ -842,7 +842,7 @@ All table texts go through `__('verdant::table.*')` (English, French and Dutch i
 
 ## Server rendering
 
-The table is fully server-rendered. The only JavaScript is `dynamic-table.js`, loaded when the table has column visibility, bulk edit, row actions, a row open URL or API search. Hover checkboxes, the floating bulk bar, the selected-row highlight and the selected count are pure CSS (`resources/css/dynamic-table.css` and `:has()` utilities). The JS powers the columns dropdown and reorder dialog, search autocomplete, the bulk multi-select fields, the bulk select-all and Shift+click, and opening rows on click or double-click:
+The table is fully server-rendered. The only JavaScript is `dynamic-table.js`, loaded when the table has column visibility, bulk edit, row actions, a row open URL or API search. Hover checkboxes, the floating bulk bar, the selected-row highlight and the selected count are pure CSS (`resources/css/components/dynamic-table.css` and `:has()` utilities). The JS powers the columns dropdown and reorder dialog, search autocomplete, the bulk multi-select fields, the bulk select-all and Shift+click, and opening rows on click or double-click:
 
 - Sorting, search, filters and pagination are links and GET forms.
 - The filter panel is an `x-v-modal` dialog. It starts hidden and needs Alpine to open; submitting is a normal GET.

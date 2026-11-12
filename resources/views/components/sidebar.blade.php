@@ -74,17 +74,6 @@
                 @endif
             </span>
         </a>
-
-        @if($collapsible)
-            <button type="button"
-                    @click="collapsed = !collapsed"
-                    :aria-label="collapsed ? @js(__('Expand menu')) : @js(__('Collapse menu'))"
-                    :aria-expanded="!collapsed"
-                    class="v:flex v:flex-none v:items-center v:justify-center v:w-8 v:h-8 v:rounded v:text-gray-400 v:hover:text-gray-700 v:dark:hover:text-gray-200 v:hover:bg-gray-100 v:dark:hover:bg-gray-700">
-                <i class="v:sidebar-expanded-only {{ $collapseIconClass }}"></i>
-                <i class="v:sidebar-collapsed-only {{ $expandIconClass }}"></i>
-            </button>
-        @endif
     </div>
 
     <nav class="v:flex-1 v:overflow-y-auto v:overflow-x-hidden v:px-3">
@@ -96,6 +85,19 @@
             {{ $slot }}
         </ul>
     </nav>
+
+    @if($collapsible)
+        <div class="v:flex v:justify-center v:px-3 v:py-2">
+            <button type="button"
+                    @click="collapsed = !collapsed"
+                    :aria-label="collapsed ? @js(__('Expand menu')) : @js(__('Collapse menu'))"
+                    :aria-expanded="!collapsed"
+                    class="v:flex v:flex-none v:items-center v:justify-center v:w-8 v:h-8 v:rounded v:text-gray-400 v:hover:text-gray-700 v:dark:hover:text-gray-200 v:hover:bg-gray-100 v:dark:hover:bg-gray-700">
+                <i class="v:sidebar-expanded-only {{ $collapseIconClass }}"></i>
+                <i class="v:sidebar-collapsed-only {{ $expandIconClass }}"></i>
+            </button>
+        </div>
+    @endif
 
     @if(isset($footer))
         {{ $footer }}

@@ -19,15 +19,15 @@
     >
         <x-v-button.light
             type="button"
-            icon-right="angle-down"
             aria-label="{{ __('verdant::table.choose_visible_columns') }}"
+            icon="gear"
             aria-haspopup="true"
             x-bind:aria-expanded="open"
             aria-controls="{{ $columnsPanelId }}"
             @click="open = !open"
             class="v:text-sm v:border-gray-500 v:dark:border-gray-600 v:text-gray-700 v:dark:text-gray-300 v:hover:bg-gray-200 v:dark:hover:bg-gray-600 v:focus:ring-gray-500 v:whitespace-nowrap"
         >
-            <i class="fas fa-gear v:mr-1"></i>
+            <i class="fas fa-angle-down v:transition-discrete v:duration-200" :class="open ? 'v:rotate-180' : ''"></i>
         </x-v-button.light>
 
         <template x-if="open">

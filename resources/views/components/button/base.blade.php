@@ -16,7 +16,7 @@
     $tag = $href ? 'a' : 'button';
     $attributes = $attributes->merge([
         'type' => $tag === 'button' ? $type : null,
-        'href' => htmlspecialchars_decode($href),
+        'href' => htmlspecialchars_decode($href ?? ''),
         'disabled' => $disabled,
         'target' => $newWindow && $href ? '_blank' : null,
         'rel' => $newWindow && $href ? 'noopener noreferrer' : null,

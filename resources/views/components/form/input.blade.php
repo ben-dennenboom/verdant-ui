@@ -2,7 +2,7 @@
 
 @php
     $inputId = $id ?? $name;
-    $inputClasses = 'v:rounded v:mt-1 v:focus:ring-secondary-500 v:focus:border-secondary-500 v:block v:w-full sm:v-text-sm v:border-secondary-300 v-bg-white v:dark:bg-gray-800 v:text-gray-900 v:dark:text-gray-100 v:dark:border-gray-600';
+    $inputClasses = 'v:rounded v:mt-1 v:focus:ring-secondary-500 v:focus:border-secondary-500 v:block v:w-full v:sm:text-sm v:border-secondary-300 v:bg-white v:dark:bg-gray-800 v:text-gray-900 v:dark:text-gray-100 v:dark:border-gray-600';
 @endphp
 
 @if($hidden)
@@ -14,7 +14,7 @@
         @endif
 
         @if($revealable)
-            <div class="v-relative">
+            <div class="v:relative">
                 <input type="{{ $type }}" :type="revealed ? 'text' : @js($type)" name="{{ $name }}" id="{{ $inputId }}"
                     value="{{ $type === 'password' ? '' : old($name, $value) }}"
                     {{ $required ? 'required' : '' }}

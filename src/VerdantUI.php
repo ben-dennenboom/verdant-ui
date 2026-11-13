@@ -48,8 +48,11 @@ class VerdantUI
         ];
 
         foreach ($possiblePaths as $possiblePath) {
-            if (file_exists(public_path($possiblePath))) {
-                return asset($possiblePath);
+            $file = public_path($possiblePath);
+
+            if (file_exists($file)) {
+                // The file names don't change between releases, so the version makes browsers drop their cached copy.
+                return asset($possiblePath).'?v='.filemtime($file);
             }
         }
 

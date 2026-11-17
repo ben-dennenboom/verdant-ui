@@ -9,6 +9,7 @@ return [
     'nothing_selected' => 'Niets geselecteerd',
     'reset' => 'reset',
     'cancel' => 'Annuleren',
+    'confirm' => 'Bevestigen',
     'image_cropper' => [
         'select' => 'Afbeelding kiezen',
         'upload' => 'Afbeelding uploaden',

@@ -9,6 +9,7 @@ return [
     'nothing_selected' => 'Nothing selected',
     'reset' => 'reset',
     'cancel' => 'Cancel',
+    'confirm' => 'Confirm',
     'image_cropper' => [
         'select' => 'Select Image',
         'upload' => 'Upload Image',

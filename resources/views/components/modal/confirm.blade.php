@@ -30,7 +30,7 @@
         @method($method)
         <div class="v:sm:flex v:sm:items-start">
             <div class="v:flex v:items-center v:justify-center v:shrink-0 v:w-12 v:h-12 v:mx-auto {{ $color['light'] }} v:sm:mx-0 v:sm:h-10 v:sm:w-10">
-                <i class="v:w-6 v:h-6 {{ $color['text'] }} v:text-center v:contents v:align-middle fas fa-{{ $iconClass }}"></i>
+                <i class="{{ $color['text'] }} fas fa-{{ $iconClass }}"></i>
             </div>
 
             <div class="v:mt-3 v:text-center v:sm:mt-0 v:sm:ml-4 v:sm:text-left">
@@ -48,15 +48,15 @@
         <div class="v:mt-5 v:sm:mt-4">
             <x-v-button.group align="right">
                 <x-v-button.light @click="$dispatch('close-modal', '{{ $id }}')">
-                    Cancel
+                    {{ __('verdant::form.cancel') }}
                 </x-v-button.light>
 
                 @if($type === 'danger')
-                    <x-v-button.danger type="submit">Confirm</x-v-button.danger>
+                    <x-v-button.danger type="submit">{{ __('verdant::form.confirm') }}</x-v-button.danger>
                 @elseif($type === 'warning')
-                    <x-v-button.warning type="submit">Confirm</x-v-button.warning>
+                    <x-v-button.warning type="submit">{{ __('verdant::form.confirm') }}</x-v-button.warning>
                 @else
-                    <x-v-button.primary type="submit">Confirm</x-v-button.primary>
+                    <x-v-button.primary type="submit">{{ __('verdant::form.confirm') }}</x-v-button.primary>
                 @endif
             </x-v-button.group>
         </div>

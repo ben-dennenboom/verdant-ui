@@ -10,7 +10,7 @@
      x-init="$nextTick(() => checkScroll()); window.addEventListener('resize', () => checkScroll())"
      class="v:rounded v:bg-surface v:border v:border-gray-200 v:dark:border-gray-700 {{ $class }}">
 
-    <div x-show="hasScroll"
+    <div x-cloak x-show="hasScroll"
          x-transition:enter="v:transition v:ease-out v:duration-300"
          x-transition:enter-start="v:opacity-0"
          x-transition:enter-end="v:opacity-100"

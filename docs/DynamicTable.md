@@ -837,7 +837,7 @@ All table texts go through `__('verdant::table.*')` (English, French and Dutch i
 
 - `<x-v-form.input>` accepts `hint` (help text under the field) and `revealable` (show/hide button, for passwords).
 - `<x-v-form.toggle>` accepts `description` (text under the label) and works with array names such as `permissions[members.view]`.
-- `<x-v-form.select>` accepts `search-url` (options fetched from that URL as the user types: `GET url?q=term` returning `[{value, label, ...}]`) with `selected-label` for the initial value, and dispatches a `select-change` event (`detail: {name, value, option}`) whenever an option is picked.
+- `<x-v-form.select>` accepts `search-url` (options fetched from that URL as the user types: `GET url?q=term` returning `[{value, label, ...}]`, see [Select](Select.md)) with `selected-label` for the initial value, and dispatches a `select-change` event (`detail: {name, value, option}`) whenever an option is picked.
 - `selected-label-expression` (JavaScript expression) gives the label of the selected value when the option is not loaded, e.g. inside `x-for` rows with remote options.
 
 ## Server rendering

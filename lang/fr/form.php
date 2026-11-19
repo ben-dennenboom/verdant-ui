@@ -4,6 +4,8 @@ return [
     'search_placeholder' => 'Rechercher…',
     'more' => '+:count autres',
     'no_results' => 'Aucun résultat',
+    'searching' => 'Recherche...',
+    'search_failed' => 'Impossible de charger les résultats',
     'show' => 'Afficher',
     'hide' => 'Masquer',
     'nothing_selected' => 'Aucune sélection',

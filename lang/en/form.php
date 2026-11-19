@@ -4,6 +4,8 @@ return [
     'search_placeholder' => 'Search...',
     'more' => '+:count more',
     'no_results' => 'No results',
+    'searching' => 'Searching...',
+    'search_failed' => 'Could not load results',
     'show' => 'Show',
     'hide' => 'Hide',
     'nothing_selected' => 'Nothing selected',

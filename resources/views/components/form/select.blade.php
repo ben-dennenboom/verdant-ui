@@ -1,4 +1,4 @@
-@props(['name', 'label', 'options' => [], 'valueKey' => 'value', 'labelKey' => 'label', 'selected' => null, 'multiple' => false, 'required' => false, 'first_empty' => true, 'disabled' => false, 'placeholder' => null, 'searchUrl' => null, 'selectedLabel' => null, 'selectedLabelExpression' => null, 'creatable' => false])
+@props(['name', 'label', 'options' => [], 'valueKey' => 'value', 'labelKey' => 'label', 'selected' => null, 'multiple' => false, 'required' => false, 'first_empty' => true, 'disabled' => false, 'placeholder' => null, 'searchUrl' => null, 'selectedLabel' => null, 'selectedLabelExpression' => null, 'creatable' => false, 'resetable' => true])
 
 @php
     $aligned = (bool) config('verdant.ui.aligned_form_controls');
@@ -21,7 +21,7 @@
     }
 @endphp
 
-<div class="v:mb-4"
+<div {{ $attributes->merge(['class' => 'v:mb-4']) }}
      x-data="{
         isOpen: false,
         search: '',
@@ -154,7 +154,7 @@
 >
     <div class="v:flex v:items-center v:justify-between">
         <label for="{{ $id }}" class="v:block v:font-medium v:text-gray-700 v:dark:text-gray-300">{{ $label }}@if($required)<span class="required_asterisk">*</span>@endif</label>
-        @unless($required && config('verdant.ui.hide_reset_on_required_selects'))
+        @unless($required && config('verdant.ui.hide_reset_on_required_selects') || ! $resetable)
             <button type="button" @click="reset" :disabled="disabled" :class="disabled ? 'v:opacity-40 v:cursor-not-allowed' : ''" class="v:text-red-500 v:text-sm">{{ __('verdant::form.reset') }}</button>
         @endunless
     </div>

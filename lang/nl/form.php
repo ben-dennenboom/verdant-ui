@@ -4,6 +4,8 @@ return [
     'search_placeholder' => 'Zoeken...',
     'more' => '+:count meer',
     'no_results' => 'Geen resultaten',
+    'searching' => 'Zoeken...',
+    'search_failed' => 'Kon resultaten niet laden',
     'show' => 'Tonen',
     'hide' => 'Verbergen',
     'nothing_selected' => 'Niets geselecteerd',

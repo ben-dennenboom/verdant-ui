@@ -19,6 +19,13 @@
     if ($searchUrl && $options === [] && filled($fallbackSelected) && ! $multiple) {
         $options = [[$valueKey => $fallbackSelected, $labelKey => $selectedLabel ?? $fallbackSelected]];
     }
+
+    if ($searchUrl && $options === [] && filled($fallbackSelected) && $multiple) {
+        $options = collect((array) $fallbackSelected)
+            ->map(fn ($value) => [$valueKey => $value, $labelKey => is_array($selectedLabel) ? ($selectedLabel[$value] ?? $value) : $value])
+            ->values()
+            ->all();
+    }
 @endphp
 
 <div {{ $attributes->merge(['class' => 'v:mb-4']) }}
@@ -44,7 +51,9 @@
         searchUrl: @js($searchUrl),
         @endif
         loading: false,
-        selectedOptionCache: null,
+        searchFailed: false,
+        searchController: null,
+        knownOptions: {},
         @if($selectedLabelExpression)
         get fallbackLabel() {
             return {{ $selectedLabelExpression }};
@@ -54,6 +63,7 @@
         @endif
         searchTimer: null,
         init() {
+            this.options.forEach(option => this.remember(option));
             if (! this.searchUrl) return;
             this.$watch('search', () => {
                 clearTimeout(this.searchTimer);
@@ -62,15 +72,34 @@
             this.$watch('isOpen', value => { if (value) this.fetchOptions(); });
         },
         async fetchOptions() {
+            this.searchController?.abort();
+            const controller = this.searchController = new AbortController();
             this.loading = true;
+            this.searchFailed = false;
             try {
                 const url = new URL(this.searchUrl, window.location.origin);
                 url.searchParams.set('q', this.search);
-                const response = await fetch(url, { headers: { Accept: 'application/json' }, credentials: 'same-origin' });
-                if (response.ok) this.options = await response.json();
+                const response = await fetch(url, {
+                    headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                    credentials: 'same-origin',
+                    signal: controller.signal,
+                });
+                if (! response.ok) throw new Error(`Search request failed with status ${response.status}`);
+                const results = await response.json();
+                this.options = Array.isArray(results) ? results : (Array.isArray(results?.data) ? results.data : []);
+            } catch (error) {
+                if (error.name === 'AbortError') return;
+                this.searchFailed = true;
+                this.options = [];
             } finally {
-                this.loading = false;
+                if (this.searchController === controller) this.loading = false;
             }
+        },
+        remember(option) {
+            this.knownOptions[String(this.getValue(option))] = option;
+        },
+        findOption(value) {
+            return this.options.find(option => String(this.getValue(option)) === String(value)) ?? this.knownOptions[String(value)] ?? null;
         },
         labels: @js($labels),
         multiple: @js($multiple),
@@ -111,6 +140,7 @@
                 this.options = [...this.options, created];
                 option = created;
             }
+            this.remember(option);
             if (this.multiple) {
                 if (!Array.isArray(this.selected)) this.selected = [];
                 const value = this.getValue(option);
@@ -122,7 +152,6 @@
                 }
             } else {
                 this.selected = this.getValue(option);
-                this.selectedOptionCache = option;
                 this.isOpen = false;
             }
             this.$dispatch('select-change', { name: this.name, value: this.selected, option });
@@ -134,13 +163,12 @@
         selectedLabels() {
             if (this.selected === null || this.selected === undefined) return [];
             if (!this.multiple) {
-                const option = this.options.find(o => String(this.getValue(o)) === String(this.selected))
-                    ?? (this.selectedOptionCache && String(this.getValue(this.selectedOptionCache)) === String(this.selected) ? this.selectedOptionCache : null);
+                const option = this.findOption(this.selected);
                 if (option) return [this.getLabel(option)];
                 return this.fallbackLabel ? [this.fallbackLabel] : (@js($creatable) && this.selected !== '' ? [String(this.selected)] : []);
             }
             return this.selected.map(value => {
-                const option = this.options.find(o => String(this.getValue(o)) === String(value));
+                const option = this.findOption(value);
                 return option ? this.getLabel(option) : (@js($creatable) ? String(value) : '');
             }).filter(label => label);
         },
@@ -209,8 +237,15 @@
             </div>
 
             <ul class="v:max-h-60 v:overflow-auto v:py-1 v:list-none v:scrollbar-thin">
+                @if($searchUrl || $xSearchUrl)
+                    <li x-show="loading" class="v:flex v:items-center v:gap-2 v:px-4 v:py-2 v:text-sm v:text-gray-500 v:dark:text-gray-400">
+                        <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                        <span>{{ __('verdant::form.searching') }}</span>
+                    </li>
+                    <li x-show="! loading && searchFailed" class="v:px-4 v:py-2 v:text-sm v:text-red-600 v:dark:text-red-400">{{ __('verdant::form.search_failed') }}</li>
+                @endif
                 @if($searchUrl || $xSearchUrl || $aligned)
-                    <li x-show="! loading && filteredOptions().length === 0" class="v:px-4 v:py-2 v:text-sm v:text-gray-500 v:dark:text-gray-400">{{ __('verdant::form.no_results') }}</li>
+                    <li x-show="! loading && ! searchFailed && filteredOptions().length === 0" class="v:px-4 v:py-2 v:text-sm v:text-gray-500 v:dark:text-gray-400">{{ __('verdant::form.no_results') }}</li>
                 @endif
                 <template x-for="(option, index) in filteredOptions()" :key="index">
                     <li @click="toggleOption(option)"

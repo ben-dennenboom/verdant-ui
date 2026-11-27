@@ -2,6 +2,7 @@
 
 @php
     $inputId = $id ?? $name;
+    $cleanName = str_replace(['[]', '[', ']'], ['', '.', ''], $name);
     $inputClasses = 'v:rounded v:mt-1 v:focus:ring-secondary-500 v:focus:border-secondary-500 v:block v:w-full v:sm:text-sm v:border-secondary-300 v:bg-white v:dark:bg-gray-800 v:text-gray-900 v:dark:text-gray-100 v:dark:border-gray-600';
 @endphp
 
@@ -38,7 +39,7 @@
             <p class="v:mt-1 v:text-xs v:text-gray-500 v:dark:text-gray-400">{{ $hint }}</p>
         @endif
 
-        @error($name)
+        @error($cleanName)
             <p class="v:mt-2 v:text-red-600">{{ $message }}</p>
         @enderror
     </div>

@@ -12,10 +12,10 @@
     <nav role="navigation" aria-label="Pagination" {{ $attributes->class(['v:flex v:items-center v:justify-between v:font-medium v:text-sm']) }}>
         <div class="v:grid grid-cols-2 v:gap-6 v:w-fit v:mx-auto {{ $isLengthAware ? 'v:lg:hidden' : '' }}">
             <x-v-button.primary :href="$previousUrl" :disabled="!$previousUrl" class="v:text-sm">
-                {!! __('pagination.previous') !!}
+                {!! __('verdant::pagination.previous') !!}
             </x-v-button.primary>
             <x-v-button.primary :href="$nextUrl" :disabled="!$nextUrl" class="v:text-sm">
-                {!! __('pagination.next') !!}
+                {!! __('verdant::pagination.next') !!}
             </x-v-button.primary>
         </div>
 

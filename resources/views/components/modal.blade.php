@@ -18,7 +18,7 @@
 
 <div
     x-data="{ show: false }"
-    x-on:open-modal.window="if ($event.detail === '{{ $id }}') show = true"
+    x-on:open-modal.window="if ($event.detail === '{{ $id }}') { show = true; $nextTick(() => $el.querySelector('[autofocus]')?.focus()) }"
     x-on:close-modal.window="show = false"
     x-on:keydown.escape.window="show = false"
     x-show="show"
